@@ -88,7 +88,7 @@ Restart-Service sshd
 | 机器 | Git 仓库 | 状态 |
 |------|----------|------|
 | macair | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
-| 12700K | `C:\Users\gaoxi\Documents\Deepseek` | ✅ |
+| 12700K | `D:\Deepseek` | ✅ |
 | lk402-1 | 待配置 | ⏳ |
 
 工作流：
@@ -102,7 +102,7 @@ git add -A && git commit -m "描述" && git push
 
 ### 12700K 配置备忘
 
-- 工作区路径：`C:\Users\gaoxi\Documents\Deepseek`
+- 工作区路径：`D:\Deepseek`
 - SSH 密钥：`~/.ssh/id_ed25519_nodes`（无密码，从 macair scp 传输）
 - GitHub 认证：`~/.ssh/config` 已配 Host github.com → id_ed25519_nodes
 

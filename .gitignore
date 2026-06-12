@@ -19,3 +19,4 @@ known_hosts*
 # 编辑器和IDE
 .vscode/
 .idea/
+sync.log

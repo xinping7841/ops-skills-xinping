@@ -83,4 +83,40 @@ Restart-Service sshd
 
 ---
 
-*最后更新：2026-06-12 | Kun 整理*
+## 三机工作台 Git 同步
+
+| 机器 | Git 仓库 | 状态 |
+|------|----------|------|
+| macair | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
+| 12700K | `C:\Users\gaoxi\Documents\Deepseek` | ✅ |
+| lk402-1 | 待配置 | ⏳ |
+
+工作流：
+```bash
+# 开始工作前
+git pull
+
+# 写完脚本/skill 后
+git add -A && git commit -m "描述" && git push
+```
+
+### 12700K 配置备忘
+
+- 工作区路径：`C:\Users\gaoxi\Documents\Deepseek`
+- SSH 密钥：`~/.ssh/id_ed25519_nodes`（无密码，从 macair scp 传输）
+- GitHub 认证：`~/.ssh/config` 已配 Host github.com → id_ed25519_nodes
+
+---
+
+## lk402-1 待办
+
+- [ ] 开启 OpenSSH 服务：`Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0` → `Start-Service sshd` → `Set-Service sshd -StartupType Automatic`
+- [ ] 装 Git for Windows
+- [ ] 装 DeepSeek GUI
+- [ ] 从 macair scp 传 `id_ed25519_nodes` 密钥
+- [ ] Clone：`git clone git@github.com:xinping7841/ops-skills-xinping.git C:\Users\gaoxi\Documents\Deepseek`
+- [ ] 配置 `administrators_authorized_keys` 允许 macair / 12700K SSH 进来
+
+---
+
+*最后更新：2026-06-13 | Kun 整理*

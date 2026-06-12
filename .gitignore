@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
+*~
+
+# 敏感信息
+*.pem
+*.key
+id_*
+known_hosts*
+
+# 编辑器和IDE
+.vscode/
+.idea/

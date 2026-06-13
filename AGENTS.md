@@ -91,11 +91,20 @@ Restart-Service sshd
 
 ---
 
-## 七、GitHub 仓库信息
+## 七、GitHub 仓库
 
-- 仓库：`xinping7841/ops-skills-xinping`
-- 分支：`main`
-- SSH：`git@github.com:xinping7841/ops-skills-xinping.git`
+| 仓库 | 用途 | 主要工作机 |
+|------|------|-----------|
+| `xinping7841/ops-skills-xinping` | 技能/配置/脚本共享 | macair, 12700K, lk402 |
+| `xinping7841/smart-center` | 多媒体展厅智能中控系统 | node-120 为主 |
+
+### smart-center
+
+```bash
+git clone git@github.com:xinping7841/smart-center.git
+```
+- 主分支：`main`，另有多个 `codex/*` 开发分支
+- node-120 本地 bare repo：`/srv/git/smart-center.git`（origin → GitHub）
 
 ---
 

@@ -44,7 +44,30 @@
 - 类型：Context7 MCP
 - 用于查询最新开发文档
 - 需要 Context7 API 密钥（在 https://context7.com 获取）
-- 启用后填入 API Key
+- **关键**：Kun 内置 10s 启动超时，npx 首次下载容易超时。需要先全局安装：
+  ```bash
+  npm install -g @upstash/context7-mcp
+  ```
+- 然后配置使用直接 node 路径调用（非 npx）：
+  - command: `node`
+  - args: `["npm-global-path/node_modules/@upstash/context7-mcp/dist/index.js", "--api-key", "your-key"]`
+  - npm 全局路径：Windows 为 `%APPDATA%/npm`，macOS/Linux 为 `/usr/local/lib/node_modules`
+
+
+### 配置文件位置
+
+MCP 配置实际涉及两个文件：
+
+| 文件 | 路径 | 作用 |
+|------|------|------|
+| mcp.json | ~/.kun/mcp.json | 初始配置模板，由 GUI 管理 |
+| config.json | ~/.kun/data/config.json | 运行时实际配置，capabilities.mcp.servers 是真正决定 MCP 启用的位置 |
+
+> 修改 mcp.json 后 Kun 重启时会同步到 config.json，但直接修改 config.json 然后重启更可靠。
+
+### context7 启动超时
+
+Kun 对 MCP 有硬编码 10s 启动超时。`@upstash/context7-mcp` 通过 npx 下载时容易超时，需全局安装后用直接 node 路径调用（见上方配置步骤）。
 
 ## 验证
 
@@ -64,4 +87,4 @@
 
 ---
 
-*最后更新：2026-06-13 | 由 macair Kun 创建*
+*最后更新：2026-06-13 | 由 macair Kun 创建 | k402 补充关键发现*

@@ -100,3 +100,18 @@ Restart-Service sshd
 ---
 
 *本文件由 macair Kun 维护，最后更新 2026-06-13*
+
+## 工作区技能文件
+
+以下技能文件位于 `~/Documents/Deepseek/`，处理相关任务时请主动读取：
+
+| 文件 | 何时读取 |
+|------|----------|
+| `skill-ssh-tailscale.md` | SSH 连接、Tailscale 组网、新机器上线 |
+| `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
+
+如需修改这些文件，改完后提交：
+```bash
+cd ~/Documents/Deepseek
+git add -A && git commit -m "描述" && git push
+```

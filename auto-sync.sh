@@ -24,6 +24,11 @@ cd "$REPO_DIR" || exit 1
 echo "[$(date '+%H:%M:%S')] 🔄 pull..." | tee -a sync.log
 git pull --no-edit 2>&1 | tee -a sync.log
 
+# 1.5. 同步 AGENTS.md 到 Codex 全局目录（Codex 每次启动自动加载）
+if [ -f "AGENTS.md" ] && [ -d "$HOME/.codex" ]; then
+  cp AGENTS.md "$HOME/.codex/AGENTS.md"
+fi
+
 # 2. 如果有本地改动，自动提交 + 推送
 if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
   echo "[$(date '+%H:%M:%S')] 📝 检测到改动，自动提交..." | tee -a sync.log

@@ -18,12 +18,12 @@
 | node-121 | 100.122.235.56 | xinping | id_ed25519 | `ssh node-121` |
 | node-123 | 100.119.214.90 | sl123 | id_ed25519_nodes | `ssh node-123-ts` |
 | 12700k | 100.94.150.23 | gaoxi | **id_ed25519_nodes** | `ssh -i ~/.ssh/id_ed25519_nodes gaoxi@100.94.150.23` |
+| lk402-1 | 100.89.199.122 | gaoxi | **id_ed25519_nodes** | `ssh lk402-1` |
 
 ## 离线/待补充
 
 | 机器 | Tailscale IP | 状态 |
 |------|-------------|------|
-| lk402-1 | 100.89.199.122 | 离线（5h前） |
 | node-122 | 100.84.214.75 | 离线（1d前） |
 | node-124 | 100.78.193.102 | 离线（9d前） |
 
@@ -89,7 +89,7 @@ Restart-Service sshd
 |------|----------|------|
 | macair | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 | 12700K | `D:\Deepseek` | ✅ |
-| lk402-1 | 待配置 | ⏳ |
+| lk402-1 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 
 工作流：
 ```bash
@@ -108,14 +108,16 @@ git add -A && git commit -m "描述" && git push
 
 ---
 
-## lk402-1 待办
+## lk402-1 配置完成
 
-- [ ] 开启 OpenSSH 服务：`Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0` → `Start-Service sshd` → `Set-Service sshd -StartupType Automatic`
-- [ ] 装 Git for Windows
-- [ ] 装 DeepSeek GUI
-- [ ] 从 macair scp 传 `id_ed25519_nodes` 密钥
-- [ ] Clone：`git clone git@github.com:xinping7841/ops-skills-xinping.git C:\Users\gaoxi\Documents\Deepseek`
-- [ ] 配置 `administrators_authorized_keys` 允许 macair / 12700K SSH 进来
+- [x] OpenSSH 服务 → 已开启 + 自动启动
+- [x] Git for Windows → 已装 (2.54.0)
+- [x] Kun GUI → 已装 (0.2.9)
+- [x] SSH 密钥 → 已生成 id_ed25519_nodes，GitHub 已授权
+- [x] 仓库克隆 → `D:\Deepseek` (git@github.com:xinping7841/ops-skills-xinping.git)
+- [x] 自动同步 → Windows 计划任务 `Deepseek-Sync`，每5分钟
+- [x] SSH 入站 → `administrators_authorized_keys` 已含 macair 的 id_ed25519_nodes key
+- [x] Kun skills → `claw.skills.extraDirs: ["D:\\Deepseek"]` 已配置，自动发现 skill-*.md
 
 ---
 

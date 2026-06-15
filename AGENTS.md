@@ -108,6 +108,25 @@ git clone git@github.com:xinping7841/smart-center.git
 
 ---
 
+## 八、新机器快速部署
+
+```bash
+# 1. clone
+git clone git@github.com:xinping7841/ops-skills-xinping.git ~/Documents/Deepseek
+
+# 2. 一键部署
+cd ~/Documents/Deepseek
+bash setup-mac.sh      # macOS
+# 或
+powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
+
+# 3. 手动：Kun GUI → MCP 参考 skill-mcp-servers.md 配置
+```
+
+部署脚本自动处理：Codex AGENTS.md、SSH config、定时同步。
+
+---
+
 *本文件由 macair Kun 维护，最后更新 2026-06-13*
 
 ## 工作区技能文件

@@ -20,22 +20,45 @@ fi
 
 cd "$REPO_DIR" || exit 1
 
-# 1. 拉取远端更新（总是安全）
-echo "[$(date '+%H:%M:%S')] 🔄 pull..." | tee -a sync.log
-git pull --no-edit 2>&1 | tee -a sync.log
-
-# 1.5. 同步 AGENTS.md 到 Codex 全局目录（Codex 每次启动自动加载）
+# 1. 同步 AGENTS.md 到 Codex 全局目录（Codex 每次启动自动加载）
 if [ -f "AGENTS.md" ] && [ -d "$HOME/.codex" ]; then
   cp AGENTS.md "$HOME/.codex/AGENTS.md"
 fi
 
-# 2. 如果有本地改动，自动提交 + 推送
+# 1.5. 同步 Codex skill（Codex 重启后自动发现）
+if [ -d "codex-skills/ops-terminal-sync" ] && [ -d "$HOME/.codex" ]; then
+  mkdir -p "$HOME/.codex/skills"
+  DEST="$HOME/.codex/skills/ops-terminal-sync"
+  SKILLS_ROOT_REAL="$(cd "$HOME/.codex/skills" && pwd -P)"
+  if [ -e "$DEST" ]; then
+    DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
+    case "$DEST_REAL" in
+      "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
+      *) echo "[$(date '+%H:%M:%S')] ❌ 技能目录异常，拒绝覆盖: $DEST_REAL" | tee -a sync.log; exit 1 ;;
+    esac
+  fi
+  cp -R "codex-skills/ops-terminal-sync" "$DEST"
+fi
+
+# 2. 如果有本地改动，先自动提交
 if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
-  echo "[$(date '+%H:%M:%S')] 📝 检测到改动，自动提交..." | tee -a sync.log
+  echo "[$(date '+%H:%M:%S')] 📝 检测到改动，先自动提交..." | tee -a sync.log
   git add -A
   git commit -m "auto: sync $(date '+%m-%d %H:%M')" 2>&1 | tee -a sync.log
+else
+  echo "[$(date '+%H:%M:%S')] ✔ 无需同步" | tee -a sync.log
+fi
+
+# 3. 拉取远端更新并推送本地提交
+echo "[$(date '+%H:%M:%S')] 🔄 pull --rebase..." | tee -a sync.log
+if ! git pull --rebase 2>&1 | tee -a sync.log; then
+  echo "[$(date '+%H:%M:%S')] ❌ pull --rebase 失败，需要人工处理冲突" | tee -a sync.log
+  exit 1
+fi
+
+if [ -n "$(git log --branches --not --remotes --oneline)" ]; then
   git push 2>&1 | tee -a sync.log
   echo "[$(date '+%H:%M:%S')] ✅ 已推送" | tee -a sync.log
 else
-  echo "[$(date '+%H:%M:%S')] ✔ 无需同步" | tee -a sync.log
+  echo "[$(date '+%H:%M:%S')] ✔ 没有待推送提交" | tee -a sync.log
 fi

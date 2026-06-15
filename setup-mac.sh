@@ -15,6 +15,22 @@ else
   echo "⚠️  未找到 Codex (~/.codex)，跳过"
 fi
 
+# 1.5 Codex 技能
+if [ -d "$HOME/.codex" ] && [ -d "$REPO_DIR/codex-skills/ops-terminal-sync" ]; then
+  mkdir -p "$HOME/.codex/skills"
+  DEST="$HOME/.codex/skills/ops-terminal-sync"
+  SKILLS_ROOT_REAL="$(cd "$HOME/.codex/skills" && pwd -P)"
+  if [ -e "$DEST" ]; then
+    DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
+    case "$DEST_REAL" in
+      "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
+      *) echo "⚠️  技能目录异常，拒绝覆盖: $DEST_REAL"; exit 1 ;;
+    esac
+  fi
+  cp -R "$REPO_DIR/codex-skills/ops-terminal-sync" "$DEST"
+  echo "✅ Codex skill ops-terminal-sync 已部署"
+fi
+
 # 2. SSH config 追加（不覆盖已有）
 SSH_CONFIG="$HOME/.ssh/config"
 if ! grep -q "### ops-skills ###" "$SSH_CONFIG" 2>/dev/null; then

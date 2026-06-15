@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ops Terminal Sync"
+  short_description: "Synchronize Deepseek ops skills across machines."
+  default_prompt: "Set up or verify multi-machine terminal skill synchronization."

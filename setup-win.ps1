@@ -1,25 +1,48 @@
-# setup-win.ps1 — Windows 新机一键部署
-# 用法(管理员 PowerShell):
+# setup-win.ps1 - Windows one-click setup
+# Usage:
 #   git clone git@github.com:xinping7841/ops-skills-xinping.git D:\Deepseek
 #   cd D:\Deepseek; powershell -ExecutionPolicy Bypass -File setup-win.ps1
 
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = 'Continue'
 $RepoDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-Write-Host "=== Kun 生态部署 (Windows) ===" -ForegroundColor Cyan
+Write-Host '=== Ops skills setup (Windows) ===' -ForegroundColor Cyan
 
-# 1. Codex 全局指令
-$codexDir = "$env:USERPROFILE\.codex"
-if (Test-Path $codexDir) {
-    Copy-Item "$RepoDir\AGENTS.md" "$codexDir\AGENTS.md" -Force
-    Write-Host "✅ Codex AGENTS.md 已部署" -ForegroundColor Green
+# 1. Codex global instructions
+$codexDir = Join-Path $env:USERPROFILE '.codex'
+if (Test-Path -LiteralPath $codexDir) {
+    Copy-Item -LiteralPath (Join-Path $RepoDir 'AGENTS.md') -Destination (Join-Path $codexDir 'AGENTS.md') -Force
+    Write-Host '[OK] Codex AGENTS.md installed' -ForegroundColor Green
 } else {
-    Write-Host "⚠️  未找到 Codex (.codex)，跳过" -ForegroundColor Yellow
+    Write-Host '[WARN] Codex directory not found; skipped AGENTS.md' -ForegroundColor Yellow
+}
+
+# 1.5 Codex skill
+$skillSource = Join-Path $RepoDir 'codex-skills\ops-terminal-sync'
+$skillRoot = Join-Path $codexDir 'skills'
+$skillDest = Join-Path $skillRoot 'ops-terminal-sync'
+if ((Test-Path -LiteralPath $codexDir) -and (Test-Path -LiteralPath $skillSource)) {
+    New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+    if (Test-Path -LiteralPath $skillDest) {
+        $resolvedRoot = (Resolve-Path -LiteralPath $skillRoot).Path
+        $resolvedDest = (Resolve-Path -LiteralPath $skillDest).Path
+        if ($resolvedDest.StartsWith($resolvedRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Remove-Item -LiteralPath $skillDest -Recurse -Force
+        } else {
+            Write-Host "[WARN] Refusing to replace unexpected skill path: $resolvedDest" -ForegroundColor Yellow
+        }
+    }
+    if (-not (Test-Path -LiteralPath $skillDest)) {
+        Copy-Item -LiteralPath $skillSource -Destination $skillDest -Recurse -Force
+    }
+    Write-Host '[OK] Codex skill ops-terminal-sync installed' -ForegroundColor Green
 }
 
 # 2. SSH config
-$sshConfig = "$env:USERPROFILE\.ssh\config"
-if (-not (Select-String -Path $sshConfig -Pattern "### ops-skills ###" -Quiet -ErrorAction SilentlyContinue)) {
-    Add-Content $sshConfig @"
+$sshDir = Join-Path $env:USERPROFILE '.ssh'
+$sshConfig = Join-Path $sshDir 'config'
+New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
+if (-not (Select-String -Path $sshConfig -Pattern '### ops-skills ###' -Quiet -ErrorAction SilentlyContinue)) {
+    Add-Content -LiteralPath $sshConfig -Encoding UTF8 -Value @'
 
 ### ops-skills ###
 Host github.com
@@ -28,36 +51,37 @@ Host github.com
   IdentityFile ~/.ssh/id_ed25519_nodes
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
-"@
-    Write-Host "✅ SSH github config 已追加" -ForegroundColor Green
+'@
+    Write-Host '[OK] SSH github config appended' -ForegroundColor Green
 } else {
-    Write-Host "⏭️  SSH config 已有 ops-skills 标记，跳过" -ForegroundColor Gray
+    Write-Host '[SKIP] SSH config already has ops-skills marker' -ForegroundColor Gray
 }
 
-# 3. 定时同步 (计划任务)
-$taskName = "Deepseek-Sync"
+# 3. Scheduled sync task
+$taskName = 'Deepseek-Sync'
 $existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-if (-not $existing) {
-    $Action = New-ScheduledTaskAction -Execute "powershell.exe" `
-        -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File $RepoDir\sync.ps1" `
-        -WorkingDirectory $RepoDir
-    $Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) `
-        -RepetitionInterval (New-TimeSpan -Minutes 5) `
-        -RepetitionDuration (New-TimeSpan -Days 3650)
-    $Principal = New-ScheduledTaskPrincipal -UserId "$env:USERNAME" -LogonType Interactive
-    Register-ScheduledTask -TaskName $taskName -Action $Action -Trigger $Trigger -Principal $Principal -Force | Out-Null
-    Write-Host "✅ 计划任务 Deepseek-Sync 已创建（每5分钟）" -ForegroundColor Green
+$syncScript = Join-Path $RepoDir 'sync.ps1'
+$taskArgs = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}"' -f $syncScript
+$Action = New-ScheduledTaskAction -Execute 'powershell.exe' `
+    -Argument $taskArgs `
+    -WorkingDirectory $RepoDir
+$Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) `
+    -RepetitionInterval (New-TimeSpan -Minutes 5) `
+    -RepetitionDuration (New-TimeSpan -Days 3650)
+$Principal = New-ScheduledTaskPrincipal -UserId "$env:USERNAME" -LogonType Interactive
+Register-ScheduledTask -TaskName $taskName -Action $Action -Trigger $Trigger -Principal $Principal -Force | Out-Null
+if ($existing) {
+    Write-Host '[OK] Scheduled task Deepseek-Sync refreshed (every 5 minutes)' -ForegroundColor Green
 } else {
-    Write-Host "⏭️  计划任务已存在，跳过" -ForegroundColor Gray
+    Write-Host '[OK] Scheduled task Deepseek-Sync created (every 5 minutes)' -ForegroundColor Green
 }
 
-# 4. 提醒
-Write-Host ""
-Write-Host "=== 部署完成 ===" -ForegroundColor Cyan
-Write-Host "还需手动操作："
-Write-Host "  1. 确保 ~/.ssh/id_ed25519_nodes 密钥已生成并添加到 GitHub"
-Write-Host "  2. Kun GUI → 设置 → MCP 参考 skill-mcp-servers.md 配置"
-Write-Host "  3. Kun GUI → 设置 → 技能 extraDirs 添加: $RepoDir"
-Write-Host ""
-Write-Host "技能文件已就位："
-Get-ChildItem "$RepoDir\skill-*.md" | ForEach-Object { Write-Host "  $_" }
+Write-Host ''
+Write-Host '=== Setup complete ===' -ForegroundColor Cyan
+Write-Host 'Manual follow-up:'
+Write-Host '  1. Ensure ~/.ssh/id_ed25519_nodes exists and is added to GitHub.'
+Write-Host '  2. Configure Kun GUI MCP using skill-mcp-servers.md.'
+Write-Host "  3. Add this path to Kun skill extraDirs: $RepoDir"
+Write-Host ''
+Write-Host 'Kun skill files:'
+Get-ChildItem -LiteralPath $RepoDir -Filter 'skill-*.md' | ForEach-Object { Write-Host "  $($_.Name)" }

@@ -43,18 +43,22 @@ if [ -d "$HOME/.codex" ]; then
 fi
 
 # 1.5. 同步 Codex skill（codex-skills/ 目录下的专用 skill）
-if [ -d "codex-skills/ops-terminal-sync" ] && [ -d "$HOME/.codex" ]; then
+if [ -d "codex-skills" ] && [ -d "$HOME/.codex" ]; then
   mkdir -p "$HOME/.codex/skills"
-  DEST="$HOME/.codex/skills/ops-terminal-sync"
   SKILLS_ROOT_REAL="$(cd "$HOME/.codex/skills" && pwd -P)"
-  if [ -e "$DEST" ]; then
-    DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
-    case "$DEST_REAL" in
-      "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
-      *) echo "[$(date '+%H:%M:%S')] ❌ 技能目录异常，拒绝覆盖: $DEST_REAL" | tee -a sync.log; exit 1 ;;
-    esac
-  fi
-  cp -R "codex-skills/ops-terminal-sync" "$DEST"
+  for SKILL_SRC in codex-skills/*; do
+    [ -d "$SKILL_SRC" ] || continue
+    SKILL_NAME="$(basename "$SKILL_SRC")"
+    DEST="$HOME/.codex/skills/$SKILL_NAME"
+    if [ -e "$DEST" ]; then
+      DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
+      case "$DEST_REAL" in
+        "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
+        *) echo "[$(date '+%H:%M:%S')] ❌ 技能目录异常，拒绝覆盖: $DEST_REAL" | tee -a sync.log; exit 1 ;;
+      esac
+    fi
+    cp -R "$SKILL_SRC" "$DEST"
+  done
 fi
 
 # 2. 如果有本地改动，先自动提交

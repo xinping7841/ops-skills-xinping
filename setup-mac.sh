@@ -16,19 +16,23 @@ else
 fi
 
 # 1.5 Codex 技能
-if [ -d "$HOME/.codex" ] && [ -d "$REPO_DIR/codex-skills/ops-terminal-sync" ]; then
+if [ -d "$HOME/.codex" ] && [ -d "$REPO_DIR/codex-skills" ]; then
   mkdir -p "$HOME/.codex/skills"
-  DEST="$HOME/.codex/skills/ops-terminal-sync"
   SKILLS_ROOT_REAL="$(cd "$HOME/.codex/skills" && pwd -P)"
-  if [ -e "$DEST" ]; then
-    DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
-    case "$DEST_REAL" in
-      "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
-      *) echo "⚠️  技能目录异常，拒绝覆盖: $DEST_REAL"; exit 1 ;;
-    esac
-  fi
-  cp -R "$REPO_DIR/codex-skills/ops-terminal-sync" "$DEST"
-  echo "✅ Codex skill ops-terminal-sync 已部署"
+  for SKILL_SRC in "$REPO_DIR"/codex-skills/*; do
+    [ -d "$SKILL_SRC" ] || continue
+    SKILL_NAME="$(basename "$SKILL_SRC")"
+    DEST="$HOME/.codex/skills/$SKILL_NAME"
+    if [ -e "$DEST" ]; then
+      DEST_REAL="$(cd "$(dirname "$DEST")" && pwd -P)/$(basename "$DEST")"
+      case "$DEST_REAL" in
+        "$SKILLS_ROOT_REAL"/*) rm -rf "$DEST" ;;
+        *) echo "⚠️  技能目录异常，拒绝覆盖: $DEST_REAL"; exit 1 ;;
+      esac
+    fi
+    cp -R "$SKILL_SRC" "$DEST"
+    echo "✅ Codex skill $SKILL_NAME 已部署"
+  done
 fi
 
 # 2. SSH config 追加（不覆盖已有）

@@ -25,21 +25,25 @@ if ((Test-Path -LiteralPath $AgentsSource) -and (Test-Path -LiteralPath $CodexDi
     Write-SyncLog 'Codex AGENTS.md refreshed.'
 }
 
-$SkillSource = Join-Path $RepoDir 'codex-skills\ops-terminal-sync'
-$SkillDest = Join-Path $CodexDir 'skills\ops-terminal-sync'
-if ((Test-Path -LiteralPath $SkillSource) -and (Test-Path -LiteralPath $CodexDir)) {
-    New-Item -ItemType Directory -Path (Split-Path -Parent $SkillDest) -Force | Out-Null
-    if (Test-Path -LiteralPath $SkillDest) {
-        $ResolvedSkillsRoot = (Resolve-Path -LiteralPath (Join-Path $CodexDir 'skills')).Path
-        $ResolvedSkillDest = (Resolve-Path -LiteralPath $SkillDest).Path
-        if (-not $ResolvedSkillDest.StartsWith($ResolvedSkillsRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-            Write-SyncLog "ERROR: refusing to remove unexpected skill path: $ResolvedSkillDest"
-            exit 1
+$SkillSourceRoot = Join-Path $RepoDir 'codex-skills'
+$SkillRoot = Join-Path $CodexDir 'skills'
+if ((Test-Path -LiteralPath $SkillSourceRoot) -and (Test-Path -LiteralPath $CodexDir)) {
+    New-Item -ItemType Directory -Path $SkillRoot -Force | Out-Null
+    $ResolvedSkillsRoot = (Resolve-Path -LiteralPath $SkillRoot).Path
+    Get-ChildItem -LiteralPath $SkillSourceRoot -Directory | ForEach-Object {
+        $SkillSource = $_.FullName
+        $SkillDest = Join-Path $SkillRoot $_.Name
+        if (Test-Path -LiteralPath $SkillDest) {
+            $ResolvedSkillDest = (Resolve-Path -LiteralPath $SkillDest).Path
+            if (-not $ResolvedSkillDest.StartsWith($ResolvedSkillsRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Write-SyncLog "ERROR: refusing to remove unexpected skill path: $ResolvedSkillDest"
+                exit 1
+            }
+            Remove-Item -LiteralPath $SkillDest -Recurse -Force
         }
-        Remove-Item -LiteralPath $SkillDest -Recurse -Force
+        Copy-Item -LiteralPath $SkillSource -Destination $SkillDest -Recurse -Force
+        Write-SyncLog "Codex skill $($_.Name) refreshed."
     }
-    Copy-Item -LiteralPath $SkillSource -Destination $SkillDest -Recurse -Force
-    Write-SyncLog 'Codex skill ops-terminal-sync refreshed.'
 }
 
 $status = & git status --porcelain

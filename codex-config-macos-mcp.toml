@@ -5,7 +5,7 @@
 [mcp_servers.filesystem]
 command = "__NODE_BIN__"
 args = [
-  "__NPM_ROOT__/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
+  "__NPM_ROOT__/@modelcontextprotocol/server-filesystem/dist/index.js",
   "__HOME__/Documents/Deepseek"
 ]
 startup_timeout_sec = 30
@@ -13,7 +13,7 @@ startup_timeout_sec = 30
 [mcp_servers.context7]
 command = "__NODE_BIN__"
 args = [
-  "__NPM_ROOT__/node_modules/@upstash/context7-mcp/dist/index.js"
+  "__NPM_ROOT__/@upstash/context7-mcp/dist/index.js"
 ]
 startup_timeout_sec = 30
 

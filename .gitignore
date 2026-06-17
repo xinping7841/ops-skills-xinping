@@ -5,18 +5,28 @@
 ._*
 
 # 临时文件
+sync.log
+.sync.lock/
+.sync-reports/
 *.tmp
 *.swp
 *.swo
 *~
+*.bak
+*.backup
+*.tar.gz
+*_config.txt
+*_config_backup.txt
+*-settings.json
 
 # 敏感信息
 *.pem
 *.key
 id_*
 known_hosts*
+.env
+.env.*
 
 # 编辑器和IDE
 .vscode/
 .idea/
-sync.log

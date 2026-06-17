@@ -19,6 +19,14 @@
 
 ## 二、协作规则（所有智能体必须遵守）
 
+### GitHub 唯一事实源
+
+- `~/Documents/Deepseek` / `D:\Deepseek` 的 GitHub 仓库是技能、协作规则、MCP 模板的唯一事实源
+- `~/.codex/skills`、`~/.agents/skills`、Kun 本机配置都视为派生目录，不作为长期源头
+- 新增 Codex 技能必须进入 `codex-skills/<skill-name>/`
+- 新增 Kun/通用技能必须进入 `skill-<主题>.md`
+- 本机已有但仓库没有的技能称为 orphan skill，只生成审计报告，不自动提交
+
 ### 开工前
 ```bash
 git pull --rebase   # 拿最新
@@ -26,14 +34,29 @@ git pull --rebase   # 拿最新
 
 ### 改完代码/文档后
 ```bash
-git add -A
+git add <白名单文件>
 git commit -m "描述改动"
 git push
 ```
 
+自动同步脚本只允许自动提交以下白名单：
+
+- `AGENTS.md`
+- `skill-*.md`
+- `codex-skills/**`
+- `setup-*.sh`、`setup-*.ps1`
+- `auto-sync.sh`、`sync.ps1`、`sync-hidden.vbs`
+- `codex-config-*.toml`
+- `scripts/**`
+- `machine-profiles/**`
+- `mcp-templates/**`
+
+禁止自动提交机器私有文件、token、`.env*`、日志、备份、路由器配置导出、`*-settings.json`。
+
 ### 冲突处理
 - 出现冲突时**不要自动解决**，暂停并等人裁决
 - 大改动开分支，不阻塞其他机器
+- 同步脚本遇到 `git pull --rebase` 冲突必须停止
 
 ### 文件命名
 - 技能文档：`skill-<主题>.md`（Kun 专用）

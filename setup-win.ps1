@@ -97,6 +97,15 @@ if ($existing) {
     Write-Host '[OK] Scheduled task Deepseek-Sync created (every 5 minutes)' -ForegroundColor Green
 }
 
+# 4. Run one immediate sync so Codex UI skill registrations are available now.
+$syncScript = Join-Path $RepoDir 'sync.ps1'
+if (Test-Path -LiteralPath $syncScript) {
+    Write-Host '[INFO] Running initial sync...' -ForegroundColor Cyan
+    powershell -ExecutionPolicy Bypass -File $syncScript
+} else {
+    Write-Host '[WARN] sync.ps1 not found; initial sync skipped' -ForegroundColor Yellow
+}
+
 Write-Host ''
 Write-Host '=== Setup complete ===' -ForegroundColor Cyan
 Write-Host 'Manual follow-up:'

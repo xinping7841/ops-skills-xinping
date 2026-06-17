@@ -32,7 +32,21 @@ Use this skill to keep the shared ops skills repository working across Codex, Ku
 6. Verify local Codex install:
    - `~/.codex/AGENTS.md` matches the repo `AGENTS.md`.
    - `~/.codex/skills/ops-terminal-sync/SKILL.md` exists after setup or sync.
+   - `~/.agents/skills/<skill>` is linked or copied for UI visibility.
+   - `~/.codex/config.toml` has `[skills.<skill>] path = ...` entries for visible skills.
 7. Commit and push script or skill changes so other machines receive them.
+
+## Source-of-truth model
+
+- GitHub repo `xinping7841/ops-skills-xinping` is the only long-term source for shared instructions, MCP templates, and shared skills.
+- Local Codex/Kun directories are derived state:
+  - `~/.codex/skills`
+  - `~/.agents/skills`
+  - `~/.codex/config.toml` skill registrations
+  - Kun GUI extraDirs / MCP runtime config
+- Add new shared Codex skills under `codex-skills/<skill-name>/`.
+- Add Kun/common markdown skills as `skill-<topic>.md`.
+- Local-only skills that are not in the repo are "orphan skills"; audit and report them, but do not auto-import or auto-commit them.
 
 ## Guardrails
 
@@ -41,6 +55,18 @@ Use this skill to keep the shared ops skills repository working across Codex, Ku
 - If `git pull --rebase` reports conflicts, stop and report the conflicted files instead of guessing a resolution.
 - Keep machine-specific paths out of `sync.ps1` and `auto-sync.sh` unless they are fallback search paths.
 - Use UTF-8 when reading or writing Chinese markdown files and PowerShell scripts.
+- Sync scripts must use a local `.sync.lock` and skip when another sync is already running.
+- Sync scripts must not use broad `git add -A`. Stage only the documented whitelist:
+  - `AGENTS.md`
+  - `skill-*.md`
+  - `codex-skills/**`
+  - `setup-*.sh`, `setup-*.ps1`
+  - `auto-sync.sh`, `sync.ps1`, `sync-hidden.vbs`
+  - `codex-config-*.toml`
+  - `scripts/**`
+  - `machine-profiles/**`
+  - `mcp-templates/**`
+- Never auto-commit machine-private files, tokens, `.env*`, logs, backups, router exports, or `*-settings.json`.
 
 ## Validation Commands
 
@@ -60,5 +86,6 @@ macOS/Linux:
 launchctl list | grep com.ops-skills.sync || true
 bash ./auto-sync.sh "$PWD"
 test -f "$HOME/.codex/skills/ops-terminal-sync/SKILL.md"
+scripts/audit-skills.sh
 git status --short
 ```

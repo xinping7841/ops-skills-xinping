@@ -17,24 +17,26 @@ if (Test-Path -LiteralPath $codexDir) {
 }
 
 # 1.5 Codex skill
-$skillSource = Join-Path $RepoDir 'codex-skills\ops-terminal-sync'
+$skillSourceRoot = Join-Path $RepoDir 'codex-skills'
 $skillRoot = Join-Path $codexDir 'skills'
-$skillDest = Join-Path $skillRoot 'ops-terminal-sync'
-if ((Test-Path -LiteralPath $codexDir) -and (Test-Path -LiteralPath $skillSource)) {
+if ((Test-Path -LiteralPath $codexDir) -and (Test-Path -LiteralPath $skillSourceRoot)) {
     New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
-    if (Test-Path -LiteralPath $skillDest) {
-        $resolvedRoot = (Resolve-Path -LiteralPath $skillRoot).Path
-        $resolvedDest = (Resolve-Path -LiteralPath $skillDest).Path
-        if ($resolvedDest.StartsWith($resolvedRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-            Remove-Item -LiteralPath $skillDest -Recurse -Force
-        } else {
-            Write-Host "[WARN] Refusing to replace unexpected skill path: $resolvedDest" -ForegroundColor Yellow
+    $resolvedRoot = (Resolve-Path -LiteralPath $skillRoot).Path
+    Get-ChildItem -LiteralPath $skillSourceRoot -Directory | ForEach-Object {
+        $skillSource = $_.FullName
+        $skillDest = Join-Path $skillRoot $_.Name
+        if (Test-Path -LiteralPath $skillDest) {
+            $resolvedDest = (Resolve-Path -LiteralPath $skillDest).Path
+            if ($resolvedDest.StartsWith($resolvedRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                Remove-Item -LiteralPath $skillDest -Recurse -Force
+            } else {
+                Write-Host "[WARN] Refusing to replace unexpected skill path: $resolvedDest" -ForegroundColor Yellow
+                return
+            }
         }
-    }
-    if (-not (Test-Path -LiteralPath $skillDest)) {
         Copy-Item -LiteralPath $skillSource -Destination $skillDest -Recurse -Force
+        Write-Host "[OK] Codex skill $($_.Name) installed" -ForegroundColor Green
     }
-    Write-Host '[OK] Codex skill ops-terminal-sync installed' -ForegroundColor Green
 }
 
 # 1.5. Codex 技能同步

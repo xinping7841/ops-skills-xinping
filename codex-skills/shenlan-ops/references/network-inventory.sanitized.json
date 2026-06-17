@@ -1,0 +1,59 @@
+{
+  "updatedAt": "2026-06-16T16:20:00+08:00",
+  "site": "shenlan",
+  "security": "sanitized-no-plaintext-passwords",
+  "sourceOfTruth": {
+    "currentLocalRoot": "D:\\IDE\\AI\\network-ops",
+    "recommendedServerRoot": "192.168.50.121:/opt/shenlan-ops",
+    "handoffDocument": "D:\\IDE\\AI\\network-ops\\handoff\\shenlan-network-handoff-2026-06-16.md",
+    "sensitiveInventoryJson": "D:\\IDE\\AI\\network-ops\\inventory\\shenlan-network-inventory.json"
+  },
+  "devices": [
+    {
+      "id": "openwrt-main",
+      "name": "OpenWrt-Main-Router",
+      "role": "main-router-egress-nat-qos-monitoring",
+      "managementIps": ["192.168.99.3", "192.168.7.1"],
+      "ssh": { "host": "192.168.99.3", "user": "root", "keyAuth": true }
+    },
+    {
+      "id": "h3c-core",
+      "name": "H3C-Core-Switch",
+      "role": "core-l3-gateway-dhcp-vlan-routing",
+      "managementIps": ["192.168.99.1"],
+      "ssh": { "host": "192.168.99.1", "user": "admin", "keyAuth": false, "auth": "password-ref" },
+      "console": { "baud": 9600, "format": "8N1", "currentWindowsPort": "COM1", "historicalPort": "COM3" }
+    },
+    {
+      "id": "er5200g3-ac",
+      "name": "ER5200G3-AC",
+      "role": "ac-miniap-controller-router-mode-dhcp-disabled",
+      "managementIps": ["192.168.99.4", "192.168.9.254"],
+      "web": ["http://192.168.99.4/router_index.html", "http://192.168.9.254"]
+    }
+  ],
+  "vlans": [
+    { "vlan": 10, "gateway": "192.168.10.1/24", "purpose": "office-wired" },
+    { "vlan": 19, "gateway": "192.168.19.1/24", "purpose": "reception" },
+    { "vlan": 20, "gateway": "192.168.20.1/24", "purpose": "ap-wireless-management" },
+    { "vlan": 30, "gateway": "192.168.30.1/24", "purpose": "nas-storage" },
+    { "vlan": 40, "gateway": "192.168.40.1/24", "purpose": "monitoring" },
+    { "vlan": 50, "gateway": "192.168.50.1/23", "purpose": "showroom-server-central-control" },
+    { "vlan": 60, "gateway": "192.168.60.1/23", "purpose": "wireless-service" },
+    { "vlan": 70, "gateway": "192.168.70.1/24", "purpose": "workstation" },
+    { "vlan": 80, "gateway": "192.168.80.1/24", "purpose": "hall-2" },
+    { "vlan": 90, "gateway": "192.168.90.1/24", "purpose": "xr-studio" },
+    { "vlan": 99, "gateway": "192.168.99.1/24", "purpose": "core-router-ac-management" },
+    { "vlan": 11, "gateway": "192.168.11.1/24", "purpose": "room-vlan-a" },
+    { "vlan": 12, "gateway": "192.168.12.1/24", "purpose": "room-vlan-b" },
+    { "vlan": 13, "gateway": "192.168.13.1/24", "purpose": "room-vlan-c" },
+    { "vlan": 110, "gateway": "192.168.110.1/24", "purpose": "reserved-business" },
+    { "vlan": 120, "gateway": "192.168.120.1/24", "purpose": "free-dhcp-ports" },
+    { "vlan": 201, "gateway": "172.16.201.254/24", "purpose": "reserved-business" }
+  ],
+  "machineReadableState": {
+    "latestStatus": "D:\\IDE\\AI\\network-ops\\state\\latest-status.json",
+    "backupLog": "D:\\IDE\\AI\\network-ops\\state\\backup-log.json",
+    "changeLog": "D:\\IDE\\AI\\network-ops\\state\\change-log.json"
+  }
+}

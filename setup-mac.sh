@@ -7,6 +7,27 @@ set -e
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "=== Kun 生态部署 ==="
 
+link_codex_skill_for_ui() {
+  local skill_name="$1"
+  local src="$HOME/.codex/skills/$skill_name"
+  local dst="$HOME/.agents/skills/$skill_name"
+
+  [ -d "$src" ] || return 0
+  mkdir -p "$HOME/.agents/skills"
+
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    return 0
+  fi
+
+  if [ -e "$dst" ]; then
+    echo "⚠️  ~/.agents/skills 已有同名技能，跳过: $skill_name"
+    return 0
+  fi
+
+  ln -s "$src" "$dst"
+  echo "✅ Codex UI skill $skill_name 已链接"
+}
+
 # 1. Codex 全局指令
 if [ -d "$HOME/.codex" ]; then
   cp "$REPO_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
@@ -31,7 +52,15 @@ if [ -d "$HOME/.codex" ] && [ -d "$REPO_DIR/codex-skills" ]; then
       esac
     fi
     cp -R "$SKILL_SRC" "$DEST"
+    link_codex_skill_for_ui "$SKILL_NAME"
     echo "✅ Codex skill $SKILL_NAME 已部署"
+  done
+fi
+
+if [ -d "$HOME/.codex/skills" ]; then
+  for SKILL_DEST in "$HOME/.codex/skills"/*; do
+    [ -d "$SKILL_DEST" ] && [ -f "$SKILL_DEST/SKILL.md" ] || continue
+    link_codex_skill_for_ui "$(basename "$SKILL_DEST")"
   done
 fi
 

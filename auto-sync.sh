@@ -20,6 +20,26 @@ fi
 
 cd "$REPO_DIR" || exit 1
 
+link_codex_skill_for_ui() {
+  skill_name="$1"
+  src="$HOME/.codex/skills/$skill_name"
+  dst="$HOME/.agents/skills/$skill_name"
+
+  [ -d "$src" ] || return 0
+  mkdir -p "$HOME/.agents/skills"
+
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    return 0
+  fi
+
+  if [ -e "$dst" ]; then
+    echo "[$(date '+%H:%M:%S')] ⚠️ ~/.agents/skills 已有同名技能，跳过: $skill_name" | tee -a sync.log
+    return 0
+  fi
+
+  ln -s "$src" "$dst"
+}
+
 # 1. 同步到 Codex 全局目录（Codex 每次启动自动加载）
 if [ -d "$HOME/.codex" ]; then
   # AGENTS.md
@@ -39,6 +59,7 @@ if [ -d "$HOME/.codex" ]; then
       echo ""
       cat "$skill_md"
     } > "$skill_dir/SKILL.md"
+    link_codex_skill_for_ui "$skill_name"
   done
 fi
 
@@ -58,6 +79,14 @@ if [ -d "codex-skills" ] && [ -d "$HOME/.codex" ]; then
       esac
     fi
     cp -R "$SKILL_SRC" "$DEST"
+    link_codex_skill_for_ui "$SKILL_NAME"
+  done
+fi
+
+if [ -d "$HOME/.codex/skills" ]; then
+  for SKILL_DEST in "$HOME/.codex/skills"/*; do
+    [ -d "$SKILL_DEST" ] && [ -f "$SKILL_DEST/SKILL.md" ] || continue
+    link_codex_skill_for_ui "$(basename "$SKILL_DEST")"
   done
 fi
 

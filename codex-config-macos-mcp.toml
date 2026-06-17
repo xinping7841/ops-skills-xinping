@@ -1,5 +1,5 @@
 # Codex macOS MCP template
-# Copy the relevant blocks into ~/.codex/config.toml, or run setup-mac.sh.
+# Copy the relevant blocks into ~/.codex/config.toml, or run setup-codex-macos.sh.
 # Secrets such as GitHub and Context7 tokens must stay in local environment variables.
 
 [mcp_servers.filesystem]

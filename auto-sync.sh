@@ -24,20 +24,26 @@ link_codex_skill_for_ui() {
   skill_name="$1"
   src="$HOME/.codex/skills/$skill_name"
   dst="$HOME/.agents/skills/$skill_name"
+  config="$HOME/.codex/config.toml"
 
   [ -d "$src" ] || return 0
   mkdir -p "$HOME/.agents/skills"
 
   if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-    return 0
-  fi
-
-  if [ -e "$dst" ]; then
+    :
+  elif [ -e "$dst" ]; then
     echo "[$(date '+%H:%M:%S')] ⚠️ ~/.agents/skills 已有同名技能，跳过: $skill_name" | tee -a sync.log
-    return 0
+  else
+    ln -s "$src" "$dst"
   fi
 
-  ln -s "$src" "$dst"
+  if [ -f "$config" ] && ! grep -q "^\[skills\.$skill_name\]" "$config"; then
+    {
+      echo ""
+      echo "[skills.$skill_name]"
+      echo "path = \"$src\""
+    } >> "$config"
+  fi
 }
 
 # 1. 同步到 Codex 全局目录（Codex 每次启动自动加载）

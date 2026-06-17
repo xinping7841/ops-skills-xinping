@@ -11,21 +11,28 @@ link_codex_skill_for_ui() {
   local skill_name="$1"
   local src="$HOME/.codex/skills/$skill_name"
   local dst="$HOME/.agents/skills/$skill_name"
+  local config="$HOME/.codex/config.toml"
 
   [ -d "$src" ] || return 0
   mkdir -p "$HOME/.agents/skills"
 
   if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-    return 0
-  fi
-
-  if [ -e "$dst" ]; then
+    :
+  elif [ -e "$dst" ]; then
     echo "⚠️  ~/.agents/skills 已有同名技能，跳过: $skill_name"
-    return 0
+  else
+    ln -s "$src" "$dst"
+    echo "✅ Codex UI skill $skill_name 已链接"
   fi
 
-  ln -s "$src" "$dst"
-  echo "✅ Codex UI skill $skill_name 已链接"
+  if [ -f "$config" ] && ! grep -q "^\[skills\.$skill_name\]" "$config"; then
+    {
+      echo ""
+      echo "[skills.$skill_name]"
+      echo "path = \"$src\""
+    } >> "$config"
+    echo "✅ Codex UI skill $skill_name 已注册"
+  fi
 }
 
 # 1. Codex 全局指令

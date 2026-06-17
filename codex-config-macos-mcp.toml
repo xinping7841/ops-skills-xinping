@@ -1,0 +1,50 @@
+# Codex macOS MCP template
+# Copy the relevant blocks into ~/.codex/config.toml, or run setup-mac.sh.
+# Secrets such as GitHub and Context7 tokens must stay in local environment variables.
+
+[mcp_servers.filesystem]
+command = "__NODE_BIN__"
+args = [
+  "__NPM_ROOT__/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js",
+  "__HOME__/Documents/Deepseek"
+]
+startup_timeout_sec = 30
+
+[mcp_servers.context7]
+command = "__NODE_BIN__"
+args = [
+  "__NPM_ROOT__/node_modules/@upstash/context7-mcp/dist/index.js"
+]
+startup_timeout_sec = 30
+
+[mcp_servers.playwright]
+command = "__NPX_BIN__"
+args = [ "-y", "@playwright/mcp@latest" ]
+startup_timeout_sec = 120
+
+[mcp_servers.github]
+command = "__NPX_BIN__"
+args = [ "-y", "@modelcontextprotocol/server-github" ]
+startup_timeout_sec = 120
+
+# Enable these from Codex Desktop if the app has not generated them yet.
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true

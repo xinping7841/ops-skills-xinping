@@ -60,9 +60,9 @@ Host github.com
 # 3. Scheduled sync task
 $taskName = 'Deepseek-Sync'
 $existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-$syncScript = Join-Path $RepoDir 'sync.ps1'
-$taskArgs = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}"' -f $syncScript
-$Action = New-ScheduledTaskAction -Execute 'powershell.exe' `
+$hiddenLauncher = Join-Path $RepoDir 'sync-hidden.vbs'
+$taskArgs = '//B //NoLogo "{0}"' -f $hiddenLauncher
+$Action = New-ScheduledTaskAction -Execute 'wscript.exe' `
     -Argument $taskArgs `
     -WorkingDirectory $RepoDir
 $Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) `

@@ -37,6 +37,25 @@ if ((Test-Path -LiteralPath $codexDir) -and (Test-Path -LiteralPath $skillSource
     Write-Host '[OK] Codex skill ops-terminal-sync installed' -ForegroundColor Green
 }
 
+# 1.5. Codex 技能同步
+if (Test-Path $codexDir) {
+    Get-ChildItem "$RepoDir\skill-*.md" | ForEach-Object {
+        $skillName = $_.BaseName -replace '^skill-', ''
+        $skillDir = "$codexDir\skills\$skillName"
+        New-Item -ItemType Directory -Force -Path $skillDir | Out-Null
+        $firstLine = (Get-Content $_ -TotalCount 1) -replace '^# ', ''
+        @"
+---
+name: $skillName
+description: $firstLine
+---
+
+$(Get-Content $_ -Raw)
+"@ | Set-Content "$skillDir\SKILL.md" -Force
+    }
+    Write-Host "✅ Codex 技能已同步 ($((Get-ChildItem $RepoDir\skill-*.md).Count) 个)" -ForegroundColor Green
+}
+
 # 2. SSH config
 $sshDir = Join-Path $env:USERPROFILE '.ssh'
 $sshConfig = Join-Path $sshDir 'config'

@@ -20,12 +20,29 @@ fi
 
 cd "$REPO_DIR" || exit 1
 
-# 1. 同步 AGENTS.md 到 Codex 全局目录（Codex 每次启动自动加载）
-if [ -f "AGENTS.md" ] && [ -d "$HOME/.codex" ]; then
-  cp AGENTS.md "$HOME/.codex/AGENTS.md"
+# 1. 同步到 Codex 全局目录（Codex 每次启动自动加载）
+if [ -d "$HOME/.codex" ]; then
+  # AGENTS.md
+  [ -f "AGENTS.md" ] && cp AGENTS.md "$HOME/.codex/AGENTS.md"
+  # skill-*.md → Codex skills/
+  for skill_md in skill-*.md; do
+    [ -f "$skill_md" ] || continue
+    skill_name="${skill_md#skill-}"
+    skill_name="${skill_name%.md}"
+    skill_dir="$HOME/.codex/skills/$skill_name"
+    mkdir -p "$skill_dir"
+    {
+      echo "---"
+      echo "name: $skill_name"
+      echo "description: $(head -1 "$skill_md" | sed 's/^# //')"
+      echo "---"
+      echo ""
+      cat "$skill_md"
+    } > "$skill_dir/SKILL.md"
+  done
 fi
 
-# 1.5. 同步 Codex skill（Codex 重启后自动发现）
+# 1.5. 同步 Codex skill（codex-skills/ 目录下的专用 skill）
 if [ -d "codex-skills/ops-terminal-sync" ] && [ -d "$HOME/.codex" ]; then
   mkdir -p "$HOME/.codex/skills"
   DEST="$HOME/.codex/skills/ops-terminal-sync"

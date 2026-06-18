@@ -345,3 +345,5 @@ Interpretation:
 - OpenWrt/WAN2/DNS are not the remaining wireless bottleneck.
 - Wireless instability is likely AP/AC/H3C wireless-side jitter: RF channel/interference, AP steering/roaming/load-balancing, AP uplink/trunk, or ER5200G3 AC settings.
 - ER5200G3 AC management `http://192.168.99.4/router_index.html` is reachable from Wi-Fi; next step is to inspect AP status, channels, widths, power, client RSSI, roaming/steering, load balancing, and AP uplink errors.
+
+Follow-up decision at about 2026-06-18 11:05: keep the current OpenWrt/DNS/routing state unchanged and wait for later WAN1/SDWAN upgrade work. 12700K is currently troubleshooting the wireless AP access/jitter issue. Do not make further OpenWrt DNS or routing changes unless the user explicitly resumes that work.

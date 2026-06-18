@@ -1,6 +1,8 @@
 # Shenlan Network Ops Latest Handoff
 
-Updated: 2026-06-18 10:55 Asia/Shanghai
+Updated: 2026-06-18 11:05 Asia/Shanghai
+
+Latest decision: 2026-06-18 11:05 Asia/Shanghai. Keep the current OpenWrt/DNS/routing state unchanged while 12700K continues troubleshooting the wireless AP access/jitter issue. Do not make further OpenWrt DNS or routing changes unless the user explicitly resumes this work. Current priority remains stable domestic access; WAN1/SDWAN foreign access remains best-effort pending later upgrade.
 
 Latest change: 2026-06-18 10:55 Asia/Shanghai. Domestic stability was made the priority because WAN1/SDWAN is currently not reliable enough to handle foreign access. OpenWrt client-facing DNS remains `192.168.99.3`, but dnsmasq upstreams were changed to domestic-only DNS `223.5.5.5`, `119.29.29.29`, and `114.114.114.114` with `allservers=1`; WAN1 DNS `192.168.77.1`, Beijing Telecom `219.141.136.10`, and domain-specific foreign upstream rules were removed from dnsmasq's `server` list. WAN2 remains the default route. Wired domestic tests were stable; wireless domestic tests still showed periodic 2.5-5s TCP connect stalls while pings to the wireless gateway had 100-240ms spikes, pointing to wireless/AP/AC/H3C-side jitter rather than OpenWrt DNS/WAN2. See `D:\IDE\AI\network-ops\handoff\shenlan-dnsmasq-full-wan1-split-2026-06-18-1015.md`.
 
@@ -39,15 +41,16 @@ The Shenlan site network is online. OpenWrt x86 N150 replaced ER5200G3 as the ma
 
 Near-term work:
 
-1. Observe the 2026-06-18 10:55 domestic-priority DNS change: WAN2 is still the global default route, client DNS remains centralized on OpenWrt `192.168.99.3`, dnsmasq now uses domestic-only upstreams `223.5.5.5`, `119.29.29.29`, and `114.114.114.114` with `allservers=1`, and WAN1/SDWAN is no longer used as a DNS dependency. Watch whether wired domestic browsing remains stable.
-2. Fix wireless/AP-side jitter. Wireless client `192.168.60.74` had 0% packet loss but frequent latency spikes to `192.168.60.1` and `192.168.99.3`, plus repeated 2.5-5s TCP connect stalls to domestic sites. ER5200G3 AC at `192.168.99.4` is reachable; next step is to inspect AP online status, channel, channel width, power, roaming/steering/load-balancing settings, and AP uplink/trunk ports.
-3. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
-4. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
-5. Continue observing DHCP/DNS stability after the H3C DNS fix.
-6. Observe the OpenWrt host upload limits. `192.168.10.16` and `192.168.10.60` are each limited to about `8Mbit/s` WAN upload using nftables `limit rate over 1000 kbytes/second drop`; counters remained `0` during the 18:20 flash-disconnect diagnosis.
-7. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
-8. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
-9. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
+1. Hold the current OpenWrt DNS/routing state while 12700K investigates wireless AP access/jitter. Do not change OpenWrt DNS/routing again unless explicitly requested.
+2. Observe the 2026-06-18 10:55 domestic-priority DNS change: WAN2 is still the global default route, client DNS remains centralized on OpenWrt `192.168.99.3`, dnsmasq now uses domestic-only upstreams `223.5.5.5`, `119.29.29.29`, and `114.114.114.114` with `allservers=1`, and WAN1/SDWAN is no longer used as a DNS dependency. Watch whether wired domestic browsing remains stable.
+3. Fix wireless/AP-side jitter. Wireless client `192.168.60.74` had 0% packet loss but frequent latency spikes to `192.168.60.1` and `192.168.99.3`, plus repeated 2.5-5s TCP connect stalls to domestic sites. ER5200G3 AC at `192.168.99.4` is reachable; 12700K is currently investigating AP access/jitter. Next step is to inspect AP online status, channel, channel width, power, roaming/steering/load-balancing settings, and AP uplink/trunk ports.
+4. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
+5. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
+6. Continue observing DHCP/DNS stability after the H3C DNS fix.
+7. Observe the OpenWrt host upload limits. `192.168.10.16` and `192.168.10.60` are each limited to about `8Mbit/s` WAN upload using nftables `limit rate over 1000 kbytes/second drop`; counters remained `0` during the 18:20 flash-disconnect diagnosis.
+8. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
+9. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
+10. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
 
 ## Device Roles
 
@@ -76,12 +79,12 @@ Client DHCP DNS must be:
 OpenWrt upstream DNS currently standardized to:
 
 ```text
-192.168.77.1
+223.5.5.5
+119.29.29.29
+114.114.114.114
 ```
 
-Reason: `www.linkedin.com` resolved incorrectly through some DNS paths. Testing with client DNS `192.168.99.3` resolved correctly. OpenWrt DNS interception for TCP/UDP 53 from LAN side is active.
-
-Latest observation at 2026-06-17 17:26: OpenWrt `nslookup www.linkedin.com 127.0.0.1` and `nslookup www.linkedin.com 192.168.77.1` both returned `104.18.41.41` / `172.64.146.215`. DNS redirect rule counters were increasing.
+Reason: 2026-06-18 domestic stability priority. WAN1/SDWAN DNS `192.168.77.1` and Beijing Telecom `219.141.136.10` were removed from the client DNS upstream path. dnsmasq uses these three domestic upstreams with `allservers=1`; OpenWrt DNS interception for TCP/UDP 53 from LAN side remains active.
 
 ## H3C DHCP DNS Fix Completed
 

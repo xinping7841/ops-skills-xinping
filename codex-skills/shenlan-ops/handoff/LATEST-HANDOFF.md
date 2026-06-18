@@ -1,6 +1,8 @@
 # Shenlan Network Ops Latest Handoff
 
-Updated: 2026-06-18 08:20 Asia/Shanghai
+Updated: 2026-06-18 09:50 Asia/Shanghai
+
+Latest change: 2026-06-18 09:50 Asia/Shanghai. Morning disconnect diagnosis found that OpenWrt itself had intermittent public HTTP failures, so the issue was not isolated to the Mac/VLAN16 client. OpenWrt was changed so WAN2/direct optical modem is the global default route, WAN1/SDWAN is retained for marked policy traffic, and dnsmasq upstream DNS was changed to Beijing Telecom `219.141.136.10` with AAAA filtering. A starter foreign-domain nft mark set was created, but its cron refresh is currently disabled because the installed dnsmasq has `no-ipset no-nftset` and the helper resolver may add DNS pressure. See `D:\IDE\AI\network-ops\handoff\shenlan-wan2-default-dns-adjustment-2026-06-18-0950.md`.
 
 Latest probe expansion: 2026-06-18 08:20 Asia/Shanghai. Added HTTP/HTTPS and DNS health probes to OpenWrt 1-minute collector so future public ICMP loss can be distinguished from real web/DNS reachability failure. New files: `/root/shenlan-usage/health/http-health-YYYY-MM-DD.csv` and `/root/shenlan-usage/health/dns-health-YYYY-MM-DD.csv`. See `D:\IDE\AI\network-ops\handoff\shenlan-http-dns-health-probes-2026-06-18-0820.md`.
 
@@ -33,15 +35,14 @@ The Shenlan site network is online. OpenWrt x86 N150 replaced ER5200G3 as the ma
 
 Near-term work:
 
-1. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
-2. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
-3. Continue observing DHCP/DNS stability after the H3C DNS fix. OpenWrt DNS was rechecked at 17:26 and LinkedIn resolution remains correct through `127.0.0.1` and upstream `192.168.77.1`.
-4. Observe the new OpenWrt host upload limits. `192.168.10.16` and `192.168.10.60` are each limited to about `8Mbit/s` WAN upload using nftables `limit rate over 1000 kbytes/second drop`; counters remained `0` during the 18:20 flash-disconnect diagnosis.
-5. Inspect WAN2 physical path/cable/optical modem if disconnect reports continue, because OpenWrt recorded a real `eth2` link down/up and high `eth2` rx_dropped even though WAN1 remains the preferred default route.
-6. Design VLAN-based WAN1/WAN2 policy routing, but do not implement until user confirms which VLANs/hosts should use WAN2/direct optical modem.
-7. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
-8. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
-9. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
+1. Observe the 2026-06-18 09:50 WAN/DNS change: WAN2 is now the global default route, WAN1 remains available for marked policy traffic, and dnsmasq uses Beijing Telecom `219.141.136.10` with AAAA filtering. Watch whether domestic browsing stabilizes and whether foreign services route/resolve as intended.
+2. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
+3. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
+4. Continue observing DHCP/DNS stability after the H3C DNS fix.
+5. Observe the OpenWrt host upload limits. `192.168.10.16` and `192.168.10.60` are each limited to about `8Mbit/s` WAN upload using nftables `limit rate over 1000 kbytes/second drop`; counters remained `0` during the 18:20 flash-disconnect diagnosis.
+6. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
+7. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
+8. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
 
 ## Device Roles
 
@@ -361,6 +362,7 @@ Do not implement until user confirms which VLANs should use which WAN.
 
 ```text
 D:\IDE\AI\network-ops\handoff\LATEST-HANDOFF.md
+D:\IDE\AI\network-ops\handoff\shenlan-wan2-default-dns-adjustment-2026-06-18-0950.md
 D:\IDE\AI\network-ops\handoff\shenlan-flap-traffic-stage-summary-2026-06-18.md
 D:\IDE\AI\network-ops\handoff\shenlan-24h-health-observation-setup-2026-06-17-1835.md
 D:\IDE\AI\network-ops\handoff\shenlan-flap-diagnosis-nlbwmon-tuning-2026-06-17-1820.md

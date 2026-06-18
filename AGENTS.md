@@ -110,6 +110,7 @@ Restart-Service sshd
 |------|------|
 | `skill-ssh-tailscale.md` | SSH 免密 + Tailscale 拓扑（含12700k/lk402配置细节） |
 | `skill-mcp-servers.md` | MCP 服务器配置指南 |
+| `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
 | `AGENTS.md` | 本文件，通用协作指令 |
 
 ---
@@ -160,6 +161,7 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 |------|----------|
 | `skill-ssh-tailscale.md` | SSH 连接、Tailscale 组网、新机器上线 |
 | `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
+| `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
 
 如需修改这些文件，改完后提交：
 ```bash

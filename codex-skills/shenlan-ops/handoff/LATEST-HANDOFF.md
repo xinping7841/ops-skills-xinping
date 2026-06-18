@@ -1,6 +1,7 @@
-# Shenlan Network Ops Latest Handoff
+﻿# Shenlan Network Ops Latest Handoff
 
 Updated: 2026-06-18 12:50 Asia/Shanghai
+Latest VLAN16 AI-site fix: 2026-06-18 15:30 Asia/Shanghai. VLAN16 Marketing clients under the office access switch reported intermittent overseas AI site access. Office access switch `192.168.99.2` was checked: VLAN16 ports `GE0/0/1` and `GE0/0/2` and uplink `GE0/0/25` are up/up, 1G full duplex, 0 CRC/input/output errors, and VLAN16 MACs are present. The fault was isolated to DNS/egress policy after the 10:55 domestic-priority DNS change: domestic upstream DNS returned abnormal IPs for several AI domains, while WAN1/SDWAN DNS `192.168.77.1` returned expected Cloudflare/Google addresses and WAN1 path completed TLS/HTTP. Added AI-domain dnsmasq exceptions to `192.168.77.1`, enabled `/etc/dnsmasq.d/shenlan-ai-domain-wan1.conf`, restarted dnsmasq, and flushed `inet fw4 shenlan_foreign_wan1_v4`; default route, VLANs, H3C, and S5735 config were not changed. See synced handoff `codex-skills/shenlan-ops/handoff/shenlan-vlan16-ai-sites-dns-policy-fix-2026-06-18-1530.md`.
 
 Kun/Codex cross-machine resume path: on any machine, first `git pull --rebase` in the shared ops skills repository (`~/Documents/Deepseek` on macair, `C:\Users\gaoxi\Documents\Deepseek` or `D:\Deepseek` on Windows if present). Then read `AGENTS.md`, `codex-skills/shenlan-ops/SKILL.md`, and this file `codex-skills/shenlan-ops/handoff/LATEST-HANDOFF.md`. Prefer synced relative files under `codex-skills/shenlan-ops/handoff/` and `codex-skills/shenlan-ops/references/`; only use local full-fidelity paths like `D:\IDE\AI\network-ops` when running on 12700K and when sensitive local state is required.
 
@@ -401,3 +402,4 @@ D:\IDE\AI\network-ops\backups\openwrt\openwrt-dns-standard-20260617-150738.tar.g
 ```text
 继续深澜网络运维，请先读取 D:\IDE\AI\AGENTS.md、shenlan-ops 技能和 D:\IDE\AI\network-ops\handoff\LATEST-HANDOFF.md，然后按接力文件继续，不要从头猜。
 ```
+

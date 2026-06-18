@@ -269,3 +269,79 @@ Observed reachability:
 - Google was OK on WAN1 after testing with browser user-agent / HTTP/1.1: `www.google.com` returned `200`, `generate_204` returned `204`.
 - Youtube, Instagram, Facebook, Google Analytics, Gemini, Claude, ChatGPT, Reddit, and Discord returned an HTTP response from local Mac and/or OpenWrt WAN1 tests. Several returned `403`, which is expected for some SaaS/WAF endpoints and does not indicate DNS split failure.
 - Pinterest remained abnormal on both local direct ADWAN and OpenWrt WAN tests. DNS split is now configured correctly, but HTTPS ended with TLS EOF or timeout. Treat Pinterest as an upstream/ADWAN reachability issue rather than a DNS split miss.
+
+## Domestic Stability Priority Change
+
+Time: 2026-06-18 10:55 Asia/Shanghai
+
+User decided to prioritize stable domestic access for wired and wireless clients. WAN1/SDWAN is currently not reliable enough to solve foreign access, so it was removed from the client DNS dependency path.
+
+OpenWrt remains the client-facing DNS endpoint:
+
+```text
+192.168.99.3
+```
+
+dnsmasq upstreams were changed to domestic-only DNS with parallel fastest-response behavior:
+
+```text
+server=223.5.5.5
+server=119.29.29.29
+server=114.114.114.114
+all-servers
+no-resolv
+filter-AAAA
+cache-size=4000
+dns-forward-max=800
+```
+
+Removed from dnsmasq `server` list for now:
+
+```text
+192.168.77.1
+219.141.136.10
+server=/foreign-domain/192.168.77.1 rules
+```
+
+Reason:
+
+- `192.168.77.1` is WAN1/SDWAN and should not affect domestic stability.
+- `219.141.136.10` repeatedly timed out from OpenWrt.
+- `192.168.201.1` returned an incomplete result for `www.baidu.com` during one test, so it was not kept as the primary client DNS upstream.
+- Domestic DNS repeated tests succeeded after enabling `allservers=1` with only `223.5.5.5`, `119.29.29.29`, and `114.114.114.114`.
+
+WAN routing remains:
+
+```text
+default via 192.168.201.1 dev eth2 metric 10
+default via 192.168.77.1 dev eth1 metric 30
+```
+
+Wired VLAN120 test after the DNS change:
+
+```text
+192.168.120.2 -> domestic sites: 5 repeated rounds succeeded
+OpenWrt eth2 -> domestic sites: succeeded
+```
+
+Wireless VLAN60 test after the DNS change:
+
+```text
+192.168.60.74 -> domestic DNS: OK
+192.168.60.74 -> domestic sites: mostly OK, but periodic 2.5-5s TCP connect stalls remained
+```
+
+Wireless evidence:
+
+```text
+ping 192.168.60.1 from 192.168.60.74: 60/60 received, avg 53.6 ms, max 241.8 ms
+ping 192.168.99.3 from 192.168.60.74: 60/60 received, avg 20.1 ms, max 103.2 ms
+curl from 192.168.60.74 to domestic HTTPS: repeated TCP connect stalls up to 5s
+```
+
+Interpretation:
+
+- Wired domestic path is now stable in the tested window.
+- OpenWrt/WAN2/DNS are not the remaining wireless bottleneck.
+- Wireless instability is likely AP/AC/H3C wireless-side jitter: RF channel/interference, AP steering/roaming/load-balancing, AP uplink/trunk, or ER5200G3 AC settings.
+- ER5200G3 AC management `http://192.168.99.4/router_index.html` is reachable from Wi-Fi; next step is to inspect AP status, channels, widths, power, client RSSI, roaming/steering, load balancing, and AP uplink errors.

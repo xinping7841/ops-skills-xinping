@@ -58,7 +58,7 @@ append_skill_config() {
     {
       echo ""
       echo "[skills.$skill_name]"
-      echo "path = \"$src\""
+      printf "path = '%s'\n" "$src"
     } >> "$config"
     log "Codex skill registered: $skill_name"
   fi

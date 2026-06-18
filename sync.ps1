@@ -54,7 +54,7 @@ function Add-CodexSkillConfig {
     if (-not (Select-String -LiteralPath $config -Pattern $pattern -Quiet -ErrorAction SilentlyContinue)) {
         Add-Content -LiteralPath $config -Encoding UTF8 -Value ''
         Add-Content -LiteralPath $config -Encoding UTF8 -Value "[skills.$SkillName]"
-        Add-Content -LiteralPath $config -Encoding UTF8 -Value ("path = `"{0}`"" -f $SkillPath)
+        Add-Content -LiteralPath $config -Encoding UTF8 -Value ("path = '{0}'" -f $SkillPath)
         Write-SyncLog "Codex skill registered: $SkillName"
     }
 }

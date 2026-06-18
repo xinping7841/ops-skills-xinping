@@ -29,7 +29,7 @@ link_codex_skill_for_ui() {
     {
       echo ""
       echo "[skills.$skill_name]"
-      echo "path = \"$src\""
+      printf "path = '%s'\n" "$src"
     } >> "$config"
     echo "✅ Codex UI skill $skill_name 已注册"
   fi

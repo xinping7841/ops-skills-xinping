@@ -208,3 +208,64 @@ eth1 -> https://www.baidu.com/ timed out
 ```
 
 Interpretation: both WAN links are physically up and usable. WAN2 is the better domestic/default path. WAN1/ADWAN is usable for foreign HTTPS targets such as GitHub, but is not a good domestic default path, matching the current policy design.
+
+## Foreign Site Split Check
+
+At about 2026-06-18 10:30, the user provided a site list to verify local access and DNS split behavior:
+
+```text
+Pinterest
+Youtube
+Instagram
+Facebook
+Linkedin
+Google Analytics 4
+Gemini
+Claude
+Chatgpt
+Google
+Reddit
+Discord
+```
+
+Initial check found that Pinterest and Reddit were not in `/root/shenlan-usage/policy/foreign-wan1-domains.txt`. The following domains were added and dnsmasq UCI/nftset config was regenerated:
+
+```text
+pinterest.com
+pinimg.com
+reddit.com
+redd.it
+redditstatic.com
+redditmedia.com
+```
+
+After restart, all requested primary domains were configured for foreign split and resolved IPs routed via WAN1 under mark `0x1`:
+
+```text
+pinterest.com          configured=yes -> eth1 via 192.168.77.1
+youtube.com            configured=yes -> eth1 via 192.168.77.1
+instagram.com          configured=yes -> eth1 via 192.168.77.1
+facebook.com           configured=yes -> eth1 via 192.168.77.1
+linkedin.com           configured=yes -> eth1 via 192.168.77.1
+analytics.google.com   configured=yes -> eth1 via 192.168.77.1
+gemini.google.com      configured=yes -> eth1 via 192.168.77.1
+claude.ai              configured=yes -> eth1 via 192.168.77.1
+chatgpt.com            configured=yes -> eth1 via 192.168.77.1
+google.com             configured=yes -> eth1 via 192.168.77.1
+reddit.com             configured=yes -> eth1 via 192.168.77.1
+discord.com            configured=yes -> eth1 via 192.168.77.1
+```
+
+Local macair caveat: at the time of the test, macair's default route was direct wired ADWAN:
+
+```text
+default -> 192.168.77.1 on en6
+```
+
+That path bypasses OpenWrt's client-side DNS interception and nft marking, so local Mac browser/curl tests are useful for ADWAN reachability but not a pure test of OpenWrt split policy.
+
+Observed reachability:
+
+- Google was OK on WAN1 after testing with browser user-agent / HTTP/1.1: `www.google.com` returned `200`, `generate_204` returned `204`.
+- Youtube, Instagram, Facebook, Google Analytics, Gemini, Claude, ChatGPT, Reddit, and Discord returned an HTTP response from local Mac and/or OpenWrt WAN1 tests. Several returned `403`, which is expected for some SaaS/WAF endpoints and does not indicate DNS split failure.
+- Pinterest remained abnormal on both local direct ADWAN and OpenWrt WAN tests. DNS split is now configured correctly, but HTTPS ended with TLS EOF or timeout. Treat Pinterest as an upstream/ADWAN reachability issue rather than a DNS split miss.

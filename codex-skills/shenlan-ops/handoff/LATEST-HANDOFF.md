@@ -1,5 +1,10 @@
 ﻿# Shenlan Network Ops Latest Handoff
 
+Latest health collector timeout hardening: 2026-06-18 22:35 Asia/Shanghai. Follow-up monitoring optimization after CSV dedupe found stale `collect-health.sh`/`logread | grep` processes and a held `/root/shenlan-usage/run/collect-health.lock` even though `crond=1`, `nlbwmon=0`, and CSV rows were clean.
+
+Updated `/root/shenlan-usage/bin/collect-health.sh` from local source `D:\IDE\AI\network-ops\router-scripts\collect-health.sh` to add PID/start-time lock metadata, stale-lock recovery after 240 seconds, and 8-second hard timeouts around `nslookup` and `logread` using temporary files instead of live pipelines. Remote backup: `/root/shenlan-usage/backups/collect-health-pre-timeout-20260618-222813.sh`.
+
+Cleared stale collector/logread/grep processes and lock; manual run returned `manual_rc=0` in about 12 seconds; natural cron samples at 22:29, 22:30, and 22:31 wrote one clean set per minute; post-check duplicate keys remained 0 for health, HTTP, DNS, and interface CSVs. No routing/DNS/firewall/SQM/H3C/OpenClash/PBR/MWAN/VLAN/DHCP changes. See synced handoff `codex-skills/shenlan-ops/handoff/shenlan-health-collector-timeout-hardening-2026-06-18-2235.md`.
 
 Latest node-121 Tailscale/Scanopy remote fix: 2026-06-18 22:16 Asia/Shanghai. User reported remote Scanopy URL would not open. From macair, `100.122.235.56:60072` and SSH timed out because `node-121` was offline in Tailscale, while 12700K LAN checks to `192.168.50.121` showed ping, SSH `22`, Scanopy `60072`, and domain manager `8765` all reachable. `tailscaled` was active but stale; control endpoint HTTPS and `tailscale netcheck` worked. Restarted `tailscaled` on `node-121`; it re-registered with `machineAuthorized=true`, Tailscale status became `active; direct 219.142.184.185:10171`, and macair `curl http://100.122.235.56:60072/api/health` returned Scanopy Server `0.16.2`. See synced handoff `codex-skills/shenlan-ops/handoff/shenlan-node121-tailscale-scanopy-remote-fix-2026-06-18-2216.md`.
 

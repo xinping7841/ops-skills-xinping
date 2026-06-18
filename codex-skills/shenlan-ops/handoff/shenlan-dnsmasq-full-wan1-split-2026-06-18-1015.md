@@ -170,3 +170,41 @@ The nft set `inet fw4 shenlan_foreign_wan1_v4` was populated by DNS answers afte
 - macair wireless management network could SSH and ping `192.168.99.3`, but direct DNS queries from macair to `192.168.99.3:53` timed out. This appears to be cross-management-path policy behavior, not a dnsmasq failure. Router-side DNS and LAN DNS interception were verified.
 - `219.141.136.10` timed out during one router-side test. Keep `192.168.77.1` fallback until Beijing Telecom DNS stability is proven from OpenWrt.
 - The old cron-based helper for resolving foreign domains should remain disabled. `dnsmasq-full` now maintains the nft set directly.
+
+## WAN Check And Tools Added
+
+At about 2026-06-18 10:20, extra troubleshooting tools were installed on OpenWrt:
+
+```text
+curl
+ethtool-full
+mtr-json
+tcpdump-mini
+```
+
+WAN interface check:
+
+```text
+WAN1 eth1: 192.168.77.197/24, gateway 192.168.77.1, link 2500Mb/s full duplex, link detected yes
+WAN2 eth2: 192.168.201.108/24, gateway 192.168.201.1, link 1000Mb/s full duplex, link detected yes
+```
+
+Both upstream gateways were healthy:
+
+```text
+ping -I eth1 192.168.77.1 -> 0% loss, about 0.3 ms
+ping -I eth2 192.168.201.1 -> 0% loss, about 0.6 ms
+```
+
+Driver stats showed no CRC, carrier, collision, or link-layer errors on either WAN port. WAN1 had a small historical `rx_fifo_errors` count, but no current interface-level `rx_errors/tx_errors`. WAN2 had cumulative `rx_dropped`, but driver error counters stayed clean.
+
+HTTP/TLS checks with `curl --interface`:
+
+```text
+eth1 -> https://github.com/  HTTP/2 200
+eth2 -> https://www.baidu.com/ HTTP/1.1 200 OK
+eth2 -> https://github.com/  HTTP/2 200
+eth1 -> https://www.baidu.com/ timed out
+```
+
+Interpretation: both WAN links are physically up and usable. WAN2 is the better domestic/default path. WAN1/ADWAN is usable for foreign HTTPS targets such as GitHub, but is not a good domestic default path, matching the current policy design.

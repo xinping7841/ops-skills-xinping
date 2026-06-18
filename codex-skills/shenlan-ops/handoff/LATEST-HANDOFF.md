@@ -1,8 +1,17 @@
 # Shenlan Network Ops Latest Handoff
 
-Updated: 2026-06-17 17:35 Asia/Shanghai
+Updated: 2026-06-18 08:20 Asia/Shanghai
+
+Latest probe expansion: 2026-06-18 08:20 Asia/Shanghai. Added HTTP/HTTPS and DNS health probes to OpenWrt 1-minute collector so future public ICMP loss can be distinguished from real web/DNS reachability failure. New files: `/root/shenlan-usage/health/http-health-YYYY-MM-DD.csv` and `/root/shenlan-usage/health/dns-health-YYYY-MM-DD.csv`. See `D:\IDE\AI\network-ops\handoff\shenlan-http-dns-health-probes-2026-06-18-0820.md`.
+
+Stage summary: 2026-06-18. The recent upload limiting, flash-disconnect diagnosis, `nlbwmon` stop, overnight findings, and HTTP/DNS probe expansion are summarized in `D:\IDE\AI\network-ops\handoff\shenlan-flap-traffic-stage-summary-2026-06-18.md`.
+
+Latest live event: 2026-06-17 19:00 Asia/Shanghai. User reported another short disconnect around 18:48. The 1-minute OpenWrt health probe captured a matching 18:45 event: H3C core, WAN1 gateway, and WAN2 gateway were reachable, while both public targets had 100% loss for that minute. OpenWrt simultaneously logged a large `nlbwmon` MAC lookup storm. `nlbwmon` was temporarily stopped at about 18:52 and stayed inactive; public probes from 18:53 onward were healthy. See `D:\IDE\AI\network-ops\handoff\shenlan-flap-event-nlbwmon-stop-2026-06-17-1900.md`.
 
 Latest continuation: 2026-06-17 17:35 Asia/Shanghai. See `D:\IDE\AI\network-ops\handoff\shenlan-traffic-dns-observation-2026-06-17-1730.md`.
+Latest change: 2026-06-17 17:58 Asia/Shanghai. Temporary host upload limits were applied on OpenWrt for `192.168.10.16` and `192.168.10.60`; see `D:\IDE\AI\network-ops\handoff\openwrt-host-upload-rate-limit-2026-06-17-1758.md`.
+Latest troubleshooting: 2026-06-17 18:20 Asia/Shanghai. User reported frequent short disconnects. No router reboot, WAN1 link flap, or internal management packet loss was found during the check window. OpenWrt `nlbwmon` was flooding logs with netlink/conntrack buffer errors, so its buffer/refresh settings and kernel receive buffer limit were tuned; see `D:\IDE\AI\network-ops\handoff\shenlan-flap-diagnosis-nlbwmon-tuning-2026-06-17-1820.md`.
+Latest observation setup: 2026-06-17 18:35 Asia/Shanghai. Added a 1-minute OpenWrt health probe to observe for one day. Main purpose: analyze short disconnects and the overall traffic situation, identify concrete problem sources, and decide handling/optimization direction; see `D:\IDE\AI\network-ops\handoff\shenlan-24h-health-observation-setup-2026-06-17-1835.md`.
 
 Use this file when a new Codex/Kun conversation needs to continue Shenlan network operations without the full chat history.
 
@@ -24,12 +33,15 @@ The Shenlan site network is online. OpenWrt x86 N150 replaced ER5200G3 as the ma
 
 Near-term work:
 
-1. Continue observing DHCP/DNS stability after the H3C DNS fix. OpenWrt DNS was rechecked at 17:26 and LinkedIn resolution remains correct through `127.0.0.1` and upstream `192.168.77.1`.
-2. Continue OpenWrt traffic/SQM analysis. One full day plus partial current-day data is available; first analysis shows WAN1 upload congestion and heavy VLAN10 upload sources.
-3. Design VLAN-based WAN1/WAN2 policy routing, but do not implement until user confirms which VLANs/hosts should use WAN2/direct optical modem.
-4. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
-5. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
-6. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
+1. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
+2. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
+3. Continue observing DHCP/DNS stability after the H3C DNS fix. OpenWrt DNS was rechecked at 17:26 and LinkedIn resolution remains correct through `127.0.0.1` and upstream `192.168.77.1`.
+4. Observe the new OpenWrt host upload limits. `192.168.10.16` and `192.168.10.60` are each limited to about `8Mbit/s` WAN upload using nftables `limit rate over 1000 kbytes/second drop`; counters remained `0` during the 18:20 flash-disconnect diagnosis.
+5. Inspect WAN2 physical path/cable/optical modem if disconnect reports continue, because OpenWrt recorded a real `eth2` link down/up and high `eth2` rx_dropped even though WAN1 remains the preferred default route.
+6. Design VLAN-based WAN1/WAN2 policy routing, but do not implement until user confirms which VLANs/hosts should use WAN2/direct optical modem.
+7. Fix backup/report sync to QNAP. Latest reporting run synced WPS and fnOS, but QNAP failed with an SMB username/password error.
+8. Deploy scheduled backups, monitoring, reports, and optional WPS/Feishu sync on `192.168.50.121`.
+9. Later, optionally rebuild H3C DHCP pools with English names during a maintenance window.
 
 ## Device Roles
 
@@ -301,6 +313,17 @@ Feishu Base/WPS discussion:
 
 ## Traffic/QoS Plan
 
+Current stability test: OpenWrt `nlbwmon` is stopped as of about 2026-06-17 18:52. Do not restart it during the overnight observation unless explicitly needed. The health script now records `nlbwmon_error_latest`; treat repeated old 18:45 log lines as historical unless the latest timestamp advances.
+
+Current temporary limiter:
+
+- OpenWrt file: `/etc/nftables.d/30-shenlan-rate-limit.nft`.
+- Hosts: `192.168.10.16`, `192.168.10.60`.
+- Match: forwarded traffic from those source IPs going out WAN interfaces `eth1` or `eth2`.
+- Limit: each host about `1000 kbytes/second`, around `8Mbit/s`; excess packets dropped.
+- Rollback: `rm -f /etc/nftables.d/30-shenlan-rate-limit.nft && fw4 reload`.
+- During the 2026-06-17 18:20 flash-disconnect diagnosis, both limiter rules still had `0 packets / 0 bytes`, so the limiter had not triggered and was not implicated by observed counters.
+
 Bandwidth: around 1000M down / 50M up.
 
 User wants automatic throttling of large uploads/downloads, not crude static limits. WAN1 goes through SDWAN and speed test being lower was considered reasonable. WAN2 is direct optical modem.
@@ -338,13 +361,18 @@ Do not implement until user confirms which VLANs should use which WAN.
 
 ```text
 D:\IDE\AI\network-ops\handoff\LATEST-HANDOFF.md
+D:\IDE\AI\network-ops\handoff\shenlan-flap-traffic-stage-summary-2026-06-18.md
+D:\IDE\AI\network-ops\handoff\shenlan-24h-health-observation-setup-2026-06-17-1835.md
+D:\IDE\AI\network-ops\handoff\shenlan-flap-diagnosis-nlbwmon-tuning-2026-06-17-1820.md
 D:\IDE\AI\network-ops\handoff\shenlan-traffic-dns-observation-2026-06-17-1730.md
+D:\IDE\AI\network-ops\handoff\openwrt-host-upload-rate-limit-2026-06-17-1758.md
 D:\IDE\AI\network-ops\handoff\h3c-dhcp-dns-web-fix-2026-06-17-1600.md
 D:\IDE\AI\network-ops\handoff\h3c-vlan-cleanup-2026-06-17-1530.md
 D:\IDE\AI\network-ops\handoff\shenlan-dns-vlan-standard-2026-06-17.md
 D:\IDE\AI\network-ops\inventory\shenlan-network-standard.json
 D:\IDE\AI\network-ops\backups\h3c-after-dhcp-dns-web-fix-20260617-160613.txt
 D:\IDE\AI\network-ops\backups\openwrt\openwrt-config-20260617-172825.tar.gz
+D:\IDE\AI\network-ops\backups\openwrt\openwrt-before-rate-limit-20260617-175328.tar.gz
 D:\IDE\AI\network-ops\backups\openwrt\openwrt-dns-standard-20260617-150738.tar.gz
 ```
 

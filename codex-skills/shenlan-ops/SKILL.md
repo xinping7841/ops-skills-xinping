@@ -21,6 +21,7 @@ Task-specific references:
 - 2026-06-17 H3C DHCP DNS/Web address-pool cleanup: `handoff/h3c-dhcp-dns-web-fix-2026-06-17-1600.md`.
 - 2026-06-17 VLAN cleanup: `handoff/h3c-vlan-cleanup-2026-06-17-1530.md` and `handoff/vlan-current-map-2026-06-16.md`.
 - Traffic/DNS observation and QoS findings: `handoff/shenlan-traffic-dns-observation-2026-06-17-1730.md` and `references/traffic-collection.md`.
+- 2026-06-18 flash-disconnect, upload limiting, `nlbwmon` stop, and HTTP/DNS probe expansion: `handoff/shenlan-flap-traffic-stage-summary-2026-06-18.md`.
 - Scheduled backups, report generation, WPS/NAS sync, monitoring plans, and migration to the 192.168.50.121 service host: `references/backup-monitoring.md`.
 
 Local full-fidelity operational data may exist on 12700K at `D:\IDE\AI\network-ops`. Treat that directory as sensitive local state, not as the shared source of truth for other machines.

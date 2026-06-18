@@ -1,6 +1,8 @@
 # Shenlan Network Ops Latest Handoff
 
-Updated: 2026-06-18 09:50 Asia/Shanghai
+Updated: 2026-06-18 10:15 Asia/Shanghai
+
+Latest change: 2026-06-18 10:15 Asia/Shanghai. OpenWrt DNS was repaired and upgraded to `dnsmasq-full 2.93` after an interrupted `apk` install left the old `dnsmasq` package half-removed. DNS is now centralized on OpenWrt again: clients keep using `192.168.99.3`, LAN TCP/UDP 53 interception is active, Beijing Telecom `219.141.136.10` is retained with `192.168.77.1` fallback, and foreign domains resolve through `192.168.77.1` while their IPv4 answers are inserted into `inet fw4 shenlan_foreign_wan1_v4` for WAN1 policy routing. See `D:\IDE\AI\network-ops\handoff\shenlan-dnsmasq-full-wan1-split-2026-06-18-1015.md`.
 
 Latest change: 2026-06-18 09:50 Asia/Shanghai. Morning disconnect diagnosis found that OpenWrt itself had intermittent public HTTP failures, so the issue was not isolated to the Mac/VLAN16 client. OpenWrt was changed so WAN2/direct optical modem is the global default route, WAN1/SDWAN is retained for marked policy traffic, and dnsmasq upstream DNS was changed to Beijing Telecom `219.141.136.10` with AAAA filtering. A starter foreign-domain nft mark set was created, but its cron refresh is currently disabled because the installed dnsmasq has `no-ipset no-nftset` and the helper resolver may add DNS pressure. See `D:\IDE\AI\network-ops\handoff\shenlan-wan2-default-dns-adjustment-2026-06-18-0950.md`.
 
@@ -35,7 +37,7 @@ The Shenlan site network is online. OpenWrt x86 N150 replaced ER5200G3 as the ma
 
 Near-term work:
 
-1. Observe the 2026-06-18 09:50 WAN/DNS change: WAN2 is now the global default route, WAN1 remains available for marked policy traffic, and dnsmasq uses Beijing Telecom `219.141.136.10` with AAAA filtering. Watch whether domestic browsing stabilizes and whether foreign services route/resolve as intended.
+1. Observe the 2026-06-18 10:15 DNS full upgrade and split-routing change: WAN2 is still the global default route, `dnsmasq-full` now owns foreign-domain nftset population, LAN DNS interception is active, default DNS uses Beijing Telecom `219.141.136.10` plus `192.168.77.1` fallback, and listed foreign domains use `192.168.77.1` plus WAN1 policy routing. Watch whether domestic browsing stabilizes and whether foreign services route/resolve as intended.
 2. Continue observing whether reported short disconnects stop while OpenWrt `nlbwmon` is temporarily inactive. The 18:45 event strongly implicated `nlbwmon` telemetry pressure: WAN gateways stayed reachable, both public probes failed for one minute, and an `nlbwmon` MAC lookup storm occurred at the same time. If reports continue while `nlbwmon` remains inactive, inspect the exact probe minute and collect longer probes from an affected client/VLAN to gateway, OpenWrt, WAN1 gateway, public IP, and DNS.
 3. After one day of observation, analyze both flash-disconnect evidence and overall traffic/optimization direction: loss/latency by layer, interface error deltas, nlbwmon health, rate-limit hits, heavy clients/VLANs, WAN utilization, and SQM drops/overlimits.
 4. Continue observing DHCP/DNS stability after the H3C DNS fix.

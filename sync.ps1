@@ -200,6 +200,20 @@ function Write-OrphanSkillReport {
     }
 }
 
+function Repair-CodexThreadIndex {
+    $repairScript = Join-Path $RepoDir 'scripts\repair-codex-thread-index.ps1'
+    if (-not (Test-Path -LiteralPath $repairScript)) { return }
+
+    try {
+        powershell -ExecutionPolicy Bypass -File $repairScript 2>&1 | ForEach-Object { Write-SyncLog $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Write-SyncLog 'WARN: Codex thread index repair failed; continuing sync.'
+        }
+    } catch {
+        Write-SyncLog "WARN: Codex thread index repair failed; continuing sync. $_"
+    }
+}
+
 function Add-WhitelistedChanges {
     $files = @('AGENTS.md', '.gitattributes', '.gitignore', 'setup-mac.sh', 'setup-win.ps1', 'setup-codex-macos.sh', 'auto-sync.sh', 'sync.ps1', 'sync-hidden.vbs')
     foreach ($file in $files) {
@@ -223,6 +237,7 @@ function Add-WhitelistedChanges {
 
 Deploy-RepoToLocal
 Write-OrphanSkillReport
+Repair-CodexThreadIndex
 
 Add-WhitelistedChanges
 $cached = & git diff --cached --name-only
@@ -251,6 +266,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Deploy-RepoToLocal
 Write-OrphanSkillReport
+Repair-CodexThreadIndex
 
 $unpushed = & git log --branches --not --remotes --oneline
 if ($unpushed) {

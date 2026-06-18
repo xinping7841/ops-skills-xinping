@@ -185,6 +185,14 @@ audit_orphan_skills() {
   rm -f "$repo_names" "$local_names"
 }
 
+repair_codex_thread_index() {
+  repair_script="$REPO_DIR/scripts/repair-codex-thread-index.sh"
+  [ -f "$repair_script" ] || return 0
+  if ! bash "$repair_script" 2>&1 | tee -a "$LOG_FILE"; then
+    log "WARN: Codex thread index repair failed; continuing sync."
+  fi
+}
+
 stage_whitelisted_changes() {
   git add -- AGENTS.md .gitattributes .gitignore 2>/dev/null || true
 
@@ -199,6 +207,7 @@ stage_whitelisted_changes() {
 
 deploy_repo_to_local
 audit_orphan_skills
+repair_codex_thread_index
 
 stage_whitelisted_changes
 if ! git diff --cached --quiet 2>/dev/null; then
@@ -227,6 +236,7 @@ fi
 
 deploy_repo_to_local
 audit_orphan_skills
+repair_codex_thread_index
 
 if [ -n "$(git log --branches --not --remotes --oneline)" ]; then
   log "Pushing local commits."

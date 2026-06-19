@@ -23,6 +23,7 @@ Task-specific references:
 - Traffic/DNS observation and QoS findings: `handoff/shenlan-traffic-dns-observation-2026-06-17-1730.md` and `references/traffic-collection.md`.
 - 2026-06-18 flash-disconnect, upload limiting, `nlbwmon` stop, and HTTP/DNS probe expansion: `handoff/shenlan-flap-traffic-stage-summary-2026-06-18.md`.
 - Scheduled backups, report generation, WPS/NAS sync, monitoring plans, and migration to the 192.168.50.121 service host: `references/backup-monitoring.md`.
+- Current `node-121` service catalog, URLs, ports, paths, and management commands: `references/node121-services.md`.
 
 Local full-fidelity operational data may exist on 12700K at `D:\IDE\AI\network-ops`. Treat that directory as sensitive local state, not as the shared source of truth for other machines.
 

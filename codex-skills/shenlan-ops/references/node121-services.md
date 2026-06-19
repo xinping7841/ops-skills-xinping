@@ -1,6 +1,6 @@
 # node-121 服务目录
 
-更新时间：2026-06-19 18:05 Asia/Shanghai
+更新时间：2026-06-19 18:26 Asia/Shanghai
 
 主机：`node-121`
 
@@ -21,6 +21,12 @@
 | WAN1 Domain Manager | OpenWrt WAN1 域名/出口相关管理小服务 | `http://192.168.50.121:8765/` | 不建议直接暴露使用 | `/opt/shenlan-network-ops/tools/wan1-domain-manager` | `shenlan-wan1-domain-manager.service` |
 
 认证信息、数据库密码、SNMP 密码、Basic Auth 密码只保存在 `node-121` 本地 secret/env 文件中，不写入本仓库。
+
+Web 管理账号当前已统一：Scanopy、LibreNMS、NetBox 使用同一套管理员密码；用户名分别按产品约定保留。密码只记录在下列 `node-121` 本地文件中：
+
+- Scanopy：`/opt/scanopy/.shenlan-credentials`
+- LibreNMS：`/opt/librenms/docker-src/examples/compose/.shenlan-credentials`
+- NetBox：`/opt/netbox/netbox-docker/.shenlan-credentials`
 
 ## 本机 SNMP / Trap / Syslog
 
@@ -47,6 +53,8 @@
 
 目录：`/opt/scanopy`
 
+管理员用户名：`admin@shenlan.local`。密码见本机 secret 文件 `/opt/scanopy/.shenlan-credentials`，不要打印或提交。
+
 常用命令：
 
 ```bash
@@ -66,6 +74,8 @@ docker compose logs --tail=100
 - `librenms_msmtpd`
 
 目录：`/opt/librenms/docker-src/examples/compose`
+
+管理员用户名：`admin`。密码见本机 secret 文件 `/opt/librenms/docker-src/examples/compose/.shenlan-credentials`，不要打印或提交。
 
 常用命令：
 
@@ -95,6 +105,8 @@ LibreNMS 当前关键设备均为 SNMPv3：
 - `netbox-docker-redis-cache-1`
 
 目录：`/opt/netbox/netbox-docker`
+
+管理员用户名：`admin`。密码见本机 secret 文件 `/opt/netbox/netbox-docker/.shenlan-credentials`，不要打印或提交。
 
 常用命令：
 
@@ -133,3 +145,4 @@ journalctl -u smart-snmp.service --no-pager -n 80
 - `codex-skills/shenlan-ops/handoff/shenlan-snmpv3-switches-er5200g3-2026-06-19-1445.md`
 - `codex-skills/shenlan-ops/handoff/shenlan-er5200g3-snmpv3-librenms-2026-06-19-1505.md`
 - `codex-skills/shenlan-ops/handoff/shenlan-openwrt-snmpv3-librenms-2026-06-19-1735.md`
+- `codex-skills/shenlan-ops/handoff/shenlan-node121-web-credentials-unified-2026-06-19-1826.md`

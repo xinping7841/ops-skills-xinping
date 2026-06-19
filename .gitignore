@@ -30,3 +30,10 @@ known_hosts*
 # 编辑器和IDE
 .vscode/
 .idea/
+
+# Codex / browser local runtime output
+.playwright-mcp/
+codex-sandbox-repair-notes.md
+
+# Local nested working copies
+leadtek-rtx-report/

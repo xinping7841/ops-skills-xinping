@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1500" viewBox="0 0 2200 1500" font-family="Menlo, Consolas, 'SF Mono', 'PingFang SC', 'Microsoft YaHei', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto"><path d="M0,0 L12,4.5 L0,9 z" fill="#1f2937"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.title{font-size:42px;font-weight:800;fill:#0f172a}.sub{font-size:22px;fill:#475569}.tier{font-size:30px;font-weight:800;fill:#7c2d12}.box{fill:#ffffff;stroke:#334155;stroke-width:3;rx:12}.router{fill:#dcfce7;stroke:#16a34a}.core{fill:#fef9c3;stroke:#ca8a04}.access{fill:#e0e7ff;stroke:#4f46e5}.svc{fill:#ccfbf1;stroke:#0d9488}.nas{fill:#fef3c7;stroke:#d97706}.todo{fill:#ffedd5;stroke:#ea580c}.h{font-size:26px;font-weight:800;fill:#111827}.t{font-size:21px;fill:#1f2937}.s{font-size:18px;fill:#475569}.warn{font-size:18px;font-weight:700;fill:#92400e}.line{stroke:#1f2937;stroke-width:4;fill:none;marker-end:url(#arrow)}.thin{stroke-width:3}.dash{stroke-dasharray:12 8}.bus{stroke:#475569;stroke-width:8;fill:none}.label{font-size:18px;fill:#334155;font-weight:700}
+    </style>
+  </defs>
+  <rect class="bg" width="2200" height="1500"/>
+  <text x="1100" y="70" text-anchor="middle" class="title">深澜网络结构拓扑图（三层交接版）</text>
+  <text x="1100" y="108" text-anchor="middle" class="sub">按“广域网出口层 → 核心交换层 → 接入与业务层”组织；设备名、VLAN、端口采用当前现网事实</text>
+
+  <text x="80" y="180" class="tier">【 广域网出口层 】</text>
+  <rect x="740" y="145" width="720" height="100" class="box"/>
+  <text x="1100" y="185" text-anchor="middle" class="h">上游 Internet / 运营商链路</text>
+  <text x="1100" y="218" text-anchor="middle" class="t">WAN1 SDWAN + WAN2 光猫直连（当前双出口）</text>
+
+  <rect x="360" y="315" width="500" height="140" class="box"/>
+  <text x="610" y="360" text-anchor="middle" class="h">WAN1：SDWAN</text>
+  <text x="610" y="395" text-anchor="middle" class="t">上游地址段：192.168.77.0/24</text>
+  <text x="610" y="425" text-anchor="middle" class="s">用于策略流量 / 部分海外域名</text>
+
+  <rect x="1340" y="315" width="500" height="140" class="box"/>
+  <text x="1590" y="360" text-anchor="middle" class="h">WAN2：光猫直连</text>
+  <text x="1590" y="395" text-anchor="middle" class="t">上游地址段：192.168.201.0/24</text>
+  <text x="1590" y="425" text-anchor="middle" class="s">当前普通/默认出口优先</text>
+
+  <rect x="765" y="540" width="670" height="165" class="box router"/>
+  <text x="1100" y="588" text-anchor="middle" class="h">OpenWrt-Main-Router</text>
+  <text x="1100" y="626" text-anchor="middle" class="t">192.168.99.3 · 主出口 / NAT / DNS / QoS / 策略路由</text>
+  <text x="1100" y="657" text-anchor="middle" class="s">现网出口与策略节点：负责 NAT、防火墙、DNS、QoS、WAN 策略分流</text>
+  <text x="1100" y="685" text-anchor="middle" class="s">到核心：eth3.99 / VLAN99</text>
+
+  <path d="M1000 245 C850 275 700 285 620 315" class="line"/>
+  <path d="M1200 245 C1350 275 1500 285 1580 315" class="line"/>
+  <path d="M610 455 C700 500 850 520 980 540" class="line"/>
+  <path d="M1590 455 C1500 500 1350 520 1220 540" class="line"/>
+
+  <path d="M770 765 H1430" class="bus"/>
+  <text x="1100" y="750" text-anchor="middle" class="label">VLAN99 管理/互联 Trunk（OpenWrt eth3.99 ↔ H3C 核心）</text>
+  <path d="M1100 705 L1100 765" class="line thin"/>
+
+  <text x="80" y="845" class="tier">【 核心交换层 】</text>
+  <rect x="700" y="830" width="800" height="180" class="box core"/>
+  <text x="1100" y="880" text-anchor="middle" class="h">H3C-Core-Switch</text>
+  <text x="1100" y="918" text-anchor="middle" class="t">192.168.99.1 · 核心三层交换机</text>
+  <text x="1100" y="952" text-anchor="middle" class="s">所有业务 VLAN 网关和 DHCP 均在这里：VLAN10/16/17/18/19/20/30/40/50/60/70/80/90/99/120/201</text>
+  <text x="1100" y="982" text-anchor="middle" class="s">排障重点：Vlan-interface、DHCP 池、端口 VLAN membership、LLDP、接口错误/CRC</text>
+  <path d="M1100 765 L1100 830" class="line"/>
+
+  <text x="80" y="1095" class="tier">【 接入与业务层 】</text>
+  <rect x="90" y="1135" width="430" height="170" class="box access"/>
+  <text x="305" y="1180" text-anchor="middle" class="h">S5735S 办公接入</text>
+  <text x="305" y="1215" text-anchor="middle" class="t">192.168.99.2</text>
+  <text x="305" y="1246" text-anchor="middle" class="s">H3C Te1/0/28 ↔ S5735S Gi0/0/25</text>
+  <text x="305" y="1276" text-anchor="middle" class="s">VLAN10 办公 · 16 市场 · 17 教培 · 18 AI开发</text>
+
+  <rect x="570" y="1135" width="390" height="170" class="box access"/>
+  <text x="765" y="1180" text-anchor="middle" class="h">ER5200G3-AC</text>
+  <text x="765" y="1215" text-anchor="middle" class="t">192.168.99.4</text>
+  <text x="765" y="1246" text-anchor="middle" class="s">H3C Gi1/0/12 → ER LAN1</text>
+  <text x="765" y="1276" text-anchor="middle" class="s">AC / MiniAP 控制；普通 DHCP 禁用</text>
+
+  <rect x="1010" y="1135" width="390" height="170" class="box svc"/>
+  <text x="1205" y="1180" text-anchor="middle" class="h">node-121 运维服务</text>
+  <text x="1205" y="1215" text-anchor="middle" class="t">192.168.50.121 · VLAN50</text>
+  <text x="1205" y="1246" text-anchor="middle" class="s">Scanopy :60072 · LibreNMS :60800</text>
+  <text x="1205" y="1276" text-anchor="middle" class="s">NetBox :60801 · 报告/发现/监控</text>
+
+  <rect x="1450" y="1135" width="330" height="170" class="box nas"/>
+  <text x="1615" y="1180" text-anchor="middle" class="h">NAS 存储</text>
+  <text x="1615" y="1215" text-anchor="middle" class="t">VLAN30 / VLAN50</text>
+  <text x="1615" y="1246" text-anchor="middle" class="s">威联通 NAS：H3C Te1/0/27，10G</text>
+  <text x="1615" y="1276" text-anchor="middle" class="s">飞牛 NAS：192.168.50.254</text>
+
+  <rect x="1830" y="1135" width="300" height="170" class="box todo"/>
+  <text x="1980" y="1180" text-anchor="middle" class="h">下游待确认</text>
+  <text x="1980" y="1215" text-anchor="middle" class="t">PoE / 小交换 / AP</text>
+  <text x="1980" y="1246" text-anchor="middle" class="s">TL-SG2024MP / YLS220P</text>
+  <text x="1980" y="1276" text-anchor="middle" class="warn">需补 NetBox 端口线缆</text>
+
+  <path d="M880 1010 C700 1050 440 1085 310 1135" class="line"/>
+  <text x="400" y="1084" class="label">Te1/0/28 trunk：1,10,16-18,99</text>
+  <path d="M990 1010 C910 1060 815 1090 770 1135" class="line"/>
+  <text x="760" y="1084" class="label">Gi1/0/12 / VLAN20,60,99</text>
+  <path d="M1130 1010 C1150 1060 1190 1090 1205 1135" class="line"/>
+  <text x="1160" y="1084" class="label">VLAN50</text>
+  <path d="M1270 1010 C1390 1055 1530 1090 1610 1135" class="line"/>
+  <text x="1445" y="1084" class="label">Te1/0/27 VLAN30 / VLAN50</text>
+  <path d="M1390 1010 C1580 1050 1880 1090 1980 1135" class="line dash"/>
+  <text x="1740" y="1084" class="label">LLDP/端口归属待核</text>
+
+  <rect x="90" y="1370" width="2040" height="90" class="box"/>
+  <text x="120" y="1408" class="h">运维交接速记</text>
+  <text x="360" y="1408" class="t">先看 OpenWrt 出口/DNS → 再看 H3C VLAN/DHCP/接口 → 再定位 S5735S、ER5200G3、NAS、PoE/AP/终端。</text>
+  <text x="120" y="1442" class="s">已复核：H3C Te1/0/27 是 VLAN30 10G 威联通 NAS 口；H3C Te1/0/28 是 S5735S trunk。待补：飞牛 NAS 192.168.50.254 具体接入口。</text>
+</svg>

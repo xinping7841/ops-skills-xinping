@@ -85,6 +85,8 @@ LibreNMS 当前关键设备均为 SNMPv3：
 | `192.168.99.3` | `OpenWrt-Main-Router` | `linux` | `server` | `v3` | 9 |
 | `192.168.99.4` | `ER5200G3-AC` | `comware` | `network` | `v3` | 11 |
 
+界面语言：Web 主容器通过 `compose.override.yml` 设置 `APP_LOCALE=zh-CN`，管理员用户 `admin` 的 `users_prefs.locale` 也设置为 `zh-CN`。如果登录后仍显示英文，刷新浏览器或在用户偏好里选择简体中文。
+
 ### NetBox
 
 - `netbox-docker-netbox-1`

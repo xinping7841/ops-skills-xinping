@@ -1,102 +1,113 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="2200" viewBox="0 0 3200 2200" font-family="Menlo, Consolas, 'SF Mono', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2600" viewBox="0 0 2600 2600" font-family="Menlo, Consolas, 'SF Mono', 'PingFang SC', 'Microsoft YaHei', sans-serif">
   <defs>
     <style>
-      .bg{fill:#f8fafc}.title{font-size:54px;font-weight:800;fill:#0f172a}.sub{font-size:28px;fill:#475569}.line{stroke:#334155;stroke-width:5;fill:none}.thin{stroke-width:4}.trunk{stroke:#2563eb;stroke-width:6}.box{fill:#fff;stroke:#334155;stroke-width:4;rx:18}.wan{fill:#e0f2fe;stroke:#0284c7}.router{fill:#dcfce7;stroke:#16a34a}.core{fill:#fef9c3;stroke:#ca8a04}.access{fill:#e0e7ff;stroke:#4f46e5}.vlan{fill:#f8fafc;stroke:#64748b}.svc{fill:#ccfbf1;stroke:#0d9488}.nas{fill:#fef3c7;stroke:#d97706}.todo{fill:#ffedd5;stroke:#ea580c}.h{font-size:34px;font-weight:800;fill:#111827}.t{font-size:27px;fill:#1f2937}.s{font-size:23px;fill:#475569}.small{font-size:21px;fill:#64748b}.tag{font-size:22px;font-weight:700;fill:#1d4ed8}.warn{font-size:22px;font-weight:700;fill:#b45309}
+      .bg{fill:#f8fafc}.title{font-size:46px;font-weight:800;fill:#0f172a}.sub{font-size:24px;fill:#475569}.line{stroke:#334155;stroke-width:4;fill:none}.thin{stroke-width:3}.trunk{stroke:#2563eb;stroke-width:5;fill:none}.box{fill:#fff;stroke:#334155;stroke-width:3;rx:18}.wan{fill:#e0f2fe;stroke:#0284c7}.router{fill:#dcfce7;stroke:#16a34a}.core{fill:#fef9c3;stroke:#ca8a04}.access{fill:#e0e7ff;stroke:#4f46e5}.vlan{fill:#f8fafc;stroke:#64748b}.svc{fill:#ccfbf1;stroke:#0d9488}.nas{fill:#fef3c7;stroke:#d97706}.todo{fill:#ffedd5;stroke:#ea580c}.h{font-size:28px;font-weight:800;fill:#111827}.t{font-size:22px;fill:#1f2937}.small{font-size:18px;fill:#64748b}.tag{font-size:18px;font-weight:700;fill:#1d4ed8}.warn{font-size:18px;font-weight:700;fill:#b45309}.muted{font-size:16px;fill:#64748b}
     </style>
   </defs>
-  <rect class="bg" width="3200" height="2200"/>
-  <text x="1600" y="90" text-anchor="middle" class="title">深澜网络结构图（最新型号补全版）</text>
-  <text x="1600" y="140" text-anchor="middle" class="sub">横向树状骨架：出口 → OpenWrt → H3C 核心 → 汇聚 / AC / VLAN / 业务设备</text>
 
-  <rect x="130" y="235" width="500" height="180" class="box wan"/>
-  <text x="380" y="285" text-anchor="middle" class="h">电信光猫</text>
-  <text x="380" y="330" text-anchor="middle" class="t">B866-S2 · 路由模式</text>
-  <text x="380" y="370" text-anchor="middle" class="small">LAN1 → SDWAN</text>
-  <text x="380" y="400" text-anchor="middle" class="small">LAN2 → OpenWrt WAN2</text>
+  <rect class="bg" width="2600" height="2600"/>
+  <text x="1300" y="75" text-anchor="middle" class="title">深澜网络结构图（最新型号补全版）</text>
+  <text x="1300" y="116" text-anchor="middle" class="sub">横向树状骨架：出口 → OpenWrt → H3C 核心 → 汇聚 / AC / VLAN / 业务设备</text>
 
-  <rect x="850" y="175" width="430" height="140" class="box wan"/>
-  <text x="1065" y="230" text-anchor="middle" class="h">SDWAN</text>
-  <text x="1065" y="275" text-anchor="middle" class="t">OSDWAN</text>
+  <rect x="70" y="185" width="390" height="165" class="box wan"/>
+  <text x="265" y="235" text-anchor="middle" class="h">电信光猫</text>
+  <text x="265" y="275" text-anchor="middle" class="t">B866-S2 · 路由模式</text>
+  <text x="265" y="310" text-anchor="middle" class="small">LAN1 → SDWAN</text>
+  <text x="265" y="337" text-anchor="middle" class="small">LAN2 → OpenWrt WAN2</text>
 
-  <rect x="1490" y="235" width="560" height="180" class="box router"/>
-  <text x="1770" y="285" text-anchor="middle" class="h">OpenWrt 主路由</text>
-  <text x="1770" y="330" text-anchor="middle" class="t">192.168.99.3 · 倍控 H30S</text>
-  <text x="1770" y="370" text-anchor="middle" class="small">出口 / NAT / DNS / QoS</text>
-  <text x="1770" y="400" text-anchor="middle" class="small">策略路由</text>
+  <rect x="610" y="160" width="330" height="125" class="box wan"/>
+  <text x="775" y="210" text-anchor="middle" class="h">SDWAN</text>
+  <text x="775" y="250" text-anchor="middle" class="t">OSDWAN</text>
 
-  <path d="M630 300 H850" class="line"/>
-  <text x="740" y="280" text-anchor="middle" class="tag">LAN1</text>
-  <path d="M1280 245 H1490" class="line"/>
-  <text x="1385" y="225" text-anchor="middle" class="tag">WAN1</text>
-  <path d="M630 365 C900 520 1210 520 1490 365" class="line thin"/>
-  <text x="1060" y="520" text-anchor="middle" class="tag">LAN2 → WAN2</text>
+  <rect x="1090" y="185" width="470" height="165" class="box router"/>
+  <text x="1325" y="235" text-anchor="middle" class="h">OpenWrt 主路由</text>
+  <text x="1325" y="275" text-anchor="middle" class="t">192.168.99.3 · 倍控 H30S</text>
+  <text x="1325" y="310" text-anchor="middle" class="small">出口 / NAT / DNS / QoS / 策略路由</text>
 
-  <rect x="1375" y="600" width="790" height="170" class="box core"/>
-  <text x="1770" y="655" text-anchor="middle" class="h">H3C 核心三层交换机</text>
-  <text x="1770" y="700" text-anchor="middle" class="t">192.168.99.1 · H3C S5130V2-28S-LI</text>
-  <text x="1770" y="740" text-anchor="middle" class="small">所有业务 VLAN 网关 + DHCP</text>
-  <path d="M1770 415 V600" class="line"/>
-  <text x="1825" y="515" class="tag">LAN</text>
+  <path d="M460 255 H610" class="line"/>
+  <text x="535" y="235" text-anchor="middle" class="tag">LAN1</text>
+  <path d="M940 222 H1090" class="line"/>
+  <text x="1015" y="202" text-anchor="middle" class="tag">WAN1</text>
+  <path d="M460 325 C645 460 900 460 1090 325" class="line thin"/>
+  <text x="775" y="462" text-anchor="middle" class="tag">LAN2 → WAN2</text>
 
-  <path d="M1770 770 V1990" class="line"/>
+  <rect x="1035" y="550" width="580" height="160" class="box core"/>
+  <text x="1325" y="600" text-anchor="middle" class="h">H3C 核心三层交换机</text>
+  <text x="1325" y="640" text-anchor="middle" class="t">192.168.99.1 · H3C S5130V2-28S-LI</text>
+  <text x="1325" y="675" text-anchor="middle" class="small">所有业务 VLAN 网关 + DHCP</text>
+  <path d="M1325 350 V550" class="line"/>
+  <text x="1368" y="455" class="tag">LAN</text>
+  <path d="M1325 710 V2320" class="line"/>
 
-  <path d="M1770 880 H2150" class="trunk"/>
-  <rect x="2150" y="805" width="940" height="190" class="box access"/>
-  <text x="2620" y="855" text-anchor="middle" class="h">S5735S 汇聚 / 办公接入</text>
-  <text x="2620" y="900" text-anchor="middle" class="t">Huawei S5735S-L24T4S-QA2 · 192.168.99.2</text>
-  <text x="2620" y="940" text-anchor="middle" class="small">H3C Te1/0/28 Trunk ↔ S5735S Gi0/0/25</text>
-  <text x="2620" y="970" text-anchor="middle" class="small">VLAN 1,10,16-18,99</text>
+  <path d="M1325 820 H1680" class="trunk"/>
+  <rect x="1680" y="735" width="820" height="210" class="box access"/>
+  <text x="2090" y="785" text-anchor="middle" class="h">S5735S 汇聚 / 办公接入</text>
+  <text x="2090" y="825" text-anchor="middle" class="t">Huawei S5735S-L24T4S-QA2 · 192.168.99.2</text>
+  <text x="2090" y="860" text-anchor="middle" class="small">H3C Te1/0/28 Trunk ↔ S5735S Gi0/0/25</text>
+  <text x="2090" y="890" text-anchor="middle" class="small">VLAN10 / 16 / 17 / 18 / 99 归属此汇聚分支</text>
 
-  <path d="M1770 1085 H2150" class="trunk"/>
-  <rect x="2150" y="1025" width="940" height="230" class="box access"/>
-  <text x="2620" y="1075" text-anchor="middle" class="h">ER5200G3 AC / MiniAP 管理器</text>
-  <text x="2620" y="1120" text-anchor="middle" class="t">H3C ERG3 / ER5200G3 · 192.168.99.4</text>
-  <text x="2620" y="1160" text-anchor="middle" class="small">H3C GE1/0/12 Trunk · 仅 AC 管理</text>
-  <text x="2620" y="1190" text-anchor="middle" class="small">AP：7 × H3C A61-1500 · SWBA1A1V100R005</text>
-  <text x="2620" y="1220" text-anchor="middle" class="small">AP IP：172.17.1.2 - 172.17.1.8</text>
+  <path d="M1325 1065 H1680" class="trunk"/>
+  <rect x="1680" y="985" width="820" height="240" class="box access"/>
+  <text x="2090" y="1035" text-anchor="middle" class="h">ER5200G3 AC / MiniAP 管理器</text>
+  <text x="2090" y="1075" text-anchor="middle" class="t">H3C ERG3 / ER5200G3 · 192.168.99.4</text>
+  <text x="2090" y="1110" text-anchor="middle" class="small">H3C GE1/0/12 Trunk · 仅 AC 管理</text>
+  <text x="2090" y="1140" text-anchor="middle" class="small">不是核心 / 网关 / 主路由</text>
+  <text x="2090" y="1170" text-anchor="middle" class="small">AP：7 × H3C A61-1500 · SWBA1A1V100R005</text>
+  <text x="2090" y="1200" text-anchor="middle" class="small">AP IP：172.17.1.2 - 172.17.1.8</text>
 
-  <path d="M1770 1340 H2150" class="line"/>
-  <rect x="2150" y="1300" width="940" height="170" class="box nas"/>
-  <text x="2620" y="1350" text-anchor="middle" class="h">VLAN30 · NAS / 中枢网关</text>
-  <text x="2620" y="1395" text-anchor="middle" class="t">GW 192.168.30.1/24</text>
-  <text x="2620" y="1432" text-anchor="middle" class="small">GE1/0/7：小米中枢网关 ZSWG01CM（100M）</text>
-  <text x="2620" y="1462" text-anchor="middle" class="small">Te1/0/27：QNAP TS-h973AX-8G（10G）</text>
+  <path d="M1325 1340 H1680" class="line"/>
+  <rect x="1680" y="1280" width="820" height="185" class="box nas"/>
+  <text x="2090" y="1330" text-anchor="middle" class="h">VLAN30 · NAS / 中枢网关</text>
+  <text x="2090" y="1370" text-anchor="middle" class="t">GW 192.168.30.1/24</text>
+  <text x="2090" y="1405" text-anchor="middle" class="small">GE1/0/7：小米中枢网关 ZSWG01CM（100M）</text>
+  <text x="2090" y="1435" text-anchor="middle" class="small">Te1/0/27：QNAP TS-h973AX-8G（10G）</text>
 
-  <path d="M1770 1545 H2150" class="line"/>
-  <rect x="2150" y="1510" width="940" height="145" class="box vlan"/>
-  <text x="2620" y="1560" text-anchor="middle" class="h">VLAN40 · 监控网络</text>
-  <text x="2620" y="1605" text-anchor="middle" class="t">GW 192.168.40.1/24</text>
-  <text x="2620" y="1640" text-anchor="middle" class="small">GE1/0/5、GE1/0/6 · 海康 NVR DS-7932N-R4(C)</text>
+  <path d="M1325 1585 H1680" class="line"/>
+  <rect x="1680" y="1525" width="820" height="170" class="box vlan"/>
+  <text x="2090" y="1575" text-anchor="middle" class="h">VLAN40 · 监控网络</text>
+  <text x="2090" y="1615" text-anchor="middle" class="t">GW 192.168.40.1/24</text>
+  <text x="2090" y="1650" text-anchor="middle" class="small">GE1/0/5、GE1/0/6 · 海康 NVR</text>
+  <text x="2090" y="1678" text-anchor="middle" class="small">DS-7932N-R4(C) · 192.168.40.168</text>
 
-  <path d="M1770 1750 H2150" class="line"/>
-  <rect x="2150" y="1700" width="940" height="210" class="box svc"/>
-  <text x="2620" y="1750" text-anchor="middle" class="h">VLAN50 · 展厅 / 服务器 / 中控</text>
-  <text x="2620" y="1795" text-anchor="middle" class="t">GW 192.168.50.1/23</text>
-  <text x="2620" y="1830" text-anchor="middle" class="small">192.168.50.120 展厅中控 / 时钟源</text>
-  <text x="2620" y="1860" text-anchor="middle" class="small">192.168.50.121 node-121（AZW SER / AMD 零刻）</text>
-  <text x="2620" y="1890" text-anchor="middle" class="small">192.168.50.254 飞牛OS NAS（组装 NAS）</text>
+  <path d="M1325 1855 H1680" class="line"/>
+  <rect x="1680" y="1770" width="820" height="250" class="box svc"/>
+  <text x="2090" y="1820" text-anchor="middle" class="h">VLAN50 · 展厅 / 服务器 / 中控</text>
+  <text x="2090" y="1860" text-anchor="middle" class="t">GW 192.168.50.1/23 · GE1/0/8-16</text>
+  <text x="2090" y="1895" text-anchor="middle" class="small">192.168.50.120：展厅中控 / 时钟源</text>
+  <text x="2090" y="1925" text-anchor="middle" class="small">192.168.50.121：node-121（AZW SER / AMD 零刻）</text>
+  <text x="2090" y="1955" text-anchor="middle" class="small">运行：Scanopy / LibreNMS / NetBox</text>
+  <text x="2090" y="1985" text-anchor="middle" class="small">192.168.50.254：飞牛OS NAS（组装 NAS）</text>
 
-  <path d="M1770 1990 H2150" class="line"/>
-  <rect x="2150" y="1950" width="940" height="165" class="box vlan"/>
-  <text x="2620" y="2000" text-anchor="middle" class="h">其他直连业务 VLAN</text>
-  <text x="2620" y="2045" text-anchor="middle" class="small">VLAN19 接待厅 · VLAN70 工作坊 · VLAN80 2号展厅</text>
-  <text x="2620" y="2075" text-anchor="middle" class="small">VLAN90 XR影棚 · VLAN99 管理网 · VLAN120 临时口 · VLAN201 预留</text>
+  <path d="M1325 2180 H1680" class="line"/>
+  <rect x="1680" y="2110" width="820" height="210" class="box vlan"/>
+  <text x="2090" y="2160" text-anchor="middle" class="h">其他 H3C 直连业务 VLAN</text>
+  <text x="2090" y="2200" text-anchor="middle" class="small">VLAN19 接待厅 · GE1/0/19 · GW 192.168.19.1/24</text>
+  <text x="2090" y="2230" text-anchor="middle" class="small">VLAN70 工作坊 · VLAN80 2号展厅</text>
+  <text x="2090" y="2260" text-anchor="middle" class="small">VLAN90 XR影棚 · Te1/0/26 · 10G</text>
+  <text x="2090" y="2290" text-anchor="middle" class="small">VLAN99 管理网 · VLAN120 临时口 · VLAN201 预留</text>
 
-  <rect x="130" y="820" width="880" height="610" class="box todo"/>
-  <text x="570" y="875" text-anchor="middle" class="h">仍待现场补充</text>
-  <text x="190" y="940" class="t">• 飞牛OS NAS：接入交换机端口</text>
-  <text x="190" y="990" class="t">• 小米 ZSWG01CM：MAC、IP</text>
-  <text x="190" y="1040" class="t">• 海康 NVR：接入口</text>
-  <text x="190" y="1090" class="t">• AP：每台安装位置、上联端口</text>
-  <text x="190" y="1140" class="t">• B866-S2 / OSDWAN：管理地址、端口映射</text>
-  <text x="190" y="1190" class="t">• VLAN50 下挂交换机：位置、型号、上联端口</text>
-  <text x="190" y="1270" class="warn">说明：S5735S 下属 VLAN10/16/17/18 不与 H3C 直连 VLAN 混层。</text>
-  <text x="190" y="1320" class="warn">ER5200G3 仅作 AC / MiniAP 管理器。</text>
+  <rect x="70" y="780" width="850" height="395" class="box vlan"/>
+  <text x="495" y="835" text-anchor="middle" class="h">S5735S 分支 VLAN</text>
+  <text x="495" y="872" text-anchor="middle" class="small">归属汇聚，不与 H3C 直连 VLAN 混层</text>
+  <text x="135" y="935" class="t">• VLAN10：办公设备 · GW 192.168.10.1/24</text>
+  <text x="135" y="985" class="t">• VLAN16：市场部 · GW 192.168.16.1/24</text>
+  <text x="135" y="1035" class="t">• VLAN17：教培部 · GW 192.168.17.1/24</text>
+  <text x="135" y="1085" class="t">• VLAN18：AI开发部 · GW 192.168.18.1/24</text>
+  <text x="135" y="1135" class="t">• VLAN99：S5735S 管理 · 192.168.99.2</text>
 
-  <rect x="130" y="1510" width="880" height="315" class="box vlan"/>
-  <text x="570" y="1565" text-anchor="middle" class="h">S5735S 分支 VLAN</text>
-  <text x="190" y="1630" class="t">• VLAN10：办公设备 · GW 192.168.10.1/24</text>
-  <text x="190" y="1680" class="t">• VLAN16：市场部 · GW 192.168.16.1/24</text>
-  <text x="190" y="1730" class="t">• VLAN17：教培部 · GW 192.168.17.1/24</text>
-  <text x="190" y="1780" class="t">• VLAN18：AI开发部 · GW 192.168.18.1/24</text>
+  <rect x="70" y="1285" width="850" height="680" class="box todo"/>
+  <text x="495" y="1345" text-anchor="middle" class="h">仍待现场补充 / 复核</text>
+  <text x="135" y="1420" class="t">• 飞牛OS NAS：接入交换机 / 端口</text>
+  <text x="135" y="1470" class="t">• 小米 ZSWG01CM：MAC、IP、接入口确认</text>
+  <text x="135" y="1520" class="t">• 海康 NVR：物理接入口</text>
+  <text x="135" y="1570" class="t">• AP：每台安装位置、上联端口</text>
+  <text x="135" y="1620" class="t">• AP：对应 172.17.1.2 - 172.17.1.8</text>
+  <text x="135" y="1670" class="t">• B866-S2 / OSDWAN：管理地址</text>
+  <text x="135" y="1720" class="t">• B866-S2 / OSDWAN：端口映射</text>
+  <text x="135" y="1770" class="t">• VLAN50 下挂交换机：位置 / 型号 / 上联口</text>
+  <text x="135" y="1855" class="warn">绘图规则：H3C 后面保持横向树状分支。</text>
+  <text x="135" y="1900" class="warn">绘图规则：ER5200G3 仅作 AC 管理器。</text>
+  <text x="135" y="1945" class="warn">绘图规则：VLAN50 暂不细分物理位置。</text>
+
+  <text x="70" y="2515" class="muted">更新：2026-06-19 · 来源：LibreNMS / NetBox / Scanopy / SNMP / 现场补充。敏感凭据未写入图中。</text>
 </svg>

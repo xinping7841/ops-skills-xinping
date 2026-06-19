@@ -1,6 +1,6 @@
 # node-121 服务目录
 
-更新时间：2026-06-19 18:35 Asia/Shanghai
+更新时间：2026-06-19 19:25 Asia/Shanghai
 
 主机：`node-121`
 
@@ -19,6 +19,7 @@
 | LibreNMS | 长期监控、SNMP/ICMP 轮询、告警基础、syslog/trap 接收 | `http://192.168.50.121:60800/` | `http://100.122.235.56:60800/` | `/opt/librenms/docker-src/examples/compose` | Docker Compose |
 | NetBox | IPAM、VLAN、设备与机柜/连接关系的专业事实源 | `http://192.168.50.121:60801/` | `http://100.122.235.56:60801/` | `/opt/netbox/netbox-docker` | Docker Compose |
 | WAN1 Domain Manager | OpenWrt WAN1 域名/出口相关管理小服务 | `http://192.168.50.121:8765/` | 不建议直接暴露使用 | `/opt/shenlan-network-ops/tools/wan1-domain-manager` | `shenlan-wan1-domain-manager.service` |
+| Leadtek RTX Report | 丽台/NVIDIA 专业图形卡对比报告静态站 | `http://192.168.50.121:18080/` / `http://nvidia.gaoxinping.top/` | `http://100.122.235.56:18080/` | `/opt/leadtek-rtx-report` | `leadtek-report.service` + nginx |
 
 认证信息、数据库密码、SNMP 密码、Basic Auth 密码只保存在 `node-121` 本地 secret/env 文件中，不写入本仓库。
 
@@ -129,6 +130,7 @@ docker compose logs --tail=100 netbox
 | `shenlan-wan1-domain-manager.service` | WAN1 Domain Manager | active/running | `/etc/systemd/system/shenlan-wan1-domain-manager.service` | 使用 `/etc/shenlan-wan1-domain-manager.env`，含认证信息，勿打印 |
 | `snmpd.service` | node-121 本机 SNMPv3 Agent | active/running | `/usr/lib/systemd/system/snmpd.service` | LibreNMS 监控本机 |
 | `smart-snmp.service` | Smart Center SNMP Agent Service | active/running | `/etc/systemd/system/smart-snmp.service` | 使用 `/etc/smart-snmp-agent.env` |
+| `leadtek-report.service` | Leadtek/NVIDIA RTX 报告静态站 | active/running | `/etc/systemd/system/leadtek-report.service` | `/opt/leadtek-rtx-report`，监听 `0.0.0.0:18080` |
 
 常用命令：
 
@@ -136,10 +138,20 @@ docker compose logs --tail=100 netbox
 systemctl status shenlan-wan1-domain-manager.service
 systemctl status snmpd.service
 systemctl status smart-snmp.service
+systemctl status leadtek-report.service
 journalctl -u shenlan-wan1-domain-manager.service --no-pager -n 80
 journalctl -u snmpd.service --no-pager -n 80
 journalctl -u smart-snmp.service --no-pager -n 80
+journalctl -u leadtek-report.service --no-pager -n 80
 ```
+
+## Leadtek RTX Report
+
+代码仓库：`xinping7841/leadtek-rtx-report`。`node-121` 现场目录 `/opt/leadtek-rtx-report` 和本地工作副本 `D:\Deepseek\leadtek-rtx-report` 当前均对齐 GitHub `master` 的 `166876e`。
+
+运行方式：`leadtek-report.service` 在 `/opt/leadtek-rtx-report` 执行 `python3 -m http.server 18080 --bind 0.0.0.0`。nginx 站点配置 `/etc/nginx/sites-available/leadtek-report.conf` 反代 `http://127.0.0.1:18080`，当前正式域名为 `nvidia.gaoxinping.top`；旧拼写 `nvdia.gaoxinping.top` 已从该配置中移除。
+
+协作方式：修改前先用仓库内 `scripts/edit-lock.*` 查看或获取编辑锁；修改后提交到 GitHub，再在 `node-121` 上 fast-forward 拉取并按需重启/验证服务。`/opt/leadtek-rtx-report` 当前为 root-owned，普通 `xinping` 用户读取可用，写入 Git 元数据需要 `sudo git -c safe.directory=/opt/leadtek-rtx-report ...`。
 
 ## 相关交接记录
 

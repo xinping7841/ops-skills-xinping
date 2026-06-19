@@ -9,8 +9,8 @@
 - DERP TLS 端口使用 `8443/TCP`，不占用 nginx 正在使用的 `443/TCP`。
 - STUN 端口使用 `3478/UDP`。
 - ECS 上 `derper.service` 已运行，监听 `*:8443` 和 `*:3478`。
-- Tailscale 管理台还需要把下方 `derpMap` 合并到 tailnet policy；在本地 `tailscale netcheck` 出现 `ali-bj` 前，不认为客户端已经采用自建 DERP。
-- 不要一开始设置 `OmitDefaultRegions`，先保留官方 DERP 作为兜底。
+- Tailscale 管理台已把下方 `derpMap` 合并到 tailnet policy，并已在 12700K 与 ECS 上验证 `ali-bj` 生效。
+- 当前没有设置 `OmitDefaultRegions`，官方 DERP 仍保留为兜底。
 
 ## 服务器信息
 
@@ -195,13 +195,17 @@ journalctl -u derper -f
 
 ## 当前验证快照
 
-2026-06-19 19:27 Asia/Shanghai：
+2026-06-19 20:09 Asia/Shanghai：
 
+- Tailscale 管理台已保存 `derpMap.Regions.900`。
+- 12700K：`tailscale debug derp-map` 已显示 `900 / ali-bj / nvidia.gaoxinping.top / DERPPort 8443 / STUNPort 3478`。
+- 12700K：`tailscale netcheck` 显示 `Nearest DERP: Aliyun Beijing`，`ali-bj` 延迟约 `16.6ms`；`tok` 约 `61.1ms`，`nue` 约 `125.2ms`。
+- 12700K 到 node-121：`tailscale ping 100.122.235.56` 曾先走 `DERP(nue)` 约 `680ms`，随后切到直连 `124.127.149.110:9561` 约 `60ms`。直连可用时不会强制走 DERP，这是正常行为。
 - ECS：`derper.service` 为 `active`。
 - ECS：`ss -lntup` 显示 `derper` 监听 `*:8443/TCP` 与 `*:3478/UDP`。
+- ECS：`tailscale netcheck` 显示 `Nearest DERP: Aliyun Beijing`，`ali-bj` 延迟约 `5.5ms`。
+- ECS：`tailscale debug derp-map` 已显示 `900 / ali-bj / nvidia.gaoxinping.top / DERPPort 8443 / STUNPort 3478`。
 - ECS 到 node-121：`tailscale ping 100.122.235.56` 直连约 `8ms`。
-- 12700K 到 node-121：曾出现 `DERP(nue)` 约 `349ms`，随后切到直连约 `77ms`。
-- 12700K `tailscale netcheck` 尚未显示 `ali-bj`，说明 Tailscale policy 的 `derpMap` 仍需保存/下发/验证。
 
 ## 回滚
 
@@ -223,7 +227,8 @@ systemctl disable --now derper.service
 - 本地 Windows 可能因代理/DNS 返回 `198.18.0.0/15` 测试地址，测试域名连通性时优先用 ECS 或 Tailscale 自带命令。
 - 直接 `curl https://nvidia.gaoxinping.top:8443/` 可能被 `--verify-clients` 拒绝，不作为唯一判据。
 - 修改本文后提交并推送 `xinping7841/ops-skills-xinping`，确保 macair、12700K、lk402 自动同步。
+- node-121 当前在 `tailscale status` 中为 `active; direct 124.127.149.110:9561`。若需要在 node-121 本机验证 `derp-map`，优先使用明确用户 `xinping@100.122.235.56` 或修复本机 SSH config ACL 后再用别名。
 
 ---
 
-*最后更新：2026-06-19 | Codex 整理*
+*最后更新：2026-06-19 20:15 | Codex 整理*

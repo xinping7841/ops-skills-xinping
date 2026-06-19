@@ -115,6 +115,12 @@ Restart-Service sshd
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
 | `AGENTS.md` | 本文件，通用协作指令 |
 
+Codex 专用技能包：
+
+| 路径 | 用途 |
+|------|------|
+| `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验的入口技能 |
+
 ---
 
 ## 七、GitHub 仓库
@@ -166,6 +172,12 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 | `skill-codex-sandbox-repair.md` | Windows `shell_command` sandbox helper 启动失败、ACL/`.sandbox` 修复 |
 | `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
+
+Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
+
+| 路径 | 何时读取 |
+|------|----------|
+| `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验 |
 
 如需修改这些文件，改完后提交：
 ```bash

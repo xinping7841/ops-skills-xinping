@@ -35,7 +35,7 @@
 - H3C 是当前核心三层交换机，业务 VLAN 网关和 DHCP 池均在 H3C 上；OpenWrt 保持主出口/NAT/DNS/QoS/策略路由角色。
 - H3C `Ten-GigabitEthernet1/0/28` 已复核为到 S5735S 的 trunk，上联描述 `TO-Huawei5130`，允许 VLAN `1,10,16-18,99`，当前 UP，1G 光口。
 - S5735S 办公接入侧承载的部门 VLAN：`VLAN10` 办公设备、`VLAN16` 市场部、`VLAN17` 教培部、`VLAN18` AI 开发部。
-- H3C `Ten-GigabitEthernet1/0/27` 已复核为 `VLAN30` access 口，当前 UP，10G 光口，光模块类型 `10G_BASE_LR_SFP`，PVID/untagged 均为 `30`；用户说明该口通过 10G 光转电模块接入一台联通 NAS。
+- H3C `Ten-GigabitEthernet1/0/27` 已复核为 `VLAN30` access 口，当前 UP，10G 光口，光模块类型 `10G_BASE_LR_SFP`，PVID/untagged 均为 `30`；用户说明该口通过 10G 光转电模块接入一台威联通 NAS。
 - H3C `VLAN30` 描述为 `NAS`，网关 `192.168.30.1/24`，untagged 端口包含 `GigabitEthernet1/0/7` 与 `Ten-GigabitEthernet1/0/27`。
 - `192.168.50.254` 记录为飞牛 NAS，归属 `VLAN50` 展厅/服务器/中控网段；本次未从 H3C MAC/ARP 侧确认到该 IP 的端口位置，后续可从 NAS Web、ARP、Scanopy 或 NetBox 继续补点。
 
@@ -51,7 +51,7 @@ flowchart TB
   S5735[S5735S-Office-Access<br/>192.168.99.2<br/>办公接入 VLAN10/16/17/18]
   ER[ER5200G3-AC<br/>192.168.99.4<br/>AC/MiniAP 控制]
   Node121[node-121-service-host<br/>192.168.50.121<br/>Scanopy/LibreNMS/NetBox]
-  NAS[NAS<br/>VLAN30 联通NAS / VLAN50 飞牛NAS]
+  NAS[NAS<br/>VLAN30 威联通NAS / VLAN50 飞牛NAS]
   PoE[TL-SG2024MP<br/>PoE/摄像头或AP接入<br/>待确认]
   YLS[YLS220P-5G1F<br/>接入设备<br/>待确认]
   Future[FutureMatrix/S5735S 邻居<br/>多端口邻居<br/>待确认]
@@ -98,7 +98,7 @@ flowchart TB
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `24 5A 5F D6 B3 8E (245a5fd6b38e)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `24 5A 5F D6 B6 2A (245a5fd6b62a)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `68 DD B7 D2 59 2F (68ddb7d2592f)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
-| `192.168.99.1` | `Ten-GigabitEthernet1/0/27` | Ten-GigabitEthernet1/0/27 Interface | 联通 NAS（用户现场说明） | 单 MAC：`245e-be7d-49fd` | 已复核：UP，10G 光口，access VLAN30，LLDP 无邻居 |
+| `192.168.99.1` | `Ten-GigabitEthernet1/0/27` | Ten-GigabitEthernet1/0/27 Interface | 威联通 NAS（用户现场说明） | 单 MAC：`245e-be7d-49fd` | 已复核：UP，10G 光口，access VLAN30，LLDP 无邻居 |
 | `192.168.99.1` | `Ten-GigabitEthernet1/0/28` | TO-Huawei5130 | `S5735S-Office-Access` | `GigabitEthernet0/0/25 (3cc78618af38)` | 已复核：UP，trunk，允许 VLAN 1/10/16-18/99 |
 | `192.168.99.2` | `GigabitEthernet0/0/25` | TO-H3C-Core-Uplink | `H3C` | `Ten-GigabitEthernet1/0/28` | S5735S 上联端口备注确认 |
 | `192.168.99.2` | `GigabitEthernet0/0/9` | GigabitEthernet0/0/9 | `TL-ST2008` | ` (f86fb0769080)` | 已发现，待端口复核 |
@@ -113,7 +113,7 @@ flowchart TB
 | `18` | `VLAN18 ai-development` | `192.168.18.0/24` | Gateway 192.168.18.1/24 · AI 开发部，经 S5735S 接入 |
 | `19` | `VLAN19 reception` | `192.168.19.0/24` | Gateway 192.168.19.1/24 · reception |
 | `20` | `VLAN20 ap-wireless-management` | `192.168.20.0/24` | Gateway 192.168.20.1/24 · ap-wireless-management |
-| `30` | `VLAN30 nas-storage` | `192.168.30.0/24` | Gateway 192.168.30.1/24 · NAS；H3C Te1/0/27 为联通 NAS 10G 接入口 |
+| `30` | `VLAN30 nas-storage` | `192.168.30.0/24` | Gateway 192.168.30.1/24 · NAS；H3C Te1/0/27 为威联通 NAS 10G 接入口 |
 | `40` | `VLAN40 monitoring` | `192.168.40.0/24` | Gateway 192.168.40.1/24 · monitoring |
 | `50` | `VLAN50 showroom-server-central-control` | `192.168.50.0/23` | Gateway 192.168.50.1/23 · 展厅/服务器/中控；`192.168.50.254` 为飞牛 NAS |
 | `60` | `VLAN60 wireless-service` | `192.168.60.0/23` | Gateway 192.168.60.1/23 · wireless-service |

@@ -11,7 +11,7 @@ Updated: 2026-06-19 19:30 Asia/Shanghai
   - VLAN18: AI 开发部
 - H3C is the core switch.
 - Business VLAN gateways and DHCP pools are on H3C.
-- H3C optical port 27 is believed to be VLAN30, using a 10G optical-to-electrical module, connected to a 联通 NAS.
+- H3C optical port 27 is believed to be VLAN30, using a 10G optical-to-electrical module, connected to a 威联通 NAS.
 - `192.168.50.254` should be 飞牛 NAS.
 
 ## Read-Only H3C Verification
@@ -33,7 +33,7 @@ Verified:
 - Learned MAC on the port: `245e-be7d-49fd` in VLAN30.
 - LLDP neighbor: none reported.
 
-Conclusion: H3C port 27 is confirmed as the VLAN30 10G NAS access port. The “联通 NAS” device identity comes from user/site knowledge because LLDP does not advertise a neighbor.
+Conclusion: H3C port 27 is confirmed as the VLAN30 10G NAS access port. The “威联通 NAS” device identity comes from user/site knowledge because LLDP does not advertise a neighbor.
 
 ### H3C `Ten-GigabitEthernet1/0/28`
 
@@ -58,11 +58,11 @@ Conclusion: H3C port 28 is the S5735/S5735S trunk carrying the department VLANs 
   - Added `192.168.50.254` as 飞牛 NAS in VLAN50.
 - `diagrams/shenlan-network-ops-tree.svg`
   - Updated S5735 node with VLAN10/16/17/18.
-  - Added NAS/storage node for VLAN30 联通 NAS and VLAN50 飞牛 NAS.
+  - Added NAS/storage node for VLAN30 威联通 NAS and VLAN50 飞牛 NAS.
   - Updated bottom VLAN ledger for handoff use.
 
 ## Remaining Checks
 
 - Confirm the physical access port for `192.168.50.254` 飞牛 NAS through ARP/MAC/Scanopy/NetBox or NAS Web UI.
-- Confirm whether the VLAN30 NAS should be named 联通 NAS or another formal asset name in NetBox.
+- Confirm whether the VLAN30 NAS should be named 威联通 NAS or another formal asset name in NetBox.
 - Continue resolving LLDP duplicate/multi-port neighbors for H3C `Gi1/0/18`, `Gi1/0/19`, `Gi1/0/24`, and related S5735/FutureMatrix entries.

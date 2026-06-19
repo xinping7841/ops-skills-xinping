@@ -68,7 +68,7 @@
 
   <rect x="1365" y="1010" width="350" height="150" class="box" fill="#fef3c7" stroke="#d97706"/>
   <text x="1540" y="1050" text-anchor="middle" class="h">NAS / 存储</text>
-  <text x="1540" y="1083" text-anchor="middle" class="t">VLAN30 联通NAS：H3C Te1/0/27</text>
+  <text x="1540" y="1083" text-anchor="middle" class="t">VLAN30 威联通NAS：H3C Te1/0/27</text>
   <text x="1540" y="1115" text-anchor="middle" class="s">已复核：10G 光口 / access VLAN30</text>
   <text x="1540" y="1143" text-anchor="middle" class="s">VLAN50 飞牛NAS：192.168.50.254</text>
 
@@ -90,5 +90,5 @@
   <!-- VLAN ledger -->
   <rect x="90" y="1350" width="1625" height="55" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
   <text x="120" y="1384" class="tier">VLAN 底账：</text>
-  <text x="260" y="1384" class="legend">H3C 负责 VLAN/DHCP · S5735S 承载 10办公/16市场/17教培/18AI · 30联通NAS · 50服务器/中控/飞牛NAS · 60无线 · 99管理</text>
+  <text x="260" y="1384" class="legend">H3C 负责 VLAN/DHCP · S5735S 承载 10办公/16市场/17教培/18AI · 30威联通NAS · 50服务器/中控/飞牛NAS · 60无线 · 99管理</text>
 </svg>

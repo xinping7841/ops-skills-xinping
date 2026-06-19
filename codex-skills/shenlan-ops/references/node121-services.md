@@ -1,6 +1,6 @@
 # node-121 服务目录
 
-更新时间：2026-06-19 18:26 Asia/Shanghai
+更新时间：2026-06-19 18:35 Asia/Shanghai
 
 主机：`node-121`
 
@@ -108,6 +108,11 @@ LibreNMS 当前关键设备均为 SNMPv3：
 
 管理员用户名：`admin`。密码见本机 secret 文件 `/opt/netbox/netbox-docker/.shenlan-credentials`，不要打印或提交。
 
+NetBox 已在 `env/netbox.env` 设置 `CSRF_TRUSTED_ORIGINS`，允许从以下入口提交登录表单，避免通过 Tailscale/LAN 端口访问时出现 Django CSRF 403：
+
+- `http://100.122.235.56:60801`
+- `http://192.168.50.121:60801`
+
 常用命令：
 
 ```bash
@@ -146,3 +151,4 @@ journalctl -u smart-snmp.service --no-pager -n 80
 - `codex-skills/shenlan-ops/handoff/shenlan-er5200g3-snmpv3-librenms-2026-06-19-1505.md`
 - `codex-skills/shenlan-ops/handoff/shenlan-openwrt-snmpv3-librenms-2026-06-19-1735.md`
 - `codex-skills/shenlan-ops/handoff/shenlan-node121-web-credentials-unified-2026-06-19-1826.md`
+- `codex-skills/shenlan-ops/handoff/shenlan-netbox-csrf-trusted-origins-2026-06-19-1835.md`

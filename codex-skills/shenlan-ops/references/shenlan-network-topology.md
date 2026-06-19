@@ -1,6 +1,6 @@
 # 深澜网络拓扑草图（Scanopy / LibreNMS / NetBox）
 
-生成时间：2026-06-19 18:55 Asia/Shanghai
+生成时间：2026-06-19 19:30 Asia/Shanghai
 
 本文件是基于 `node-121` 上三个系统生成的第一版拓扑草图：
 
@@ -19,7 +19,7 @@
 
 ## 运维排查树
 
-推荐给现场运维交接时优先使用 `codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`。这张图按排查顺序表达：上游 Internet/WAN → OpenWrt 主出口 → H3C 核心三层 → S5735S 接入、ER5200G3 AC、node-121 运维服务、待确认下游设备。橙色/虚线链路表示仍需复核的 LLDP 多端口邻居、聚合、PoE/AP/房间面板端口。
+推荐给现场运维交接时优先使用 `codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`。这张图按排查顺序表达：上游 Internet/WAN → OpenWrt 主出口 → H3C 核心三层 → S5735S 接入、ER5200G3 AC、node-121 运维服务、NAS/待确认下游设备。橙色/虚线链路表示仍需复核的 LLDP 多端口邻居、聚合、PoE/AP/房间面板端口。
 
 ## 当前结论
 
@@ -30,6 +30,15 @@
 - `Scanopy` 可继续作为自动发现入口，后续用于补足非网管终端、摄像头、AP、NAS、投屏/中控设备等。
 - 第一版拓扑能准确表达主干关系；若要达到“施工图/交付图”级别，还需要逐口确认 H3C/S5735S 聚合、AP/PoE 交换机、各房间面板端口。
 
+## 2026-06-19 现场补充与只读复核
+
+- H3C 是当前核心三层交换机，业务 VLAN 网关和 DHCP 池均在 H3C 上；OpenWrt 保持主出口/NAT/DNS/QoS/策略路由角色。
+- H3C `Ten-GigabitEthernet1/0/28` 已复核为到 S5735S 的 trunk，上联描述 `TO-Huawei5130`，允许 VLAN `1,10,16-18,99`，当前 UP，1G 光口。
+- S5735S 办公接入侧承载的部门 VLAN：`VLAN10` 办公设备、`VLAN16` 市场部、`VLAN17` 教培部、`VLAN18` AI 开发部。
+- H3C `Ten-GigabitEthernet1/0/27` 已复核为 `VLAN30` access 口，当前 UP，10G 光口，光模块类型 `10G_BASE_LR_SFP`，PVID/untagged 均为 `30`；用户说明该口通过 10G 光转电模块接入一台联通 NAS。
+- H3C `VLAN30` 描述为 `NAS`，网关 `192.168.30.1/24`，untagged 端口包含 `GigabitEthernet1/0/7` 与 `Ten-GigabitEthernet1/0/27`。
+- `192.168.50.254` 记录为飞牛 NAS，归属 `VLAN50` 展厅/服务器/中控网段；本次未从 H3C MAC/ARP 侧确认到该 IP 的端口位置，后续可从 NAS Web、ARP、Scanopy 或 NetBox 继续补点。
+
 ## 高层拓扑
 
 ```mermaid
@@ -38,10 +47,11 @@ flowchart TB
   WAN1[WAN1 SDWAN]
   WAN2[WAN2 光猫直连]
   OpenWrt[OpenWrt-Main-Router<br/>192.168.99.3<br/>主出口/NAT/DNS/QoS]
-  H3C[H3C-Core-Switch<br/>192.168.99.1<br/>核心三层网关/DHCP]
-  S5735[S5735S-Office-Access<br/>192.168.99.2<br/>办公接入]
+  H3C[H3C-Core-Switch<br/>192.168.99.1<br/>核心三层网关/VLAN/DHCP]
+  S5735[S5735S-Office-Access<br/>192.168.99.2<br/>办公接入 VLAN10/16/17/18]
   ER[ER5200G3-AC<br/>192.168.99.4<br/>AC/MiniAP 控制]
   Node121[node-121-service-host<br/>192.168.50.121<br/>Scanopy/LibreNMS/NetBox]
+  NAS[NAS<br/>VLAN30 联通NAS / VLAN50 飞牛NAS]
   PoE[TL-SG2024MP<br/>PoE/摄像头或AP接入<br/>待确认]
   YLS[YLS220P-5G1F<br/>接入设备<br/>待确认]
   Future[FutureMatrix/S5735S 邻居<br/>多端口邻居<br/>待确认]
@@ -49,9 +59,10 @@ flowchart TB
   Internet --> WAN1 --> OpenWrt
   Internet --> WAN2 --> OpenWrt
   OpenWrt -- eth3.99 / VLAN99 --> H3C
-  H3C -- Gi1/0/18、Gi1/0/19、Gi1/0/24 等<br/>LLDP 指向 192.168.99.2/FutureMatrix，需确认聚合关系 --> S5735
+  H3C -- Te1/0/28 trunk<br/>VLAN 1,10,16-18,99 --> S5735
   H3C -- Gi1/0/12 / TO-ER5200G3-AC / LAN1 --> ER
   H3C -- VLAN50 --> Node121
+  H3C -- Te1/0/27 / VLAN30 / 10G 光口 --> NAS
   H3C -- Gi1/0/16 --> PoE
   H3C -- Gi1/0/13 --> YLS
   H3C -- Gi1/0/11 等 --> Future
@@ -87,7 +98,8 @@ flowchart TB
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `24 5A 5F D6 B3 8E (245a5fd6b38e)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `24 5A 5F D6 B6 2A (245a5fd6b62a)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
 | `192.168.99.1` | `GigabitEthernet1/0/9` | GigabitEthernet1/0/9 Interface | `192.168.99.2` | `68 DD B7 D2 59 2F (68ddb7d2592f)` | 指向 S5735S/FutureMatrix，可能为上联/聚合，待确认 |
-| `192.168.99.1` | `Ten-GigabitEthernet1/0/28` | TO-Huawei5130 | `S5735S-Office-Access` | `GigabitEthernet0/0/25 (3cc78618af38)` | 已发现，待端口复核 |
+| `192.168.99.1` | `Ten-GigabitEthernet1/0/27` | Ten-GigabitEthernet1/0/27 Interface | 联通 NAS（用户现场说明） | 单 MAC：`245e-be7d-49fd` | 已复核：UP，10G 光口，access VLAN30，LLDP 无邻居 |
+| `192.168.99.1` | `Ten-GigabitEthernet1/0/28` | TO-Huawei5130 | `S5735S-Office-Access` | `GigabitEthernet0/0/25 (3cc78618af38)` | 已复核：UP，trunk，允许 VLAN 1/10/16-18/99 |
 | `192.168.99.2` | `GigabitEthernet0/0/25` | TO-H3C-Core-Uplink | `H3C` | `Ten-GigabitEthernet1/0/28` | S5735S 上联端口备注确认 |
 | `192.168.99.2` | `GigabitEthernet0/0/9` | GigabitEthernet0/0/9 | `TL-ST2008` | ` (f86fb0769080)` | 已发现，待端口复核 |
 
@@ -96,14 +108,14 @@ flowchart TB
 | VLAN | 名称 | 网段 | 说明 |
 |---:|---|---|---|
 | `10` | `VLAN10 office-wired` | `192.168.10.0/24` | Gateway 192.168.10.1/24 · office-wired |
-| `11` | `VLAN11 room-vlan-a` | `192.168.11.0/24` | Gateway 192.168.11.1/24 · room-vlan-a |
-| `12` | `VLAN12 room-vlan-b` | `192.168.12.0/24` | Gateway 192.168.12.1/24 · room-vlan-b |
-| `13` | `VLAN13 room-vlan-c` | `192.168.13.0/24` | Gateway 192.168.13.1/24 · room-vlan-c |
+| `16` | `VLAN16 marketing` | `192.168.16.0/24` | Gateway 192.168.16.1/24 · 市场部，经 S5735S 接入 |
+| `17` | `VLAN17 training` | `192.168.17.0/24` | Gateway 192.168.17.1/24 · 教培部，经 S5735S 接入 |
+| `18` | `VLAN18 ai-development` | `192.168.18.0/24` | Gateway 192.168.18.1/24 · AI 开发部，经 S5735S 接入 |
 | `19` | `VLAN19 reception` | `192.168.19.0/24` | Gateway 192.168.19.1/24 · reception |
 | `20` | `VLAN20 ap-wireless-management` | `192.168.20.0/24` | Gateway 192.168.20.1/24 · ap-wireless-management |
-| `30` | `VLAN30 nas-storage` | `192.168.30.0/24` | Gateway 192.168.30.1/24 · nas-storage |
+| `30` | `VLAN30 nas-storage` | `192.168.30.0/24` | Gateway 192.168.30.1/24 · NAS；H3C Te1/0/27 为联通 NAS 10G 接入口 |
 | `40` | `VLAN40 monitoring` | `192.168.40.0/24` | Gateway 192.168.40.1/24 · monitoring |
-| `50` | `VLAN50 showroom-server-central-control` | `192.168.50.0/23` | Gateway 192.168.50.1/23 · showroom-server-central-control |
+| `50` | `VLAN50 showroom-server-central-control` | `192.168.50.0/23` | Gateway 192.168.50.1/23 · 展厅/服务器/中控；`192.168.50.254` 为飞牛 NAS |
 | `60` | `VLAN60 wireless-service` | `192.168.60.0/23` | Gateway 192.168.60.1/23 · wireless-service |
 | `70` | `VLAN70 workstation` | `192.168.70.0/24` | Gateway 192.168.70.1/24 · workstation |
 | `80` | `VLAN80 hall-2` | `192.168.80.0/24` | Gateway 192.168.80.1/24 · hall-2 |
@@ -126,6 +138,7 @@ flowchart TB
 - H3C `GigabitEthernet1/0/18`、`1/0/19`、`1/0/24` 均发现与 `192.168.99.2` / `FutureMatrix` 相关邻居，需要确认是否为同一台 S5735S、链路聚合、级联或 LLDP 残留。
 - OpenWrt 与 H3C 的物理端口在 LibreNMS 端没有形成完整 LLDP 双向链路；当前按已知 `eth3.99` / VLAN99 管理关系表达。
 - `TL-SG2024MP`、`YLS220P-5G1F`、`FutureMatrix` 等下游设备还未纳入 SNMPv3/NetBox 正式资产。
+- `192.168.50.254` 飞牛 NAS 已按用户说明记录在 VLAN50；仍需确认具体 H3C/S5735S 接入口。
 - Scanopy 的发现结果尚未结构化写入 NetBox；后续应建立“发现 → 候选资产 → 人工确认 → NetBox 入库”的流程。
 
 ## 建议落地步骤

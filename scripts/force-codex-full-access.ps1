@@ -1,14 +1,13 @@
 param(
     [switch]$RestartCodex,
-    [switch]$NoRestart
+    [switch]$NoRestart,
+    [int]$PostStartRepairDelaySeconds = 0
 )
 
 $ErrorActionPreference = 'Stop'
 
 $CodexHome = Join-Path $env:USERPROFILE '.codex'
 $ConfigPath = Join-Path $CodexHome 'config.toml'
-$GlobalStatePath = Join-Path $CodexHome '.codex-global-state.json'
-$StateDbPath = Join-Path $CodexHome 'state_5.sqlite'
 $PythonPath = Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 $StartAppId = 'OpenAI.Codex_2p2nqsd0c76g0!App'
 $Timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
@@ -17,44 +16,48 @@ function Write-Step($Message) {
     Write-Host "[force-codex-full-access] $Message"
 }
 
-if (-not (Test-Path -LiteralPath $CodexHome)) {
-    throw "Codex home not found: $CodexHome"
-}
-
-if (-not (Test-Path -LiteralPath $PythonPath)) {
-    $PythonCmd = Get-Command python -ErrorAction SilentlyContinue
-    if (-not $PythonCmd) {
-        throw 'Python not found. Install Python or ensure Codex primary runtime exists.'
-    }
-    $PythonPath = $PythonCmd.Source
-}
-
-if ($RestartCodex -and $NoRestart) {
-    throw 'Use either -RestartCodex or -NoRestart, not both.'
-}
-
-if ($RestartCodex) {
-    Write-Step 'Stopping running Codex processes so app state cannot overwrite the repair.'
-    Get-Process Codex,codex,node_repl -ErrorAction SilentlyContinue | Stop-Process -Force
-    Start-Sleep -Seconds 2
-}
-
-if (Test-Path -LiteralPath $ConfigPath) {
-    $ConfigBackup = "$ConfigPath.bak-full-access-$Timestamp"
-    Copy-Item -LiteralPath $ConfigPath -Destination $ConfigBackup -Force
-    $config = Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8
-    $config = [regex]::Replace(
-        $config,
-        "(?ms)^\[mcp_servers\.playwright\.tools\.browser_navigate\]\s*\r?\napproval_mode\s*=\s*`"approve`"\s*\r?\n+",
-        ""
+function Invoke-PythonBlock {
+    param(
+        [Parameter(Mandatory=$true)][string]$Name,
+        [Parameter(Mandatory=$true)][string]$Code
     )
-    Set-Content -LiteralPath $ConfigPath -Value $config -Encoding UTF8
-    Write-Step "Config repaired and backed up: $ConfigBackup"
-} else {
-    Write-Step "Config not found; skipped: $ConfigPath"
+
+    $TempScript = Join-Path $env:TEMP "$Name-$Timestamp.py"
+    Set-Content -LiteralPath $TempScript -Value $Code -Encoding UTF8
+    try {
+        & $PythonPath $TempScript
+    } finally {
+        Remove-Item -LiteralPath $TempScript -Force -ErrorAction SilentlyContinue
+    }
 }
 
-$RepairPython = @'
+function Repair-CodexConfig {
+    if (-not (Test-Path -LiteralPath $ConfigPath)) {
+        Write-Step "Config not found; skipped: $ConfigPath"
+        return
+    }
+
+    $ConfigBackup = "$ConfigPath.bak-full-access-$Timestamp"
+    try {
+        Copy-Item -LiteralPath $ConfigPath -Destination $ConfigBackup -Force
+        $config = Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8
+        $config = [regex]::Replace(
+            $config,
+            "(?ms)^\[mcp_servers\.playwright\.tools\.browser_navigate\]\s*\r?\napproval_mode\s*=\s*`"approve`"\s*\r?\n+",
+            ""
+        )
+        Set-Content -LiteralPath $ConfigPath -Value $config -Encoding UTF8
+        Write-Step "Config repaired and backed up: $ConfigBackup"
+    } catch {
+        Write-Step "Config repair skipped due to access restrictions: $($_.Exception.Message)"
+    }
+}
+
+function Repair-CodexThreadPermissions {
+    param([string]$Label)
+
+    Write-Step "Repairing Codex thread permissions in SQLite and global state JSON ($Label)."
+    Invoke-PythonBlock -Name 'force-codex-full-access' -Code @'
 import json
 import pathlib
 import shutil
@@ -114,15 +117,11 @@ if global_json.exists():
 else:
     print(f'json_missing={global_json}')
 '@
+}
 
-$TempScript = Join-Path $env:TEMP "force-codex-full-access-$Timestamp.py"
-Set-Content -LiteralPath $TempScript -Value $RepairPython -Encoding UTF8
-Write-Step 'Repairing Codex thread permissions in SQLite and global state JSON.'
-& $PythonPath $TempScript
-Remove-Item -LiteralPath $TempScript -Force -ErrorAction SilentlyContinue
-
-Write-Step 'Verification:'
-$VerifyPython = @'
+function Verify-CodexThreadPermissions {
+    Write-Step 'Verification:'
+    Invoke-PythonBlock -Name 'verify-codex-full-access' -Code @'
 import json
 import pathlib
 import sqlite3
@@ -153,15 +152,43 @@ if global_json.exists():
     print('agent_mode=' + repr(atom.get('agent-mode-by-host-id')))
     print('preferred_non_full_access=' + repr(atom.get('preferred-non-full-access-agent-mode-by-host-id')))
 '@
+}
 
-$VerifyScript = Join-Path $env:TEMP "verify-codex-full-access-$Timestamp.py"
-Set-Content -LiteralPath $VerifyScript -Value $VerifyPython -Encoding UTF8
-& $PythonPath $VerifyScript
-Remove-Item -LiteralPath $VerifyScript -Force -ErrorAction SilentlyContinue
+if (-not (Test-Path -LiteralPath $CodexHome)) {
+    throw "Codex home not found: $CodexHome"
+}
+
+if (-not (Test-Path -LiteralPath $PythonPath)) {
+    $PythonCmd = Get-Command python -ErrorAction SilentlyContinue
+    if (-not $PythonCmd) {
+        throw 'Python not found. Install Python or ensure Codex primary runtime exists.'
+    }
+    $PythonPath = $PythonCmd.Source
+}
+
+if ($RestartCodex -and $NoRestart) {
+    throw 'Use either -RestartCodex or -NoRestart, not both.'
+}
+
+if ($RestartCodex) {
+    Write-Step 'Stopping running Codex processes so app state cannot overwrite the repair.'
+    Get-Process Codex,codex,node_repl -ErrorAction SilentlyContinue | Stop-Process -Force
+    Start-Sleep -Seconds 2
+}
+
+Repair-CodexConfig
+Repair-CodexThreadPermissions -Label 'initial'
+Verify-CodexThreadPermissions
 
 if ($RestartCodex) {
     Write-Step 'Starting Codex.'
     Start-Process "shell:AppsFolder\$StartAppId"
+    if ($PostStartRepairDelaySeconds -gt 0) {
+        Write-Step "Waiting $PostStartRepairDelaySeconds seconds before post-start repair."
+        Start-Sleep -Seconds $PostStartRepairDelaySeconds
+        Repair-CodexThreadPermissions -Label 'post-start'
+        Verify-CodexThreadPermissions
+    }
 } elseif (-not $NoRestart) {
     Write-Step 'Repair complete. Restart Codex Desktop once so the UI reloads repaired permissions.'
 }

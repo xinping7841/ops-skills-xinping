@@ -7,13 +7,17 @@ running even trivial commands, for example:
   windows sandbox: helper_unknown_error: setup refresh had errors
   failed to read setup_error.json
   CreateProcessAsUserW failed: 5
+  write ACE failed on D:\Deepseek: SetNamedSecurityInfoW failed: 5
 
 Default mode is conservative: back up and recreate only ~/.codex/.sandbox.
 Use -ApplyAcl if Access denied persists after a Codex restart.
+Use -RepairWorkspaceAcl when sandbox logs show write ACE failures on D:\Deepseek.
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$ApplyAcl,
+    [switch]$RepairWorkspaceAcl,
+    [string]$WorkspacePath = 'D:\Deepseek',
     [switch]$RepairSshConfigAcl
 )
 
@@ -73,6 +77,27 @@ if ($ApplyAcl) {
     Invoke-Checked icacls.exe @($codexHome, '/grant', "${identity}:(OI)(CI)RX")
 }
 
+if ($RepairWorkspaceAcl) {
+    Write-Step "Applying ACL repair to workspace root: $WorkspacePath"
+    if (-not (Test-Path -LiteralPath $WorkspacePath)) {
+        throw "Workspace path not found: $WorkspacePath"
+    }
+
+    $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    Write-Host "Current identity: $identity"
+
+    # Keep this non-recursive. Codex setup only needs to update the workspace root
+    # security descriptor; existing inherited child permissions can stay as they are.
+    Invoke-Checked takeown.exe @('/F', $WorkspacePath, '/A')
+    Invoke-Checked icacls.exe @($WorkspacePath, '/inheritance:e')
+    Invoke-Checked icacls.exe @($WorkspacePath, '/grant', "${identity}:(F)")
+    Invoke-Checked icacls.exe @($WorkspacePath, '/grant', 'BUILTIN\Administrators:(F)')
+    Invoke-Checked icacls.exe @($WorkspacePath, '/grant', 'SYSTEM:(F)')
+    Invoke-Checked icacls.exe @($WorkspacePath, '/grant', 'CodexSandboxUsers:(OI)(CI)(M,DC)')
+    Write-Host 'Workspace ACL after repair:'
+    & icacls.exe $WorkspacePath
+}
+
 if ($RepairSshConfigAcl) {
     Write-Step 'Applying optional ACL repair to ~/.ssh/config'
     $sshConfig = Join-Path $env:USERPROFILE '.ssh\config'
@@ -106,4 +131,4 @@ Get-Content -LiteralPath $outFile
 
 Write-Step 'Done'
 Write-Host 'Now fully quit and reopen Codex, then run a trivial shell test such as: Write-Output OK' -ForegroundColor Green
-Write-Host 'If it still fails with Access denied, rerun this script with -ApplyAcl from an elevated PowerShell.' -ForegroundColor Green
+Write-Host 'If sandbox logs show write ACE failed on D:\Deepseek, rerun this script with -RepairWorkspaceAcl from an elevated PowerShell.' -ForegroundColor Green

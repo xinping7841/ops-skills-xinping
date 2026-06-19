@@ -1,3 +1,5 @@
+Latest topology image layout fix: 2026-06-19 21:25 Asia/Shanghai. Reworked codex-skills/shenlan-ops/diagrams/shenlan-network-latest-tree.svg to a larger 3200x2200 canvas with shorter wrapped lines to avoid text overflow in preview.
+
 Latest rendered topology image: 2026-06-19 21:15 Asia/Shanghai. Generated latest horizontal tree SVG topology at codex-skills/shenlan-ops/diagrams/shenlan-network-latest-tree.svg using the completed model supplements: B866-S2, OSDWAN, Beelink/倍控 H30S, H3C S5130V2-28S-LI, S5735S-L24T4S-QA2, ER5200G3/ERG3, 7 x A61-1500 APs, QNAP TS-h973AX-8G, 飞牛OS, Xiaomi ZSWG01CM, and Hikvision DS-7932N-R4(C).
 
 Latest endpoint model supplement: 2026-06-19 21:05 Asia/Shanghai. User confirmed 飞牛 NAS is an assembled NAS and should be recorded as 飞牛OS, Xiaomi central gateway model ZSWG01CM, and Hikvision NVR model DS-7932N-R4(C). Updated topology and device-model enrichment handoff. Remaining details are mostly physical access ports/locations and management addresses. Rebase conflict on codex-skills/shenlan-ops/diagrams/shenlan-network-layered-structure.svg remains unresolved.

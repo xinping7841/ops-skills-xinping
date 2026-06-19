@@ -1,6 +1,7 @@
 # 深澜网络拓扑草图（Scanopy / LibreNMS / NetBox）
 
 生成时间：2026-06-19 20:45 Asia/Shanghai
+最近更新：2026-06-19 22:25 Asia/Shanghai（型号补全、图片布局修正、PNG 导出）
 
 本文件是基于 `node-121` 上三个系统生成的第一版拓扑草图：
 
@@ -15,8 +16,10 @@
 - draw.io 文件：`codex-skills/shenlan-ops/diagrams/shenlan-network-topology.drawio`
 - 运维树状图：`codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`
 - 三层交接结构图：`codex-skills/shenlan-ops/diagrams/shenlan-network-layered-structure.svg`
-- 生成时间：2026-06-19 19:03 Asia/Shanghai
-- 用途：用于 diagrams.net / draw.io 继续手工排版、导出 PNG/PDF，或后续根据 LibreNMS/NetBox 复核结果迭代。
+- 最新横向树状 SVG：`codex-skills/shenlan-ops/diagrams/shenlan-network-latest-tree.svg`
+- 最新 PNG 预览：`codex-skills/shenlan-ops/diagrams/shenlan-network-latest-tree.svg.png`
+- 生成时间：2026-06-19 19:03 Asia/Shanghai；最近图片布局修正：2026-06-19 22:25 Asia/Shanghai
+- 用途：用于 diagrams.net / draw.io 继续手工排版、导出 PNG/PDF，或后续根据 LibreNMS/NetBox 复核结果迭代。当前优先查看最新横向树状 SVG/PNG。
 
 ## 运维排查树
 
@@ -160,7 +163,7 @@ flowchart TB
 - OpenWrt 与 H3C 的物理端口在 LibreNMS 端没有形成完整 LLDP 双向链路；当前按已知 `eth3.99` / VLAN99 管理关系表达。
 - `TL-SG2024MP`、`YLS220P-5G1F`、`FutureMatrix` 等下游设备还未纳入 SNMPv3/NetBox 正式资产。
 - `192.168.50.254` 飞牛 NAS 已按用户说明记录在 VLAN50；仍需确认具体 H3C/S5735S 接入口。
-- OpenWrt、SDWAN、电信光猫、AP、飞牛 NAS、威联通 NAS、小米中枢网关、海康 NVR 仍缺具体硬件型号；目前只能从 SNMP/Scanopy/现场说明确认角色、IP、部分 MAC 和服务。
+- 主干和关键终端型号已基本补齐：B866-S2、OSDWAN、倍控 H30S、H3C S5130V2-28S-LI、S5735S-L24T4S-QA2、ER5200G3/ERG3、7 × A61-1500、QNAP TS-h973AX-8G、飞牛OS、ZSWG01CM、DS-7932N-R4(C)。后续重点不再是型号，而是现场物理位置、接入口、管理地址和端口映射。
 - Scanopy 的发现结果尚未结构化写入 NetBox；后续应建立“发现 → 候选资产 → 人工确认 → NetBox 入库”的流程。
 
 ## 建议落地步骤
@@ -168,5 +171,5 @@ flowchart TB
 1. 在 LibreNMS 中确认所有关键设备 discovery/poll 周期正常。
 2. 在 H3C/S5735S 上导出或查询 LLDP neighbor 和 interface description，复核聚合链路。
 3. 将确认后的设备接口、线缆、VLAN membership 录入 NetBox。
-4. 用 Scanopy 扫描各 VLAN 网段，补充 AP、摄像头、NAS、中控、投屏、终端等非核心资产。
-5. Codex 重启后使用已安装的 `mcp-diagram-generator` 生成 `.drawio` 版本，作为可视化交付图。
+4. 用 Scanopy 扫描各 VLAN 网段，补充 AP、摄像头、NAS、中控、投屏/会议、终端等非核心资产。
+5. 继续以最新横向树状 SVG/PNG 作为现场沟通图；后续若要交付版，再在 draw.io 文件中做美化和导出 PDF。

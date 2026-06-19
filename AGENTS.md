@@ -109,6 +109,7 @@ Restart-Service sshd
 | 文件 | 用途 |
 |------|------|
 | `skill-ssh-tailscale.md` | SSH 免密 + Tailscale 拓扑（含12700k/lk402配置细节） |
+| `skill-tailscale-derp.md` | 北京阿里云自建 Tailscale DERP 中继配置、验证和回滚 |
 | `skill-mcp-servers.md` | MCP 服务器配置指南 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
 | `AGENTS.md` | 本文件，通用协作指令 |
@@ -160,6 +161,7 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 | 文件 | 何时读取 |
 |------|----------|
 | `skill-ssh-tailscale.md` | SSH 连接、Tailscale 组网、新机器上线 |
+| `skill-tailscale-derp.md` | 自建 DERP、中继兜底、Tailscale netcheck/derp-map 排查 |
 | `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
 

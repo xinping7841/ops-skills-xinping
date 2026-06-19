@@ -29,6 +29,14 @@
 
 ---
 
+## 自建 DERP 兜底速查
+
+北京阿里云 ECS `39.106.125.197` 已部署自建 Tailscale DERP/STUN，用于直连失败时优先走国内中继。域名 `nvidia.gaoxinping.top`，DERP TLS `8443/TCP`，STUN `3478/UDP`，systemd 服务 `derper.service`。
+
+详细安装记录、Tailscale `derpMap`、验证命令和回滚步骤见 `skill-tailscale-derp.md`。处理 Tailscale 中继、`tailscale netcheck`、`DERP(nue)` / `DERP(tok)` 延迟问题时，先读取该文档。
+
+---
+
 ## 12700k Windows SSH 配置备忘
 
 ### 问题根因

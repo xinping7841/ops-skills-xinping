@@ -19,6 +19,41 @@ CreateProcessAsUserW failed: 5
 
 脚本位置：`scripts/repair-codex-sandbox.ps1`。
 
+如果问题不是 sandbox helper 启动失败，而是 Codex Desktop 频繁把对话权限改回中途确认 / workspace 模式，使用全权限修复脚本：
+
+- macOS：`scripts/force-codex-full-access.sh`
+- Windows：`scripts/force-codex-full-access.ps1`
+
+macOS 一次性修复并验证：
+
+```bash
+cd ~/Documents/Deepseek
+bash scripts/force-codex-full-access.sh --repair --verify
+```
+
+macOS 持久修复（推荐）：安装用户级 LaunchAgent，监听 `~/.codex/.codex-global-state.json` 被 Codex 重写后自动拉回 full-access / never approval：
+
+```bash
+cd ~/Documents/Deepseek
+bash scripts/force-codex-full-access.sh --repair --install-launch-agent --verify
+```
+
+验证干净的关键输出：
+
+```text
+config approval_policy='never' sandbox_mode='danger-full-access'
+json ... preferred.local='full-access' ... guarded_count=0
+sqlite ... guarded_count=0
+VERIFY=clean
+```
+
+卸载 macOS 持久修复：
+
+```bash
+cd ~/Documents/Deepseek
+bash scripts/force-codex-full-access.sh --uninstall-launch-agent
+```
+
 保守修复模式会备份并重建 `C:\Users\gaoxi\.codex\.sandbox`，不会删除 Codex 会话、skills、config、SSH key 或项目文件。
 
 普通 PowerShell 中执行：

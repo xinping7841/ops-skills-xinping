@@ -10,6 +10,12 @@
 
 > 注意：本文件不包含任何密码、SNMP 凭据、Token 或原始配置备份。端口级链路中 LLDP 重复/厂商显示不一致的项目标记为“待确认”。
 
+## 可编辑图文件
+
+- draw.io 文件：`codex-skills/shenlan-ops/diagrams/shenlan-network-topology.drawio`
+- 生成时间：2026-06-19 19:03 Asia/Shanghai
+- 用途：用于 diagrams.net / draw.io 继续手工排版、导出 PNG/PDF，或后续根据 LibreNMS/NetBox 复核结果迭代。
+
 ## 当前结论
 
 依靠这三个程序已经可以构建出“核心层 + 出口 + 接入/无线控制 + 运维服务”的初始拓扑：

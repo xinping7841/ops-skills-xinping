@@ -1,6 +1,6 @@
 # 深澜网络拓扑草图（Scanopy / LibreNMS / NetBox）
 
-生成时间：2026-06-19 19:30 Asia/Shanghai
+生成时间：2026-06-19 20:45 Asia/Shanghai
 
 本文件是基于 `node-121` 上三个系统生成的第一版拓扑草图：
 
@@ -14,12 +14,15 @@
 
 - draw.io 文件：`codex-skills/shenlan-ops/diagrams/shenlan-network-topology.drawio`
 - 运维树状图：`codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`
+- 三层交接结构图：`codex-skills/shenlan-ops/diagrams/shenlan-network-layered-structure.svg`
 - 生成时间：2026-06-19 19:03 Asia/Shanghai
 - 用途：用于 diagrams.net / draw.io 继续手工排版、导出 PNG/PDF，或后续根据 LibreNMS/NetBox 复核结果迭代。
 
 ## 运维排查树
 
 推荐给现场运维交接时优先使用 `codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`。这张图按排查顺序表达：上游 Internet/WAN → OpenWrt 主出口 → H3C 核心三层 → S5735S 接入、ER5200G3 AC、node-121 运维服务、NAS/待确认下游设备。橙色/虚线链路表示仍需复核的 LLDP 多端口邻居、聚合、PoE/AP/房间面板端口。
+
+如果需要类似现场交接材料的分层结构图，优先使用 `codex-skills/shenlan-ops/diagrams/shenlan-network-layered-structure.svg`。该图按深澜实际现网绘制为“广域网出口层 / 核心交换层 / 接入与业务层”，不照搬双核心、防火墙等示例架构。
 
 ## 当前结论
 
@@ -70,13 +73,31 @@ flowchart TB
 
 ## 设备清单（LibreNMS）
 
-| 地址 | 显示名 | sysName | OS | 类型 | 状态 |
-|---|---|---|---|---|---|
-| `192.168.50.121` | `node-121-service-host` | `node-121` | `linux` | `server` | `1` |
-| `192.168.99.1` | `H3C-Core-Switch` | `h3c` | `comware` | `network` | `1` |
-| `192.168.99.2` | `S5735S-Office-Access` | `s5735s-office-access` | `vrp` | `network` | `1` |
-| `192.168.99.3` | `OpenWrt-Main-Router` | `openwrt-main-router` | `linux` | `server` | `1` |
-| `192.168.99.4` | `ER5200G3-AC` | `h3c` | `comware` | `network` | `1` |
+| 地址 | 显示名 | sysName | OS | 类型 | 型号 / 硬件 | 版本 / 序列号 | 状态 |
+|---|---|---|---|---|---|---|---|
+| `192.168.50.121` | `node-121-service-host` | `node-121` | `linux` | `server` | `Generic x86 64-bit`；本机 DMI 显示厂商 `AZW`、产品 `SER`，用户描述为“服务平台 AMD 零刻” | Linux `6.17.0-35-generic` | `1` |
+| `192.168.99.1` | `H3C-Core-Switch` | `h3c` | `comware` | `network` | `H3C S5130V2-28S-LI` | Comware `7.3.28` / Release `3507P18`；序列号已由 LibreNMS 读取但不在公开拓扑中展开 | `1` |
+| `192.168.99.2` | `S5735S-Office-Access` | `s5735s-office-access` | `vrp` | `network` | `Huawei S5735S-L24T4S-QA2` | VRP `5.170 (V200R021C00SPC600)` | `1` |
+| `192.168.99.3` | `OpenWrt-Main-Router` | `openwrt-main-router` | `linux` | `server` | 倍控 `H30S` | OpenWrt 版本待补 | `1` |
+| `192.168.99.4` | `ER5200G3-AC` | `h3c` | `comware` | `network` | `H3C ERG3 / ER5200G3 AC`（LibreNMS sysDescr：`H3C Product Version ERG3-MINIWAREV2-R0174P03,H3C ERG3`） | `ERG3-MINIWAREV2-R0174P03` | `1` |
+
+## 设备型号补全状态（2026-06-19）
+
+| 设备 | 当前结论 | 来源 | 仍需现场补充 |
+|---|---|---|---|
+| H3C 核心 | `H3C S5130V2-28S-LI` | LibreNMS SNMP `hardware/sysDescr` | 无 |
+| 华为办公汇聚 | `Huawei S5735S-L24T4S-QA2` | LibreNMS SNMP `hardware/sysDescr` | 无 |
+| ER5200G3 AC | `H3C ERG3 / ER5200G3`，软件 `ERG3-MINIWAREV2-R0174P03` | LibreNMS SNMP `sysDescr` + NetBox 设备名 | 若要采购/维保，补充机身完整铭牌型号 |
+| node-121 服务主机 | `AZW SER` / AMD 零刻服务平台 | `node-121` DMI + Scanopy 描述 | 若要资产入库，补充零刻具体商品型号 |
+| 飞牛 NAS | 组装 NAS，系统/资产名按 `飞牛OS` 记录，IP `192.168.50.254`，MAC `4c:ed:fb:45:c6:e1`，开放 NFS/FTP/SSH/HTTPS/Samba/Home Assistant 等服务 | 用户现场补充 + Scanopy 主机/端口发现 | 接入交换机端口 |
+| 威联通 NAS | QNAP/威联通 `TS-h973AX-8G`，H3C `Te1/0/27`，VLAN30，10G 光口，MAC `245e-be7d-49fd` | 用户现场补充 + H3C 端口复核 | 无 |
+| 小米中枢网关 | 小米中枢网关 `ZSWG01CM`，H3C `GE1/0/7`，当前 100M | 用户现场补充 | MAC / IP |
+| 海康威视 NVR | 海康威视 NVR `DS-7932N-R4(C)`，IP `192.168.40.168` | 用户现场补充 | 接入口 |
+| OpenWrt 主路由 | 倍控 `H30S`，IP `192.168.99.3` | 用户现场补充 + LibreNMS SNMP 角色确认 | OpenWrt 具体版本、物理 WAN/LAN 口映射 |
+| SDWAN | `OSDWAN` | 用户现场补充 | 管理地址、端口映射 |
+| 电信光猫 | `B866-S2`，路由模式，LAN1 到 SDWAN、LAN2 到 OpenWrt WAN2 | 用户现场补充 | 管理地址 |
+| AP / MiniAP | `A61-1500`，当前 ER5200G3 AP 列表显示已接入 7 台，AP 版本 `SWBA1A1V100R005`，IP 为 `172.17.1.2` 至 `172.17.1.8` | 用户截图 / ER5200G3 MiniAP 管理页面 | 每台 AP 现场安装位置、上联端口 |
+| VLAN50 下挂交换机 | Scanopy 发现大量 VLAN50 终端，LibreNMS/LLDP 已见 `TL-SG2024MP`、`YLS220P-5G1F`、`TL-ST2008`、`FutureMatrix` 等候选名称 | LibreNMS LLDP + Scanopy | 逐台确认物理位置、品牌完整型号、上联端口 |
 
 ## 已发现链路（LibreNMS links 表）
 
@@ -139,6 +160,7 @@ flowchart TB
 - OpenWrt 与 H3C 的物理端口在 LibreNMS 端没有形成完整 LLDP 双向链路；当前按已知 `eth3.99` / VLAN99 管理关系表达。
 - `TL-SG2024MP`、`YLS220P-5G1F`、`FutureMatrix` 等下游设备还未纳入 SNMPv3/NetBox 正式资产。
 - `192.168.50.254` 飞牛 NAS 已按用户说明记录在 VLAN50；仍需确认具体 H3C/S5735S 接入口。
+- OpenWrt、SDWAN、电信光猫、AP、飞牛 NAS、威联通 NAS、小米中枢网关、海康 NVR 仍缺具体硬件型号；目前只能从 SNMP/Scanopy/现场说明确认角色、IP、部分 MAC 和服务。
 - Scanopy 的发现结果尚未结构化写入 NetBox；后续应建立“发现 → 候选资产 → 人工确认 → NetBox 入库”的流程。
 
 ## 建议落地步骤

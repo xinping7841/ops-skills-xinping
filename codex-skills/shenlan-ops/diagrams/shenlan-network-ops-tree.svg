@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1320" viewBox="0 0 1800 1320" font-family="Arial, PingFang SC, Microsoft YaHei, sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.18"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto"><path d="M0,0 L12,4.5 L0,9 z" fill="#334155"/></marker>
+    <style>
+      .title{font-size:44px;font-weight:800;fill:#0f172a}.subtitle{font-size:22px;fill:#475569}.box{stroke-width:3;rx:22;filter:url(#shadow)}.tier{font-size:22px;font-weight:800;fill:#334155}.h{font-size:25px;font-weight:800;fill:#0f172a}.t{font-size:19px;fill:#1e293b}.s{font-size:17px;fill:#475569}.warn{font-size:18px;fill:#92400e;font-weight:700}.line{stroke:#334155;stroke-width:4;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:12 8}.thin{stroke-width:3}.legend{font-size:18px;fill:#334155}
+    </style>
+  </defs>
+  <rect width="1800" height="1320" fill="#f8fafc"/>
+  <text x="900" y="70" text-anchor="middle" class="title">深澜网络运维排查树状拓扑</text>
+  <text x="900" y="108" text-anchor="middle" class="subtitle">从上游出口 → 主路由 → 核心三层 → 接入/无线/服务；橙色为待复核链路</text>
+
+  <!-- Root / WAN -->
+  <rect x="610" y="145" width="580" height="100" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="900" y="184" text-anchor="middle" class="h">上游网络 / Internet</text>
+  <text x="900" y="215" text-anchor="middle" class="t">排查入口：先确认两条 WAN 是否在线、DNS/路由是否正常</text>
+
+  <rect x="235" y="305" width="430" height="120" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="450" y="345" text-anchor="middle" class="h">WAN1 SDWAN</text>
+  <text x="450" y="378" text-anchor="middle" class="t">海外/策略流量候选出口</text>
+  <text x="450" y="406" text-anchor="middle" class="s">关联：OpenWrt 策略路由 / 域名分流</text>
+
+  <rect x="1135" y="305" width="430" height="120" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="1350" y="345" text-anchor="middle" class="h">WAN2 光猫直连</text>
+  <text x="1350" y="378" text-anchor="middle" class="t">当前默认国内/普通出口</text>
+  <text x="1350" y="406" text-anchor="middle" class="s">排查：光猫链路、默认路由、丢包</text>
+
+  <path d="M820 245 C720 270 585 280 485 305" class="line"/>
+  <path d="M980 245 C1080 270 1215 280 1315 305" class="line"/>
+
+  <!-- OpenWrt -->
+  <rect x="610" y="500" width="580" height="150" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="900" y="543" text-anchor="middle" class="h">OpenWrt-Main-Router</text>
+  <text x="900" y="578" text-anchor="middle" class="t">192.168.99.3 · 主出口 / NAT / DNS / QoS / 策略路由</text>
+  <text x="900" y="610" text-anchor="middle" class="s">运维检查：WAN、dnsmasq、PBR/MWAN、SNMPv3、CPU/接口流量</text>
+  <text x="900" y="637" text-anchor="middle" class="s">到核心：eth3.99 / VLAN99 管理链路</text>
+
+  <path d="M450 425 C520 465 650 485 760 500" class="line"/>
+  <path d="M1350 425 C1280 465 1150 485 1040 500" class="line"/>
+
+  <!-- Core -->
+  <rect x="575" y="735" width="650" height="165" class="box" fill="#fef9c3" stroke="#ca8a04"/>
+  <text x="900" y="778" text-anchor="middle" class="h">H3C-Core-Switch</text>
+  <text x="900" y="812" text-anchor="middle" class="t">192.168.99.1 · 核心三层网关 / VLAN / DHCP</text>
+  <text x="900" y="846" text-anchor="middle" class="s">所有业务 VLAN 网关主要在这里；上联 OpenWrt，下联接入/AC/服务器</text>
+  <text x="900" y="875" text-anchor="middle" class="s">排查优先：接口状态、VLAN membership、DHCP 池、LLDP 邻居、聚合口</text>
+  <path d="M900 650 L900 735" class="line"/>
+  <text x="930" y="705" class="legend">VLAN99 / eth3.99</text>
+
+  <!-- Children row -->
+  <rect x="90" y="1010" width="390" height="150" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="285" y="1050" text-anchor="middle" class="h">S5735S-Office-Access</text>
+  <text x="285" y="1083" text-anchor="middle" class="t">192.168.99.2 · 办公接入交换机</text>
+  <text x="285" y="1115" text-anchor="middle" class="s">确认上联：Gi0/0/25 ↔ H3C Te1/0/28</text>
+  <text x="285" y="1143" text-anchor="middle" class="warn">另有多端口邻居/聚合待复核</text>
+
+  <rect x="535" y="1010" width="360" height="150" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="715" y="1050" text-anchor="middle" class="h">ER5200G3-AC</text>
+  <text x="715" y="1083" text-anchor="middle" class="t">192.168.99.4 · AC / MiniAP 控制</text>
+  <text x="715" y="1115" text-anchor="middle" class="s">H3C Gi1/0/12 → ER LAN1</text>
+  <text x="715" y="1143" text-anchor="middle" class="s">普通 DHCP 已禁用；SNMPv3 纳管</text>
+
+  <rect x="950" y="1010" width="360" height="150" class="box" fill="#ccfbf1" stroke="#0d9488"/>
+  <text x="1130" y="1050" text-anchor="middle" class="h">node-121-service-host</text>
+  <text x="1130" y="1083" text-anchor="middle" class="t">192.168.50.121 · 运维服务主机</text>
+  <text x="1130" y="1115" text-anchor="middle" class="s">Scanopy :60072 · LibreNMS :60800</text>
+  <text x="1130" y="1143" text-anchor="middle" class="s">NetBox :60801 · SNMP/日志/发现</text>
+
+  <rect x="1365" y="1010" width="350" height="150" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="1540" y="1050" text-anchor="middle" class="h">待确认下游设备</text>
+  <text x="1540" y="1083" text-anchor="middle" class="t">TL-SG2024MP / YLS220P-5G1F</text>
+  <text x="1540" y="1115" text-anchor="middle" class="s">FutureMatrix / TL-ST2008 / AP/摄像头</text>
+  <text x="1540" y="1143" text-anchor="middle" class="warn">需补 NetBox 资产与端口线缆</text>
+
+  <path d="M780 900 C650 940 430 965 300 1010" class="line"/>
+  <text x="355" y="957" class="legend">Te1/0/28 ↔ Gi0/0/25</text>
+  <path d="M845 900 C800 945 745 965 725 1010" class="line"/>
+  <text x="720" y="957" class="legend">Gi1/0/12 / LAN1</text>
+  <path d="M990 900 C1045 945 1105 965 1125 1010" class="line"/>
+  <text x="1090" y="957" class="legend">VLAN50 / 192.168.50.121</text>
+  <path d="M1060 900 C1210 940 1430 965 1530 1010" class="line dash"/>
+  <text x="1320" y="957" class="legend">Gi1/0/1/9/11/13/16/18/19/24 待核</text>
+
+  <!-- VLAN ledger -->
+  <rect x="90" y="1210" width="1625" height="70" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="120" y="1240" class="tier">NetBox / VLAN 底账：</text>
+  <text x="330" y="1240" class="legend">10 办公有线 · 19 前台 · 20 AP 管理 · 30 NAS · 40 监控 · 50 展厅服务器/中控 · 60 无线业务 · 70 工作站 · 80 二厅 · 90 XR · 99 核心管理 · 120 自由 DHCP · 201 预留</text>
+  <text x="120" y="1268" class="legend">排查建议：先看 H3C 网关/VLAN/DHCP，再看对应接入口，确认后把接口、线缆、设备归属回写 NetBox。</text>
+</svg>

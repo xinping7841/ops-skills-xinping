@@ -13,8 +13,13 @@
 ## 可编辑图文件
 
 - draw.io 文件：`codex-skills/shenlan-ops/diagrams/shenlan-network-topology.drawio`
+- 运维树状图：`codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`
 - 生成时间：2026-06-19 19:03 Asia/Shanghai
 - 用途：用于 diagrams.net / draw.io 继续手工排版、导出 PNG/PDF，或后续根据 LibreNMS/NetBox 复核结果迭代。
+
+## 运维排查树
+
+推荐给现场运维交接时优先使用 `codex-skills/shenlan-ops/diagrams/shenlan-network-ops-tree.svg`。这张图按排查顺序表达：上游 Internet/WAN → OpenWrt 主出口 → H3C 核心三层 → S5735S 接入、ER5200G3 AC、node-121 运维服务、待确认下游设备。橙色/虚线链路表示仍需复核的 LLDP 多端口邻居、聚合、PoE/AP/房间面板端口。
 
 ## 当前结论
 

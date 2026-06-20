@@ -117,6 +117,7 @@ Restart-Service sshd
 | `skill-mcp-servers.md` | MCP 服务器配置指南 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
 | `skill-web-app-dev-standards.md` | Web 应用现场开发规范：代码结构、Agent 协作、UI 质量和验收清单 |
+| `skill-code-review-eval.md` | 代码评估与审查规范：P0/P1/P2/P3 风险分级、结构体检、测试缺口和 UI 质量检查 |
 | `AGENTS.md` | 本文件，通用协作指令 |
 
 Codex 专用技能包：
@@ -125,6 +126,7 @@ Codex 专用技能包：
 |------|------|
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验的入口技能 |
 | `codex-skills/web-app-dev/` | 网页服务、React/Next/Vite、Tailwind/shadcn UI、代码规范和可维护性入口技能 |
+| `codex-skills/code-review-eval/` | 代码审查、项目体检、风险评估、重构前评估、测试缺口和 UI 质量检查入口技能 |
 
 ---
 
@@ -178,6 +180,7 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 | `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
 | `skill-web-app-dev-standards.md` | 搭建或维护网页服务、前端 UI、后台、管理台、看板、React/Next/Vite 项目 |
+| `skill-code-review-eval.md` | 代码评估、code review、重构前体检、风险分级、测试缺口、安全/性能/UI 审查 |
 
 Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 
@@ -185,6 +188,7 @@ Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 |------|----------|
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验 |
 | `codex-skills/web-app-dev/` | 创建或修改网站、网页服务、后台、管理台、看板、React/Next/Vite、Tailwind/shadcn UI |
+| `codex-skills/code-review-eval/` | 评估现有代码质量、审查 PR/项目风险、重构前体检、查测试缺口或 UI 质量问题 |
 
 如需修改这些文件，改完后提交：
 ```bash

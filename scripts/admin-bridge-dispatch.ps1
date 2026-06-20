@@ -178,6 +178,46 @@ function Probe-Node121Via12700K {
     }
 }
 
+function Test-WithMetaDisabled {
+    $meta = Get-NetAdapter -Name 'Meta' -ErrorAction SilentlyContinue
+    if (-not $meta) {
+        'Meta adapter not found; running probe without adapter change.'
+        Probe-TailscaleAndSsh
+        return
+    }
+
+    "Meta adapter status before=$($meta.Status) ifIndex=$($meta.ifIndex)"
+    try {
+        if ($meta.Status -ne 'Disabled') {
+            'disabling Meta adapter'
+            Disable-NetAdapter -Name 'Meta' -Confirm:$false -ErrorAction Stop
+            Start-Sleep -Seconds 5
+        }
+
+        'forcing Tailscale rebind after Meta change'
+        Invoke-Native -FilePath 'tailscale.exe' -Arguments @('debug', 'rebind') -TimeoutSeconds 15
+        Start-Sleep -Seconds 3
+
+        'routes while Meta is disabled:'
+        Get-NetRoute -AddressFamily IPv4 |
+            Where-Object { $_.DestinationPrefix -like '100.*' -or $_.DestinationPrefix -eq '0.0.0.0/0' -or $_.DestinationPrefix -like '198.18.*' } |
+            Sort-Object RouteMetric,InterfaceMetric,DestinationPrefix |
+            Select-Object ifIndex,InterfaceAlias,DestinationPrefix,NextHop,RouteMetric,InterfaceMetric |
+            Format-Table -AutoSize
+
+        Probe-TailscaleAndSsh
+    } finally {
+        $current = Get-NetAdapter -Name 'Meta' -ErrorAction SilentlyContinue
+        if ($current -and $current.Status -eq 'Disabled') {
+            're-enabling Meta adapter'
+            Enable-NetAdapter -Name 'Meta' -Confirm:$false -ErrorAction Continue
+            Start-Sleep -Seconds 5
+        }
+        $restored = Get-NetAdapter -Name 'Meta' -ErrorAction SilentlyContinue
+        if ($restored) { "Meta adapter status after=$($restored.Status)" }
+    }
+}
+
 $isAdmin = Test-Admin
 Write-Log "isAdmin=$isAdmin"
 if (-not $isAdmin) {
@@ -202,6 +242,7 @@ switch ($action) {
     'repair-tailscale' { Run-Step 'repair Tailscale' { Repair-Tailscale } }
     'probe-12700k' { Run-Step 'probe Tailscale and SSH' { Probe-TailscaleAndSsh } }
     'probe-node121-via-12700k' { Run-Step 'probe node-121 via 12700K' { Probe-Node121Via12700K } }
+    'test-with-meta-disabled' { Run-Step 'test with Meta adapter disabled' { Test-WithMetaDisabled } }
     'all' {
         Run-Step 'fix SSH ACL' { Repair-SshAcl }
         Run-Step 'repair Tailscale' { Repair-Tailscale }

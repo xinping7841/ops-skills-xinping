@@ -34,6 +34,11 @@ known_hosts*
 # Codex / browser local runtime output
 .playwright-mcp/
 codex-sandbox-repair-notes.md
+codex-detached-test.log
+codex-full-access-final-runner.ps1
+
+# Local screenshots / login captures
+tencent-docs-login-121.png
 
 # Local nested working copies
 leadtek-rtx-report/

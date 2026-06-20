@@ -15,7 +15,7 @@
 |------|-------------|------|------|----------|
 | hy-node-254 | 100.114.16.16 | enlightv-506 | id_ed25519 | `ssh hy-node-254` |
 | node-120 | 100.80.138.78 | xinping | id_ed25519 | `ssh node-120` |
-| node-121 | 100.122.235.56 | xinping | id_ed25519 | `ssh node-121` |
+| node-121 | 100.122.235.56 | xinping | **id_ed25519_nodes** | `ssh node-121` |
 | node-123 | 100.119.214.90 | sl123 | id_ed25519_nodes | `ssh node-123-ts` |
 | 12700k | 100.94.150.23 | gaoxi | **id_ed25519_nodes** | `ssh -i ~/.ssh/id_ed25519_nodes gaoxi@100.94.150.23` |
 | lk402-1 | 100.89.199.122 | gaoxi | **id_ed25519_nodes** | `ssh lk402-1` |
@@ -26,6 +26,50 @@
 |------|-------------|------|
 | node-122 | 100.84.214.75 | 离线（1d前） |
 | node-124 | 100.78.193.102 | 离线（9d前） |
+
+## SSH config 标准片段
+
+新机器运行 `setup-mac.sh` / `setup-win.ps1` 后应自动写入以下节点别名。若本机缺失，可手动追加到 `~/.ssh/config`：
+
+```sshconfig
+Host node-121
+  HostName 100.122.235.56
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host node-121-lan
+  HostName 192.168.50.121
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host 12700k
+  HostName 100.94.150.23
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host lk402-1
+  HostName 100.89.199.122
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+```
+
+`node-121` 优先走 Tailscale；在深蓝现场管理网内可用 `node-121-lan` 走 `192.168.50.121`。如果机器上有全局代理、TUN 或 Meta Tunnel 抢默认路由，访问 `192.168.50.121` 时可能从 `198.18.0.1` 发起连接并出现空响应；远程维护时优先检查 `tailscale status` / `tailscale ping node-121`。
+
+Windows 上如果 `~/.ssh/config` 的 owner 是 `BUILTIN\Administrators` 且当前用户只有 Read 权限，普通终端会无法追加 Host 块。用管理员 PowerShell 运行 `setup-win.ps1` 修复，或临时用 `ssh -F <临时配置文件> node-121` 验证连接。
+
+`node-121` 上的 Leadtek/NVIDIA RTX Report 服务监听 `18080`：
+
+- Tailscale：`http://100.122.235.56:18080/`
+- LAN：`http://192.168.50.121:18080/`
+- 备案完成前不要用 `nvidia.gaoxinping.top` 做生产验收；公网 80/443 可能返回阿里云 ICP 合规 `403 Beaver`。
 
 ---
 

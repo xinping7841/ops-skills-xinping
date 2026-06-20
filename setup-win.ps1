@@ -79,6 +79,9 @@ $(Get-Content $_ -Raw)
 $sshDir = Join-Path $env:USERPROFILE '.ssh'
 $sshConfig = Join-Path $sshDir 'config'
 New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
+if (Test-Path -LiteralPath $sshConfig) {
+    icacls $sshConfig /grant "$($env:USERNAME):(F)" | Out-Null
+}
 if (-not (Select-String -Path $sshConfig -Pattern '### ops-skills ###' -Quiet -ErrorAction SilentlyContinue)) {
     Add-Content -LiteralPath $sshConfig -Encoding UTF8 -Value @'
 

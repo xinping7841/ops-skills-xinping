@@ -103,6 +103,43 @@ else
   echo "⏭️  SSH config 已有 ops-skills 标记，跳过"
 fi
 
+if ! grep -q "### ops-skills node hosts ###" "$SSH_CONFIG" 2>/dev/null; then
+  cat >> "$SSH_CONFIG" << 'SSHEOF'
+
+### ops-skills node hosts ###
+Host node-121
+  HostName 100.122.235.56
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host node-121-lan
+  HostName 192.168.50.121
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host 12700k
+  HostName 100.94.150.23
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host lk402-1
+  HostName 100.89.199.122
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+SSHEOF
+  echo "✅ SSH node host config 已追加"
+else
+  echo "⏭️  SSH config 已有 ops-skills node host 标记，跳过"
+fi
+
 # 3. 定时同步 (launchd)
 PLIST="$HOME/Library/LaunchAgents/com.ops-skills.sync.plist"
 cat > "$PLIST" << PLISTEOF

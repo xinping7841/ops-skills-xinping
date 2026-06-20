@@ -35,9 +35,15 @@ function Invoke-Native {
         [int]$TimeoutSeconds = 30
     )
 
+    function Quote-Arg {
+        param([string]$Value)
+        if ($Value -notmatch '[\s"]') { return $Value }
+        return '"' + ($Value -replace '"', '\"') + '"'
+    }
+
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = $FilePath
-    foreach ($arg in $Arguments) { [void]$psi.ArgumentList.Add($arg) }
+    $psi.Arguments = ($Arguments | ForEach-Object { Quote-Arg $_ }) -join ' '
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.UseShellExecute = $false

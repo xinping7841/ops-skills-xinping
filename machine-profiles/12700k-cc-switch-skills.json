@@ -1,13 +1,19 @@
-{
+﻿{
   "schema": "cc-switch-skills-profile/v1",
   "machine": "12700k",
   "windowsUser": "gaoxi",
-  "generatedAt": "2026-06-20T07:03:51.146513+00:00",
-  "note": "Sanitized CC Switch skills profile. Credentials, account auth data, local database files, provider secrets, and private logs are excluded.",
+  "generatedAt": "2026-06-20T07:11:14.316518+00:00",
+  "note": "Sanitized CC Switch skills profile. Credentials, OAuth data, local databases, provider secrets, and private logs are excluded.",
+  "counts": {
+    "installed": 40,
+    "enabledCodex": 33,
+    "enabledClaude": 0
+  },
   "storage": {
     "ccSwitchSkillsDir": "~/.cc-switch/skills",
     "codexSkillsDir": "~/.codex/skills",
-    "backupPolicy": "Use this manifest as a restore checklist; do not commit ~/.cc-switch/cc-switch.db because it may contain account/provider data."
+    "agentsSkillsDir": "~/.agents/skills",
+    "backupPolicy": "Use this manifest as a restore checklist; do not commit ~/.cc-switch/cc-switch.db because it may contain account data."
   },
   "skills": [
     {
@@ -26,6 +32,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-compress-image",
+        "codex": "~/.codex/skills/baoyu-compress-image",
+        "agents": "~/.agents/skills/baoyu-compress-image"
       }
     },
     {
@@ -44,6 +55,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-diagram",
+        "codex": "~/.codex/skills/baoyu-diagram",
+        "agents": "~/.agents/skills/baoyu-diagram"
       }
     },
     {
@@ -62,6 +78,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-format-markdown",
+        "codex": "~/.codex/skills/baoyu-format-markdown",
+        "agents": "~/.agents/skills/baoyu-format-markdown"
       }
     },
     {
@@ -80,6 +101,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-infographic",
+        "codex": "~/.codex/skills/baoyu-infographic",
+        "agents": "~/.agents/skills/baoyu-infographic"
       }
     },
     {
@@ -98,6 +124,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-markdown-to-html",
+        "codex": "~/.codex/skills/baoyu-markdown-to-html",
+        "agents": "~/.agents/skills/baoyu-markdown-to-html"
       }
     },
     {
@@ -116,6 +147,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-translate",
+        "codex": "~/.codex/skills/baoyu-translate",
+        "agents": "~/.agents/skills/baoyu-translate"
       }
     },
     {
@@ -134,6 +170,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-url-to-markdown",
+        "codex": "~/.codex/skills/baoyu-url-to-markdown",
+        "agents": "~/.agents/skills/baoyu-url-to-markdown"
       }
     },
     {
@@ -152,6 +193,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/baoyu-youtube-transcript",
+        "codex": "~/.codex/skills/baoyu-youtube-transcript",
+        "agents": "~/.agents/skills/baoyu-youtube-transcript"
       }
     },
     {
@@ -170,6 +216,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/brand-guidelines",
+        "codex": "~/.codex/skills/brand-guidelines",
+        "agents": "~/.agents/skills/brand-guidelines"
       }
     },
     {
@@ -188,6 +239,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/canvas-design",
+        "codex": "~/.codex/skills/canvas-design",
+        "agents": "~/.agents/skills/canvas-design"
       }
     },
     {
@@ -206,6 +262,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/changelog-generator",
+        "codex": "~/.codex/skills/changelog-generator",
+        "agents": "~/.agents/skills/changelog-generator"
       }
     },
     {
@@ -224,6 +285,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/codex-sandbox-repair",
+        "codex": "~/.codex/skills/codex-sandbox-repair",
+        "agents": "~/.agents/skills/codex-sandbox-repair"
       }
     },
     {
@@ -242,6 +308,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/content-research-writer",
+        "codex": "~/.codex/skills/content-research-writer",
+        "agents": "~/.agents/skills/content-research-writer"
       }
     },
     {
@@ -260,6 +331,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/doc-coauthoring",
+        "codex": "~/.codex/skills/doc-coauthoring",
+        "agents": "~/.agents/skills/doc-coauthoring"
       }
     },
     {
@@ -278,6 +354,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/docx",
+        "codex": "~/.codex/skills/docx",
+        "agents": "~/.agents/skills/docx"
       }
     },
     {
@@ -296,6 +377,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/domain-name-brainstormer",
+        "codex": "~/.codex/skills/domain-name-brainstormer",
+        "agents": "~/.agents/skills/domain-name-brainstormer"
       }
     },
     {
@@ -314,6 +400,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/file-organizer",
+        "codex": "~/.codex/skills/file-organizer",
+        "agents": "~/.agents/skills/file-organizer"
       }
     },
     {
@@ -332,6 +423,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/frontend-design",
+        "codex": "~/.codex/skills/frontend-design",
+        "agents": "~/.agents/skills/frontend-design"
       }
     },
     {
@@ -350,6 +446,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/internal-comms",
+        "codex": "~/.codex/skills/internal-comms",
+        "agents": "~/.agents/skills/internal-comms"
       }
     },
     {
@@ -368,6 +469,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/invoice-organizer",
+        "codex": "~/.codex/skills/invoice-organizer",
+        "agents": "~/.agents/skills/invoice-organizer"
       }
     },
     {
@@ -386,6 +492,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/kun-skills-sync",
+        "codex": "~/.codex/skills/kun-skills-sync",
+        "agents": "~/.agents/skills/kun-skills-sync"
       }
     },
     {
@@ -404,6 +515,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/mcp-builder",
+        "codex": "~/.codex/skills/mcp-builder",
+        "agents": "~/.agents/skills/mcp-builder"
       }
     },
     {
@@ -422,6 +538,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/mcp-servers",
+        "codex": "~/.codex/skills/mcp-servers",
+        "agents": "~/.agents/skills/mcp-servers"
       }
     },
     {
@@ -440,6 +561,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/meeting-insights-analyzer",
+        "codex": "~/.codex/skills/meeting-insights-analyzer",
+        "agents": "~/.agents/skills/meeting-insights-analyzer"
       }
     },
     {
@@ -458,6 +584,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/ops-terminal-sync",
+        "codex": "~/.codex/skills/ops-terminal-sync",
+        "agents": "~/.agents/skills/ops-terminal-sync"
       }
     },
     {
@@ -476,6 +607,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/pdf",
+        "codex": "~/.codex/skills/pdf",
+        "agents": "~/.agents/skills/pdf"
       }
     },
     {
@@ -494,6 +630,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/pptx",
+        "codex": "~/.codex/skills/pptx",
+        "agents": "~/.agents/skills/pptx"
       }
     },
     {
@@ -512,6 +653,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/product-requirements",
+        "codex": "~/.codex/skills/product-requirements",
+        "agents": "~/.agents/skills/product-requirements"
       }
     },
     {
@@ -530,6 +676,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/shenlan-ops",
+        "codex": "~/.codex/skills/shenlan-ops",
+        "agents": "~/.agents/skills/shenlan-ops"
       }
     },
     {
@@ -548,6 +699,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/skill-creator",
+        "codex": "~/.codex/skills/skill-creator",
+        "agents": "~/.agents/skills/skill-creator"
       }
     },
     {
@@ -566,6 +722,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/ssh-tailscale",
+        "codex": "~/.codex/skills/ssh-tailscale",
+        "agents": "~/.agents/skills/ssh-tailscale"
       }
     },
     {
@@ -584,6 +745,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/table-data",
+        "codex": "~/.codex/skills/table-data",
+        "agents": "~/.agents/skills/table-data"
       }
     },
     {
@@ -602,6 +768,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/tailored-resume-generator",
+        "codex": "~/.codex/skills/tailored-resume-generator",
+        "agents": "~/.agents/skills/tailored-resume-generator"
       }
     },
     {
@@ -620,6 +791,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/tailscale-derp",
+        "codex": "~/.codex/skills/tailscale-derp",
+        "agents": "~/.agents/skills/tailscale-derp"
       }
     },
     {
@@ -638,6 +814,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/test-cases",
+        "codex": "~/.codex/skills/test-cases",
+        "agents": "~/.agents/skills/test-cases"
       }
     },
     {
@@ -656,6 +837,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/theme-factory",
+        "codex": "~/.codex/skills/theme-factory",
+        "agents": "~/.agents/skills/theme-factory"
       }
     },
     {
@@ -674,6 +860,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/video-downloader",
+        "codex": "~/.codex/skills/video-downloader",
+        "agents": "~/.agents/skills/video-downloader"
       }
     },
     {
@@ -692,6 +883,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/web-artifacts-builder",
+        "codex": "~/.codex/skills/web-artifacts-builder",
+        "agents": "~/.agents/skills/web-artifacts-builder"
       }
     },
     {
@@ -710,6 +906,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/webapp-testing",
+        "codex": "~/.codex/skills/webapp-testing",
+        "agents": "~/.agents/skills/webapp-testing"
       }
     },
     {
@@ -728,6 +929,11 @@
         "gemini": false,
         "opencode": false,
         "hermes": false
+      },
+      "localPaths": {
+        "ccSwitch": "~/.cc-switch/skills/xlsx",
+        "codex": "~/.codex/skills/xlsx",
+        "agents": "~/.agents/skills/xlsx"
       }
     }
   ]

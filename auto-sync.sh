@@ -64,6 +64,21 @@ append_skill_config() {
   fi
 }
 
+install_codex_global_agents() {
+  [ -d "$HOME/.codex" ] || return 0
+  cat > "$HOME/.codex/AGENTS.md" << 'AGENTSEOF'
+# Codex Global Instructions
+
+Project-specific AGENTS.md files are the source of truth.
+
+For the Deepseek workspace, read and follow:
+- ~/Documents/Deepseek/AGENTS.md on macOS/Linux
+- D:\Deepseek\AGENTS.md on Windows
+
+Keep this global file short. Do not copy full project instructions here; doing so duplicates context in every Codex thread and can cause context bloat or stalled conversations.
+AGENTSEOF
+}
+
 link_codex_skill_for_ui() {
   skill_name="$1"
   src="$HOME/.codex/skills/$skill_name"
@@ -131,7 +146,7 @@ sync_codex_skill_dir() {
 
 deploy_repo_to_local() {
   if [ -d "$HOME/.codex" ]; then
-    [ -f "AGENTS.md" ] && cp AGENTS.md "$HOME/.codex/AGENTS.md"
+    install_codex_global_agents
 
     for skill_md in skill-*.md; do
       [ -f "$skill_md" ] || continue

@@ -7,6 +7,20 @@ set -e
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "=== Kun 生态部署 ==="
 
+install_codex_global_agents() {
+  cat > "$HOME/.codex/AGENTS.md" << 'AGENTSEOF'
+# Codex Global Instructions
+
+Project-specific AGENTS.md files are the source of truth.
+
+For the Deepseek workspace, read and follow:
+- ~/Documents/Deepseek/AGENTS.md on macOS/Linux
+- D:\Deepseek\AGENTS.md on Windows
+
+Keep this global file short. Do not copy full project instructions here; doing so duplicates context in every Codex thread and can cause context bloat or stalled conversations.
+AGENTSEOF
+}
+
 link_codex_skill_for_ui() {
   local skill_name="$1"
   local src="$HOME/.codex/skills/$skill_name"
@@ -37,8 +51,8 @@ link_codex_skill_for_ui() {
 
 # 1. Codex 全局指令
 if [ -d "$HOME/.codex" ]; then
-  cp "$REPO_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
-  echo "✅ Codex AGENTS.md 已部署"
+  install_codex_global_agents
+  echo "✅ Codex 全局 AGENTS.md 已部署（短索引版）"
 else
   echo "⚠️  未找到 Codex (~/.codex)，跳过"
 fi

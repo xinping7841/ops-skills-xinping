@@ -7,11 +7,28 @@ $ErrorActionPreference = 'Continue'
 $RepoDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Host '=== Ops skills setup (Windows) ===' -ForegroundColor Cyan
 
+function Install-CodexGlobalAgents {
+    param([string]$CodexDir)
+
+    $content = @'
+# Codex Global Instructions
+
+Project-specific AGENTS.md files are the source of truth.
+
+For the Deepseek workspace, read and follow:
+- ~/Documents/Deepseek/AGENTS.md on macOS/Linux
+- D:\Deepseek\AGENTS.md on Windows
+
+Keep this global file short. Do not copy full project instructions here; doing so duplicates context in every Codex thread and can cause context bloat or stalled conversations.
+'@
+    Set-Content -LiteralPath (Join-Path $CodexDir 'AGENTS.md') -Value $content -Encoding UTF8
+}
+
 # 1. Codex global instructions
 $codexDir = Join-Path $env:USERPROFILE '.codex'
 if (Test-Path -LiteralPath $codexDir) {
-    Copy-Item -LiteralPath (Join-Path $RepoDir 'AGENTS.md') -Destination (Join-Path $codexDir 'AGENTS.md') -Force
-    Write-Host '[OK] Codex AGENTS.md installed' -ForegroundColor Green
+    Install-CodexGlobalAgents -CodexDir $codexDir
+    Write-Host '[OK] Codex global AGENTS.md installed as short index' -ForegroundColor Green
 } else {
     Write-Host '[WARN] Codex directory not found; skipped AGENTS.md' -ForegroundColor Yellow
 }

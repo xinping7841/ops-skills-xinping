@@ -59,6 +59,24 @@ function Add-CodexSkillConfig {
     }
 }
 
+function Install-CodexGlobalAgents {
+    $codexDir = Join-Path $env:USERPROFILE '.codex'
+    if (-not (Test-Path -LiteralPath $codexDir)) { return }
+
+    $content = @'
+# Codex Global Instructions
+
+Project-specific AGENTS.md files are the source of truth.
+
+For the Deepseek workspace, read and follow:
+- ~/Documents/Deepseek/AGENTS.md on macOS/Linux
+- D:\Deepseek\AGENTS.md on Windows
+
+Keep this global file short. Do not copy full project instructions here; doing so duplicates context in every Codex thread and can cause context bloat or stalled conversations.
+'@
+    Set-Content -LiteralPath (Join-Path $codexDir 'AGENTS.md') -Value $content -Encoding UTF8
+}
+
 function Link-CodexSkillForUi {
     param([string]$SkillName)
 
@@ -137,10 +155,9 @@ function Sync-CodexSkillDir {
 
 function Deploy-RepoToLocal {
     $codexDir = Join-Path $env:USERPROFILE '.codex'
-    $agentsSource = Join-Path $RepoDir 'AGENTS.md'
-    if ((Test-Path -LiteralPath $agentsSource) -and (Test-Path -LiteralPath $codexDir)) {
-        Copy-Item -LiteralPath $agentsSource -Destination (Join-Path $codexDir 'AGENTS.md') -Force
-        Write-SyncLog 'Codex AGENTS.md refreshed.'
+    Install-CodexGlobalAgents
+    if (Test-Path -LiteralPath $codexDir) {
+        Write-SyncLog 'Codex global AGENTS.md refreshed as short index.'
     }
 
     if (Test-Path -LiteralPath $codexDir) {

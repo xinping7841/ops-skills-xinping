@@ -13,6 +13,7 @@
 
 | 机器 | Tailscale IP | 用户 | 密钥 | 连接命令 |
 |------|-------------|------|------|----------|
+| macair / xinpingmacbook-air | 100.112.77.115 | 待确认 | id_ed25519_nodes | — |
 | hy-node-254 | 100.114.16.16 | enlightv-506 | id_ed25519 | `ssh hy-node-254` |
 | node-120 | 100.80.138.78 | xinping | id_ed25519 | `ssh node-120` |
 | node-121 | 100.122.235.56 | xinping | **id_ed25519_nodes** | `ssh node-121` |
@@ -139,7 +140,7 @@ Restart-Service sshd
 
 | 机器 | Git 仓库 | 状态 |
 |------|----------|------|
-| macair | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
+| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Tailscale 已上线，待恢复 Git/SSH |
 | 12700K | `D:\Deepseek` | ✅ |
 | lk402-1 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 
@@ -173,4 +174,4 @@ git add -A && git commit -m "描述" && git push
 
 ---
 
-*最后更新：2026-06-13 | Kun 整理*
+*最后更新：2026-06-20 | Codex 整理*

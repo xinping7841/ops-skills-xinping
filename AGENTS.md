@@ -9,7 +9,7 @@
 
 | 机器 | 角色 | 路径 | 同步方式 |
 |------|------|------|----------|
-| **macair** | 移动办公 | `~/Documents/Deepseek` | auto-sync.sh (5min) |
+| **macair / xinpingmacbook-air** | 移动办公 | `~/Documents/Deepseek` | auto-sync.sh (5min) |
 | **12700K** | 主力工作 | `D:\Deepseek` | 计划任务 (5min) |
 | **lk402** | 家庭工作 | `D:\Deepseek` | Deepseek-Sync 计划任务 (5min) |
 
@@ -69,7 +69,7 @@ git push
 
 | 机器 | Tailscale IP | 用户 | 密钥 | 连接命令 |
 |------|-------------|------|------|----------|
-| macair | 100.79.241.32 | wanghongyu | id_ed25519_nodes | — |
+| macair / xinpingmacbook-air | 100.112.77.115 | 待确认 | id_ed25519_nodes | — |
 | node-121 | 100.122.235.56 | xinping | id_ed25519_nodes | `ssh node-121` |
 | 12700k | 100.94.150.23 | gaoxi | id_ed25519_nodes | `ssh -i ~/.ssh/id_ed25519_nodes gaoxi@100.94.150.23` |
 | lk402 | 100.89.199.122 | gaoxi | id_ed25519_nodes | `ssh lk402-1` |
@@ -162,7 +162,7 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 
 ---
 
-*本文件由 macair Kun 维护，最后更新 2026-06-13*
+*本文件由 macair Kun 维护，最后更新 2026-06-20*
 
 ## 工作区技能文件
 

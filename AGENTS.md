@@ -72,7 +72,7 @@ git push
 | macair / xinpingmacbook-air | 100.112.77.115 | 待确认 | id_ed25519_nodes | — |
 | node-121 | 100.122.235.56 | xinping | id_ed25519_nodes | `ssh node-121` |
 | 12700k | 100.94.150.23 | gaoxi | id_ed25519_nodes | `ssh -i ~/.ssh/id_ed25519_nodes gaoxi@100.94.150.23` |
-| lk402 | 100.89.199.122 | gaoxi | id_ed25519_nodes | `ssh lk402-1` |
+| lk402 | 100.89.199.122 | gaoxi | id_ed25519_nodes | `ssh lk402`（兼容 `ssh lk402-1`） |
 
 > 无密码 key：`id_ed25519_nodes`（macbook-air-nodes / lk402-nodes）
 > 有密码 key：`id_ed25519`（wanghongyu@bogon，需要 Keychain）

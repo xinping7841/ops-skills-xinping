@@ -123,7 +123,7 @@ Host 12700k
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
 
-Host lk402-1
+Host lk402 lk402-1
   HostName 100.89.199.122
   User gaoxi
   IdentityFile ~/.ssh/id_ed25519_nodes

@@ -19,7 +19,7 @@
 | node-121 | 100.122.235.56 | xinping | **id_ed25519_nodes** | `ssh node-121` |
 | node-123 | 100.119.214.90 | sl123 | id_ed25519_nodes | `ssh node-123-ts` |
 | 12700k | 100.94.150.23 | gaoxi | **id_ed25519_nodes** | `ssh -i ~/.ssh/id_ed25519_nodes gaoxi@100.94.150.23` |
-| lk402-1 | 100.89.199.122 | gaoxi | **id_ed25519_nodes** | `ssh lk402-1` |
+| lk402 | 100.89.199.122 | gaoxi | **id_ed25519_nodes** | `ssh lk402`（兼容 `ssh lk402-1`） |
 
 ## 离线/待补充
 
@@ -54,7 +54,7 @@ Host 12700k
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
 
-Host lk402-1
+Host lk402 lk402-1
   HostName 100.89.199.122
   User gaoxi
   IdentityFile ~/.ssh/id_ed25519_nodes
@@ -142,7 +142,7 @@ Restart-Service sshd
 |------|----------|------|
 | macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Tailscale 已上线，待恢复 Git/SSH |
 | 12700K | `D:\Deepseek` | ✅ |
-| lk402-1 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
+| lk402 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 
 工作流：
 ```bash
@@ -161,7 +161,7 @@ git add -A && git commit -m "描述" && git push
 
 ---
 
-## lk402-1 配置完成
+## lk402 配置完成
 
 - [x] OpenSSH 服务 → 已开启 + 自动启动
 - [x] Git for Windows → 已装 (2.54.0)

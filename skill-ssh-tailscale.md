@@ -9,11 +9,16 @@
 | `~/.ssh/id_ed25519.pub` | 公钥 | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIADSa1NydZ0L4fYpadK/mMeQoi/ccMGypVY+0u8FO1Ow wanghongyu@bogon` |
 | `~/.ssh/id_ed25519_nodes.pub` | 公钥 | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKNo3GgCvj6YmcZDW5g8gI3XTvGZlhXSe2/Kw9FgKlHK macbook-air-nodes` |
 
+macair 入站 SSH 已开启，`/Users/xinping/.ssh/authorized_keys` 已授权：
+- macair 本机 `id_ed25519_nodes`
+- 12700k `id_ed25519_nodes`
+- lk402 `id_ed25519_nodes`
+
 ## 在线机器
 
 | 机器 | Tailscale IP | 用户 | 密钥 | 连接命令 |
 |------|-------------|------|------|----------|
-| macair / xinpingmacbook-air | 100.112.77.115 | 待确认 | id_ed25519_nodes | — |
+| macair / xinpingmacbook-air | 100.112.77.115 | xinping | id_ed25519_nodes | `ssh -i ~/.ssh/id_ed25519_nodes xinping@100.112.77.115` |
 | hy-node-254 | 100.114.16.16 | enlightv-506 | id_ed25519 | `ssh hy-node-254` |
 | node-120 | 100.80.138.78 | xinping | id_ed25519 | `ssh node-120` |
 | node-121 | 100.122.235.56 | xinping | **id_ed25519_nodes** | `ssh node-121` |
@@ -140,7 +145,7 @@ Restart-Service sshd
 
 | 机器 | Git 仓库 | 状态 |
 |------|----------|------|
-| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Tailscale 已上线，待恢复 Git/SSH |
+| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Tailscale 已上线，SSH 入站已开启 |
 | 12700K | `D:\Deepseek` | ✅ |
 | lk402 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 

@@ -219,6 +219,51 @@ function Test-WithMetaDisabled {
     }
 }
 
+function Update-AdminAuthorizedKeys {
+    param($Request)
+
+    if (-not $Request.key) {
+        throw 'Request is missing key.'
+    }
+
+    $key = [string]$Request.key
+    if ($key -notmatch '^ssh-ed25519\s+[A-Za-z0-9+/=]+\s+.+$') {
+        throw 'Only ssh-ed25519 public keys are supported by this bridge action.'
+    }
+
+    $file = 'C:\ProgramData\ssh\administrators_authorized_keys'
+    if (-not (Test-Path -LiteralPath $file)) {
+        New-Item -ItemType File -Path $file -Force | Out-Null
+    }
+
+    $removeKeys = @()
+    if ($Request.removeKeys) {
+        $removeKeys = @($Request.removeKeys | ForEach-Object { [string]$_ })
+    }
+
+    $lines = @(Get-Content -LiteralPath $file -ErrorAction SilentlyContinue) |
+        Where-Object { $_ -and ($removeKeys -notcontains $_) }
+
+    if ($lines -contains $key) {
+        'key already present'
+    } else {
+        $lines += $key
+        'key added'
+    }
+
+    Set-Content -LiteralPath $file -Encoding ascii -Value $lines
+    icacls.exe $file /inheritance:r /grant 'SYSTEM:(R)' /grant 'BUILTIN\Administrators:(R)'
+    Restart-Service sshd -ErrorAction SilentlyContinue
+
+    $tmp = New-TemporaryFile
+    try {
+        Set-Content -LiteralPath $tmp -Encoding ascii -Value $key
+        ssh-keygen.exe -l -f $tmp
+    } finally {
+        Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+    }
+}
+
 $isAdmin = Test-Admin
 Write-Log "isAdmin=$isAdmin"
 if (-not $isAdmin) {
@@ -244,6 +289,7 @@ switch ($action) {
     'probe-12700k' { Run-Step 'probe Tailscale and SSH' { Probe-TailscaleAndSsh } }
     'probe-node121-via-12700k' { Run-Step 'probe node-121 via 12700K' { Probe-Node121Via12700K } }
     'test-with-meta-disabled' { Run-Step 'test with Meta adapter disabled' { Test-WithMetaDisabled } }
+    'update-admin-authorized-keys' { Run-Step 'update admin authorized_keys' { Update-AdminAuthorizedKeys -Request $request } }
     'all' {
         Run-Step 'fix SSH ACL' { Repair-SshAcl }
         Run-Step 'repair Tailscale' { Repair-Tailscale }

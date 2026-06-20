@@ -1,0 +1,734 @@
+{
+  "schema": "cc-switch-skills-profile/v1",
+  "machine": "12700k",
+  "windowsUser": "gaoxi",
+  "generatedAt": "2026-06-20T07:01:44.420556+00:00",
+  "note": "Sanitized CC Switch skills profile. Credentials, account auth data, local database files, provider secrets, and private logs are excluded.",
+  "storage": {
+    "ccSwitchSkillsDir": "~/.cc-switch/skills",
+    "codexSkillsDir": "~/.codex/skills",
+    "backupPolicy": "Use this manifest as a restore checklist; do not commit ~/.cc-switch/cc-switch.db because it may contain account/provider data."
+  },
+  "skills": [
+    {
+      "directory": "baoyu-compress-image",
+      "displayNameZh": "宝玉-图片压缩",
+      "descriptionZh": "压缩图片并转换为 WebP 或 PNG，适合优化图片体积、批量压缩、转 WebP、减小图片文件大小。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-compress-image/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-diagram",
+      "displayNameZh": "宝玉-图表绘制",
+      "descriptionZh": "创建专业 SVG 图表，适合架构图、流程图、时序图、脑图、网络拓扑、系统结构和各种“画个图”需求。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-diagram/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-format-markdown",
+      "displayNameZh": "宝玉-Markdown 排版",
+      "descriptionZh": "为普通文本或 Markdown 添加标题、摘要、层级、加粗、列表和代码块，适合文章排版和 Markdown 美化。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-format-markdown/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-infographic",
+      "displayNameZh": "宝玉-信息图生成",
+      "descriptionZh": "生成专业信息图和高密度视觉总结，适合信息图、可视化摘要、长文提炼和社交媒体大图。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-infographic/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-markdown-to-html",
+      "displayNameZh": "宝玉-Markdown 转 HTML",
+      "descriptionZh": "将 Markdown 转为带样式 HTML，支持微信兼容主题、代码高亮、数学公式、Mermaid 和外链引用。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-markdown-to-html/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-translate",
+      "displayNameZh": "宝玉-翻译",
+      "descriptionZh": "翻译文本或文档内容，适合中英互译、润色译文、多语言内容转换和保持 Markdown 结构的翻译任务。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-translate/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-url-to-markdown",
+      "displayNameZh": "宝玉-网页转 Markdown",
+      "descriptionZh": "抓取 URL 并转换为 Markdown，支持网页、X/Twitter、YouTube 字幕、Hacker News 等内容保存。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-url-to-markdown/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "baoyu-youtube-transcript",
+      "displayNameZh": "宝玉-YouTube 字幕提取",
+      "descriptionZh": "下载 YouTube 视频字幕、封面和章节信息，适合提取视频文字稿、字幕、封面图和多语言转写。",
+      "source": {
+        "owner": "JimLiu",
+        "repo": "baoyu-skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/JimLiu/baoyu-skills/blob/main/skills/baoyu-youtube-transcript/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "brand-guidelines",
+      "displayNameZh": "品牌规范应用",
+      "descriptionZh": "将品牌颜色、字体和视觉规范应用到文档、页面、报告或视觉稿中，适合需要统一品牌风格的输出。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "canvas-design",
+      "displayNameZh": "画布视觉设计",
+      "descriptionZh": "创建海报、静态视觉稿、艺术图和 PDF/PNG 设计稿，适合需要原创视觉设计的任务。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/canvas-design/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "changelog-generator",
+      "displayNameZh": "更新日志生成",
+      "descriptionZh": "根据 Git 提交历史生成面向用户的更新日志，把技术提交整理成清晰的版本说明。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "codex-sandbox-repair",
+      "displayNameZh": "Codex 沙箱修复",
+      "descriptionZh": "修复 Windows 上 Codex sandbox helper、ACL、.sandbox 目录和 shell_command 启动失败等问题。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "content-research-writer",
+      "displayNameZh": "内容研究写作",
+      "descriptionZh": "辅助资料研究、引用整理、文章大纲、开头优化和段落迭代，适合高质量内容写作。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/content-research-writer/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "doc-coauthoring",
+      "displayNameZh": "文档协作写作",
+      "descriptionZh": "通过结构化流程协作撰写文档、提案、技术方案、决策记录和规范说明。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "docx",
+      "displayNameZh": "Word 文档处理",
+      "descriptionZh": "创建、读取、编辑和整理 .docx Word 文档，支持目录、标题、页码、图片、查找替换、批注和专业格式。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/docx/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "domain-name-brainstormer",
+      "displayNameZh": "域名头脑风暴",
+      "descriptionZh": "为项目生成创意域名并检查常见后缀可用性，适合产品命名和域名筛选。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/domain-name-brainstormer/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "file-organizer",
+      "displayNameZh": "文件整理",
+      "descriptionZh": "根据内容理解文件和文件夹，识别重复文件，建议目录结构并辅助清理本地文件。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/file-organizer/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "frontend-design",
+      "displayNameZh": "前端视觉设计",
+      "descriptionZh": "为新 UI 或现有界面提供更有辨识度的视觉设计、字体、布局和审美方向。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "internal-comms",
+      "displayNameZh": "内部沟通写作",
+      "descriptionZh": "撰写状态报告、领导更新、项目同步、FAQ、事故报告、公司通讯等内部沟通材料。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/internal-comms/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "invoice-organizer",
+      "displayNameZh": "发票收据整理",
+      "descriptionZh": "读取并整理发票、收据和报销文件，提取关键信息、规范命名并分类归档。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/invoice-organizer/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "kun-skills-sync",
+      "displayNameZh": "Kun 技能同步",
+      "descriptionZh": "维护 Kun / .agents 技能多机同步、GitHub 推送、首次拉取和本机技能目录对齐。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "mcp-builder",
+      "displayNameZh": "MCP 服务构建",
+      "descriptionZh": "指导创建高质量 MCP 服务器，适合用 Python FastMCP 或 Node/TypeScript MCP SDK 集成外部 API。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/mcp-builder/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "mcp-servers",
+      "displayNameZh": "MCP 服务器配置",
+      "descriptionZh": "管理和排查 GitHub、filesystem、context7、playwright 等 MCP 服务器配置。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "meeting-insights-analyzer",
+      "displayNameZh": "会议洞察分析",
+      "descriptionZh": "分析会议记录或转写内容，提炼沟通模式、行为反馈、行动项和领导力改进建议。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/meeting-insights-analyzer/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "ops-terminal-sync",
+      "displayNameZh": "终端技能同步运维",
+      "descriptionZh": "同步和维护 Deepseek ops skills 多机工作区、Codex/Kun AGENTS、计划任务和 GitHub 分发。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "pdf",
+      "displayNameZh": "PDF 处理",
+      "descriptionZh": "读取、拆分、合并、旋转、加水印、OCR、提取表格/图片、填写表单和生成 PDF。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/pdf/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "pptx",
+      "displayNameZh": "PPT 演示处理",
+      "descriptionZh": "创建、读取、编辑和整理 .pptx 幻灯片，支持模板、版式、备注、合并拆分和内容提取。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "product-requirements",
+      "displayNameZh": "产品需求文档",
+      "descriptionZh": "通过交互式需求收集、分析和质量检查生成 PRD、功能规格和产品需求说明。",
+      "source": {
+        "owner": "cexll",
+        "repo": "myclaude",
+        "branch": "master",
+        "readmeUrl": "https://github.com/cexll/myclaude/blob/master/skills/product-requirements/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "shenlan-ops",
+      "displayNameZh": "深蓝现场网络运维",
+      "descriptionZh": "深蓝现场网络、OpenWrt、H3C、ER5200G3、AC/AP、NAS、VLAN、DNS、路由和带宽优化知识库。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "skill-creator",
+      "displayNameZh": "技能创建器",
+      "descriptionZh": "创建、修改、优化和评估技能，适合从零编写 SKILL.md 或改进已有技能触发描述。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "ssh-tailscale",
+      "displayNameZh": "SSH 与 Tailscale",
+      "descriptionZh": "SSH 免密连接、Tailscale 组网、新机器上线和 12700K/lk402/macair 节点连接速查。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "table-data",
+      "displayNameZh": "表格数据整理",
+      "descriptionZh": "清洗、合并、去重、校验、透视和汇总 Excel、CSV、TSV、Google Sheets 等表格数据。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "tailored-resume-generator",
+      "displayNameZh": "定制简历生成",
+      "descriptionZh": "根据职位描述生成定制简历，突出匹配经验、技能和成果，提高面试机会。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/tailored-resume-generator/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "tailscale-derp",
+      "displayNameZh": "Tailscale DERP 中继",
+      "descriptionZh": "自建 DERP 中继配置、验证、回滚和 Tailscale netcheck/derp-map 排查。",
+      "source": {
+        "owner": null,
+        "repo": null,
+        "branch": "main",
+        "readmeUrl": null
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "test-cases",
+      "displayNameZh": "测试用例生成",
+      "descriptionZh": "根据 PRD 或用户需求生成结构化测试用例，覆盖功能、边界、异常和状态转换场景。",
+      "source": {
+        "owner": "cexll",
+        "repo": "myclaude",
+        "branch": "master",
+        "readmeUrl": "https://github.com/cexll/myclaude/blob/master/skills/test-cases/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "theme-factory",
+      "displayNameZh": "主题工厂",
+      "descriptionZh": "为文档、幻灯片、报告和网页生成或应用视觉主题，包含颜色、字体和样式方案。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "video-downloader",
+      "displayNameZh": "视频下载",
+      "descriptionZh": "下载 YouTube 视频或音频，支持清晰度、格式和 MP3 音频提取选项。",
+      "source": {
+        "owner": "ComposioHQ",
+        "repo": "awesome-claude-skills",
+        "branch": "master",
+        "readmeUrl": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/video-downloader/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "web-artifacts-builder",
+      "displayNameZh": "Web 交互制品构建",
+      "descriptionZh": "使用 React、Tailwind、shadcn/ui 构建复杂 HTML/Web 制品，适合需要状态管理和多组件的交互页面。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/web-artifacts-builder/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "webapp-testing",
+      "displayNameZh": "Web 应用测试",
+      "descriptionZh": "使用 Playwright 测试本地 Web 应用，验证前端功能、调试 UI、截图和查看浏览器日志。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/webapp-testing/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    },
+    {
+      "directory": "xlsx",
+      "displayNameZh": "电子表格处理",
+      "descriptionZh": "读取、编辑、清洗、格式化、制图和创建 .xlsx/.xlsm/.csv/.tsv 表格文件。",
+      "source": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "branch": "main",
+        "readmeUrl": "https://github.com/anthropics/skills/blob/main/skills/xlsx/SKILL.md"
+      },
+      "enabled": {
+        "claude": false,
+        "codex": true,
+        "gemini": false,
+        "opencode": false,
+        "hermes": false
+      }
+    }
+  ]
+}

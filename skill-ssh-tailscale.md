@@ -7,7 +7,7 @@
 | `~/.ssh/id_ed25519` | ED25519 | **有密码（Keychain）** |
 | `~/.ssh/id_ed25519_nodes` | ED25519 | **无密码** |
 | `~/.ssh/id_ed25519.pub` | 公钥 | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIADSa1NydZ0L4fYpadK/mMeQoi/ccMGypVY+0u8FO1Ow wanghongyu@bogon` |
-| `~/.ssh/id_ed25519_nodes.pub` | 公钥 | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbeeVegOMLoXaAwJtmBddRBOVumbo/vGAIIZgDjJ9/A macbook-air-nodes` |
+| `~/.ssh/id_ed25519_nodes.pub` | 公钥 | `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKNo3GgCvj6YmcZDW5g8gI3XTvGZlhXSe2/Kw9FgKlHK macbook-air-nodes` |
 
 ## 在线机器
 

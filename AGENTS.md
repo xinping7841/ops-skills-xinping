@@ -85,7 +85,7 @@ git push
 
 ```powershell
 # 管理员 PowerShell 执行
-$key_nodes = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbeeVegOMLoXaAwJtmBddRBOVumbo/vGAIIZgDjJ9/A macbook-air-nodes"
+$key_nodes = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKNo3GgCvj6YmcZDW5g8gI3XTvGZlhXSe2/Kw9FgKlHK macbook-air-nodes"
 $file = "C:\ProgramData\ssh\administrators_authorized_keys"
 Add-Content $file $key_nodes
 icacls $file /inheritance:r /grant "SYSTEM:(R)" /grant "BUILTIN\Administrators:(R)"

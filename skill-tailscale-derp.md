@@ -193,6 +193,22 @@ journalctl -u derper -f
 - 如果直连失败，`tailscale ping` 应优先显示 `via DERP(ali-bj)`，而不是 `DERP(nue)` 或 `DERP(tok)`。
 - `journalctl -u derper -f` 在客户端使用中继时能看到连接日志。
 
+## 交接总结
+
+2026-06-20 12:30 Asia/Shanghai：
+
+- 目标：给 tailnet 增加国内 DERP 兜底，避免直连失败时流量落到 `nue`、`tok` 等海外 DERP，影响 SSH 和 `nvidia.gaoxinping.top` 访问。
+- 已完成：北京阿里云 ECS `39.106.125.197` 部署 `derper.service`，使用 `nvidia.gaoxinping.top:8443/TCP` 做 DERP TLS，`3478/UDP` 做 STUN。
+- 已完成：阿里云安全组已放行 `8443/TCP`、`3478/UDP`，并保留 nginx/certbot 所需 `80/TCP`、`443/TCP`。
+- 已完成：Tailscale 管理台 policy 已合并 `derpMap.Regions.900`，区域名 `ali-bj / Aliyun Beijing`，未设置 `OmitDefaultRegions`，官方 DERP 仍作为兜底。
+- 已验证：12700K `tailscale netcheck` 显示 `Nearest DERP: Aliyun Beijing`，`ali-bj` 约 `10.5ms`；对比 `tok` 约 `50.1ms`、`nue` 约 `133.8ms`。
+- 已验证：ECS `derper.service` 为 `active`，ECS `tailscale netcheck` 显示 `Nearest DERP: Aliyun Beijing`，`ali-bj` 约 `5.6ms`。
+- 曾验证：2026-06-19 12700K 到 node-121 在直连不可用时可走 `DERP(ali-bj)`，约 `21-22ms`。
+- 当前注意：2026-06-20 12:29 从 12700K `tailscale ping -c 3 100.122.235.56` 三次超时；DERP map 仍正常，后续若持续超时应优先检查 node-121 在线状态、Tailscale 客户端、主机防火墙或现场网络，而不是先回滚 DERP。
+- 相关记录已推送 GitHub：`skill-tailscale-derp.md`、`skill-ssh-tailscale.md`、`AGENTS.md`、`skill-codex-sandbox-repair.md`、`.gitignore`。
+- 本地 Git 噪音已处理：`.playwright-mcp/`、`leadtek-rtx-report/`、`codex-sandbox-repair-notes.md` 已加入 `.gitignore`。
+- Windows Codex sandbox 主故障已通过 `scripts/repair-codex-sandbox.ps1` 修复到可运行 `Write-Output OK`；`~/.ssh/config` ACL 若仍拒绝读取，需要管理员 PowerShell 执行 `-RepairSshConfigAcl`。
+
 ## 当前验证快照
 
 2026-06-19 20:09 Asia/Shanghai：
@@ -231,4 +247,4 @@ systemctl disable --now derper.service
 
 ---
 
-*最后更新：2026-06-19 20:15 | Codex 整理*
+*最后更新：2026-06-20 12:30 | Codex 整理*

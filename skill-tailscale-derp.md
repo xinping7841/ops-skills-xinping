@@ -8,9 +8,9 @@
 - 域名使用：`nvidia.gaoxinping.top`。
 - DERP TLS 端口使用 `8443/TCP`，不占用 nginx 正在使用的 `443/TCP`。
 - STUN 端口使用 `3478/UDP`。
-- ECS 上 `derper.service` 已运行，监听 `*:8443` 和 `*:3478`。
-- Tailscale 管理台已把下方 `derpMap` 合并到 tailnet policy，并已在 12700K 与 ECS 上验证 `ali-bj` 生效。
-- 当前没有设置 `OmitDefaultRegions`，官方 DERP 仍保留为兜底。
+- 2026-06-20 21:43 Asia/Shanghai：因启用 `ali-bj` 后 lk402 到 12700K 的 Tailscale 数据通道和 SSH 出现超时，ECS 上 `derper.service` 已执行 `systemctl disable --now derper.service` 应急停用。
+- Tailscale 管理台 policy 里仍可能保留 `derpMap.Regions.900`；长期修复应从 policy 删除该区域，避免客户端继续尝试不可用的 `ali-bj`。
+- 停用 DERP 服务后，lk402 到 12700K 已恢复：`tailscale ping 100.94.150.23` 成功，`Test-NetConnection 100.94.150.23 -Port 22` 成功，`ssh 12700k hostname` 返回 `12700K`。
 
 ## 服务器信息
 
@@ -194,6 +194,15 @@ journalctl -u derper -f
 - `journalctl -u derper -f` 在客户端使用中继时能看到连接日志。
 
 ## 交接总结
+
+2026-06-20 21:43 Asia/Shanghai：
+
+- 现象：配置自建 DERP `ali-bj` 后，lk402 到 12700K 的 Tailscale 控制面显示在线，但 `tailscale ping 100.94.150.23`、`Test-NetConnection 100.94.150.23 -Port 22`、`ssh 12700k hostname` 均超时。
+- 排查：Tailscale 管理台显示 12700K Connected；lk402 `tailscale status --json` 显示 12700K Online 且使用 relay `ali-bj`，但只有发送流量、无有效回包；ECS 到 12700K 的 `tailscale ping` 也超时。
+- 处理：在 ECS `39.106.125.197` 执行 `systemctl disable --now derper.service`，让客户端不再使用该自建 DERP 服务。
+- 验证：停用后 lk402 `tailscale status` 中 12700K 切到官方 relay/直连并出现回包；`tailscale ping --c=5 100.94.150.23` 成功；`Test-NetConnection 100.94.150.23 -Port 22` 成功；`ssh -o BatchMode=yes -o PasswordAuthentication=no 12700k hostname` 返回 `12700K`。
+- SSH 权限核对：12700K 上 `sshd` 为 `Running / Automatic`；`C:\ProgramData\ssh\administrators_authorized_keys` 存在并包含 `macbook-air-nodes` 无密码 key；OpenSSH Server 入站防火墙规则启用。结论是免密权限正常，故障点在 DERP/Tailscale 数据通道。
+- 后续：进入 Tailscale 管理台 policy 删除 `derpMap.Regions.900`，保存后在各客户端执行 `tailscale netcheck` 确认不再选择 `ali-bj`。删除前不要重新启动 `derper.service`。
 
 2026-06-20 15:55 Asia/Shanghai：
 

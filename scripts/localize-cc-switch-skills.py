@@ -179,9 +179,10 @@ def main() -> None:
 
     if args.apply_manifest:
         apply_manifest()
-    export_manifest()
     if args.audit:
         audit()
+        return
+    export_manifest()
 
 
 if __name__ == "__main__":

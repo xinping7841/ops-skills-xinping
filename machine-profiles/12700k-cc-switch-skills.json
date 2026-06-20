@@ -2,7 +2,7 @@
   "schema": "cc-switch-skills-profile/v1",
   "machine": "12700k",
   "windowsUser": "gaoxi",
-  "generatedAt": "2026-06-20T07:11:14.316518+00:00",
+  "generatedAt": "2026-06-20T07:13:16.760383+00:00",
   "note": "Sanitized CC Switch skills profile. Credentials, OAuth data, local databases, provider secrets, and private logs are excluded.",
   "counts": {
     "installed": 40,

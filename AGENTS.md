@@ -116,6 +116,7 @@ Restart-Service sshd
 | `skill-codex-sandbox-repair.md` | Codex Windows sandbox helper 故障修复记录和脚本入口 |
 | `skill-mcp-servers.md` | MCP 服务器配置指南 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
+| `skill-web-app-dev-standards.md` | Web 应用现场开发规范：代码结构、Agent 协作、UI 质量和验收清单 |
 | `AGENTS.md` | 本文件，通用协作指令 |
 
 Codex 专用技能包：
@@ -123,6 +124,7 @@ Codex 专用技能包：
 | 路径 | 用途 |
 |------|------|
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验的入口技能 |
+| `codex-skills/web-app-dev/` | 网页服务、React/Next/Vite、Tailwind/shadcn UI、代码规范和可维护性入口技能 |
 
 ---
 
@@ -175,12 +177,14 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 | `skill-codex-sandbox-repair.md` | Windows `shell_command` sandbox helper 启动失败、ACL/`.sandbox` 修复 |
 | `skill-mcp-servers.md` | MCP 服务器配置、Kun GUI 工具对齐 |
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
+| `skill-web-app-dev-standards.md` | 搭建或维护网页服务、前端 UI、后台、管理台、看板、React/Next/Vite 项目 |
 
 Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 
 | 路径 | 何时读取 |
 |------|----------|
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验 |
+| `codex-skills/web-app-dev/` | 创建或修改网站、网页服务、后台、管理台、看板、React/Next/Vite、Tailwind/shadcn UI |
 
 如需修改这些文件，改完后提交：
 ```bash

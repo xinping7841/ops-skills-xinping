@@ -195,6 +195,16 @@ journalctl -u derper -f
 
 ## 交接总结
 
+2026-06-20 15:55 Asia/Shanghai：
+
+- 现象一：阿里云短信提示华北 2 ECS `i-2ze9ir9plddvp4u0za61` 文件备份任务失败，原因是实例网络环境异常、无法访问云助手服务。
+- 根因：ECS 安装 Tailscale 后，`ts-input` 链默认丢弃非 `tailscale0` 入站的 `100.64.0.0/10` 源地址；阿里云元数据、云助手、HBR 内网服务使用 `100.100.0.0/16`，正好被误伤。
+- 修复：ECS 上已新增并启用持久化 systemd 服务 `allow-aliyun-internal-through-tailscale.service`，脚本路径 `/usr/local/sbin/allow-aliyun-internal-through-tailscale.sh`，在 `ts-input` drop 规则前允许 `-i eth0 -s 100.100.0.0/16 -j ACCEPT`。
+- 验证：`curl http://100.100.100.200/latest/meta-data/instance-id` 返回 `i-2ze9ir9plddvp4u0za61`；`hbrclient` 日志显示 `MQTT connected`、`Client registered successfully. ClientID: c-00003xgy6tuvfpu0j0lx`、`NoRunningJob`；`hbrclient.service` 为 `active`。
+- 现象二：`https://nvidia.gaoxinping.top/` 从公网不可访问。
+- 结论：DNS 公网 DoH 解析仍正确返回 `39.106.125.197`；nginx、证书、DERP 均在 ECS 上正常。外部访问 `http://39.106.125.197/` 并带 `Host: nvidia.gaoxinping.top` 返回 `403 Server: Beaver` 与 `Non-compliance ICP Filing` 页面，说明 80/443 网站访问被阿里云 ICP 合规拦截。DERP 使用 `8443/TCP`，当前不受 443 网站拦截结论影响。
+- 后续处理：若要继续在北京 ECS 上提供 `nvidia.gaoxinping.top` 的 80/443 网站，需要完成/绑定备案；若只是保留 Tailscale DERP，则继续使用 `nvidia.gaoxinping.top:8443` 并通过 `tailscale netcheck`/`derp-map` 验证。
+
 2026-06-20 12:30 Asia/Shanghai：
 
 - 目标：给 tailnet 增加国内 DERP 兜底，避免直连失败时流量落到 `nue`、`tok` 等海外 DERP，影响 SSH 和 `nvidia.gaoxinping.top` 访问。

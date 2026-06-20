@@ -18,7 +18,7 @@ macair 入站 SSH 已开启，`/Users/xinping/.ssh/authorized_keys` 已授权：
 
 | 机器 | Tailscale IP | 用户 | 密钥 | 连接命令 |
 |------|-------------|------|------|----------|
-| macair / xinpingmacbook-air | 100.112.77.115 | xinping | id_ed25519_nodes | `ssh -i ~/.ssh/id_ed25519_nodes xinping@100.112.77.115` |
+| macair / xinpingmacbook-air | 100.112.77.115 | xinping | id_ed25519_nodes | `ssh macair` |
 | hy-node-254 | 100.114.16.16 | enlightv-506 | id_ed25519 | `ssh hy-node-254` |
 | node-120 | 100.80.138.78 | xinping | id_ed25519 | `ssh node-120` |
 | node-121 | 100.122.235.56 | xinping | **id_ed25519_nodes** | `ssh node-121` |
@@ -62,6 +62,13 @@ Host 12700k
 Host lk402 lk402-1
   HostName 100.89.199.122
   User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host macair xinpingmacbook-air
+  HostName 100.112.77.115
+  User xinping
   IdentityFile ~/.ssh/id_ed25519_nodes
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
@@ -145,7 +152,7 @@ Restart-Service sshd
 
 | 机器 | Git 仓库 | 状态 |
 |------|----------|------|
-| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Tailscale 已上线，SSH 入站已开启 |
+| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Git/SSH 已接入，远程枚举 Documents 需授予 macOS 隐私权限 |
 | 12700K | `D:\Deepseek` | ✅ |
 | lk402 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 

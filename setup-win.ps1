@@ -129,6 +129,13 @@ Host lk402 lk402-1
   IdentityFile ~/.ssh/id_ed25519_nodes
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
+
+Host macair xinpingmacbook-air
+  HostName 100.112.77.115
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
 '@
     Write-Host '[OK] SSH node host config appended' -ForegroundColor Green
 } else {

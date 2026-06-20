@@ -25,6 +25,9 @@ function Run-Step {
         }
     } catch {
         Write-Log "ERROR: $($_.Exception.Message)"
+        if ($_.InvocationInfo -and $_.InvocationInfo.PositionMessage) {
+            Write-Log $_.InvocationInfo.PositionMessage
+        }
     }
 }
 
@@ -131,10 +134,12 @@ function Repair-Tailscale {
 }
 
 function Probe-TailscaleAndSsh {
-    tailscale status | Select-String 'lk402|12700|node-121|aliyun'
-    tailscale netcheck
+    Invoke-Native -FilePath 'tailscale.exe' -Arguments @('status') -TimeoutSeconds 20
+    Invoke-Native -FilePath 'tailscale.exe' -Arguments @('netcheck') -TimeoutSeconds 30
     Invoke-Native -FilePath 'tailscale.exe' -Arguments @('ping', '--c', '3', '--timeout=8s', '100.94.150.23') -TimeoutSeconds 35
-    Test-NetConnection 100.94.150.23 -Port 22 -InformationLevel Detailed
+    Invoke-Native -FilePath 'tailscale.exe' -Arguments @('ping', '--c', '2', '--timeout=5s', '100.122.235.56') -TimeoutSeconds 20
+    Invoke-Native -FilePath 'tailscale.exe' -Arguments @('ping', '--c', '2', '--timeout=5s', '100.97.0.61') -TimeoutSeconds 20
+    Invoke-Native -FilePath 'powershell.exe' -Arguments @('-NoProfile', '-Command', 'Test-NetConnection 100.94.150.23 -Port 22 -InformationLevel Quiet') -TimeoutSeconds 35
 
     $sshDir = Join-Path $env:USERPROFILE '.ssh'
     $keys = @(
@@ -145,7 +150,7 @@ function Probe-TailscaleAndSsh {
     foreach ($key in $keys) {
         "--- ssh with $key ---"
         if (Test-Path -LiteralPath $key) {
-            Invoke-Native -FilePath 'ssh.exe' -Arguments @('-i', $key, '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=accept-new', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', 'gaoxi@100.94.150.23', 'hostname; whoami') -TimeoutSeconds 20
+            Invoke-Native -FilePath 'ssh.exe' -Arguments @('-i', $key, '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=accept-new', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', 'gaoxi@100.94.150.23', 'hostname & whoami') -TimeoutSeconds 20
         } else {
             "missing key: $key"
         }
@@ -199,11 +204,7 @@ function Test-WithMetaDisabled {
         Start-Sleep -Seconds 3
 
         'routes while Meta is disabled:'
-        Get-NetRoute -AddressFamily IPv4 |
-            Where-Object { $_.DestinationPrefix -like '100.*' -or $_.DestinationPrefix -eq '0.0.0.0/0' -or $_.DestinationPrefix -like '198.18.*' } |
-            Sort-Object RouteMetric,InterfaceMetric,DestinationPrefix |
-            Select-Object ifIndex,InterfaceAlias,DestinationPrefix,NextHop,RouteMetric,InterfaceMetric |
-            Format-Table -AutoSize
+        Invoke-Native -FilePath 'route.exe' -Arguments @('print', '100.94.150.23') -TimeoutSeconds 15
 
         Probe-TailscaleAndSsh
     } finally {

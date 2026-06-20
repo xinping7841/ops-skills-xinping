@@ -95,6 +95,43 @@ Host github.com
     Write-Host '[SKIP] SSH config already has ops-skills marker' -ForegroundColor Gray
 }
 
+if (-not (Select-String -Path $sshConfig -Pattern '### ops-skills node hosts ###' -Quiet -ErrorAction SilentlyContinue)) {
+    Add-Content -LiteralPath $sshConfig -Encoding UTF8 -Value @'
+
+### ops-skills node hosts ###
+Host node-121
+  HostName 100.122.235.56
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host node-121-lan
+  HostName 192.168.50.121
+  User xinping
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host 12700k
+  HostName 100.94.150.23
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host lk402-1
+  HostName 100.89.199.122
+  User gaoxi
+  IdentityFile ~/.ssh/id_ed25519_nodes
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+'@
+    Write-Host '[OK] SSH node host config appended' -ForegroundColor Green
+} else {
+    Write-Host '[SKIP] SSH config already has ops-skills node host marker' -ForegroundColor Gray
+}
+
 # 3. Scheduled sync task
 $taskName = 'Deepseek-Sync'
 $existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue

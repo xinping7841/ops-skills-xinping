@@ -2,7 +2,7 @@
   "schema": "cc-switch-skills-profile/v1",
   "machine": "12700k",
   "windowsUser": "gaoxi",
-  "generatedAt": "2026-06-20T07:01:44.420556+00:00",
+  "generatedAt": "2026-06-20T07:03:51.146513+00:00",
   "note": "Sanitized CC Switch skills profile. Credentials, account auth data, local database files, provider secrets, and private logs are excluded.",
   "storage": {
     "ccSwitchSkillsDir": "~/.cc-switch/skills",
@@ -166,7 +166,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -184,7 +184,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -238,7 +238,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -292,7 +292,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -598,7 +598,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -670,7 +670,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false
@@ -724,7 +724,7 @@
       },
       "enabled": {
         "claude": false,
-        "codex": true,
+        "codex": false,
         "gemini": false,
         "opencode": false,
         "hermes": false

@@ -90,15 +90,44 @@ function Repair-SshAcl {
 }
 
 function Repair-Tailscale {
-    @(Get-Process tailscaled,tailscale-ipn -ErrorAction SilentlyContinue) | Select-Object ProcessName,Id,Path | Format-Table -AutoSize
-    Stop-Service Tailscale -Force -ErrorAction SilentlyContinue
+    'before processes:'
+    $before = @(Get-Process -Name tailscaled,tailscale-ipn -ErrorAction SilentlyContinue)
+    if ($before.Count -eq 0) {
+        'no tailscale processes found before repair'
+    } else {
+        foreach ($process in $before) { "$($process.ProcessName) pid=$($process.Id)" }
+    }
+
+    'stopping Tailscale service'
+    Stop-Service -Name Tailscale -Force -ErrorAction Continue
     Start-Sleep -Seconds 3
-    Get-Process tailscaled -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+
+    'killing remaining tailscaled processes'
+    $remaining = @(Get-Process -Name tailscaled -ErrorAction SilentlyContinue)
+    foreach ($process in $remaining) {
+        try {
+            Stop-Process -Id $process.Id -Force -ErrorAction Stop
+            "stopped pid=$($process.Id)"
+        } catch {
+            "failed to stop pid=$($process.Id): $($_.Exception.Message)"
+        }
+    }
     Start-Sleep -Seconds 2
-    Start-Service Tailscale -ErrorAction SilentlyContinue
+
+    'starting Tailscale service'
+    Start-Service -Name Tailscale -ErrorAction Continue
     Start-Sleep -Seconds 10
-    Get-Service Tailscale | Format-Table -AutoSize Status,Name,DisplayName
-    @(Get-Process tailscaled,tailscale-ipn -ErrorAction SilentlyContinue) | Select-Object ProcessName,Id,Path | Format-Table -AutoSize
+
+    $service = Get-Service -Name Tailscale -ErrorAction Continue
+    "service status=$($service.Status) name=$($service.Name)"
+
+    'after processes:'
+    $after = @(Get-Process -Name tailscaled,tailscale-ipn -ErrorAction SilentlyContinue)
+    if ($after.Count -eq 0) {
+        'no tailscale processes found after repair'
+    } else {
+        foreach ($process in $after) { "$($process.ProcessName) pid=$($process.Id)" }
+    }
 }
 
 function Probe-TailscaleAndSsh {
@@ -107,10 +136,11 @@ function Probe-TailscaleAndSsh {
     Invoke-Native -FilePath 'tailscale.exe' -Arguments @('ping', '--c', '3', '--timeout=8s', '100.94.150.23') -TimeoutSeconds 35
     Test-NetConnection 100.94.150.23 -Port 22 -InformationLevel Detailed
 
+    $sshDir = Join-Path $env:USERPROFILE '.ssh'
     $keys = @(
-        Join-Path $env:USERPROFILE '.ssh\id_ed25519_nodes',
-        Join-Path $env:USERPROFILE '.ssh\codex_rdp_ed25519',
-        Join-Path $env:USERPROFILE '.ssh\codex_rdp_rsa'
+        (Join-Path $sshDir 'id_ed25519_nodes'),
+        (Join-Path $sshDir 'codex_rdp_ed25519'),
+        (Join-Path $sshDir 'codex_rdp_rsa')
     )
     foreach ($key in $keys) {
         "--- ssh with $key ---"
@@ -123,10 +153,11 @@ function Probe-TailscaleAndSsh {
 }
 
 function Probe-Node121Via12700K {
+    $sshDir = Join-Path $env:USERPROFILE '.ssh'
     $keys = @(
-        Join-Path $env:USERPROFILE '.ssh\id_ed25519_nodes',
-        Join-Path $env:USERPROFILE '.ssh\codex_rdp_ed25519',
-        Join-Path $env:USERPROFILE '.ssh\codex_rdp_rsa'
+        (Join-Path $sshDir 'id_ed25519_nodes'),
+        (Join-Path $sshDir 'codex_rdp_ed25519'),
+        (Join-Path $sshDir 'codex_rdp_rsa')
     )
 
     foreach ($key in $keys) {

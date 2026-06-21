@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-The Deepseek workspace is adding the second-stage `engineering-handoff-memory` tooling: template-based memory creation plus a pre-handoff commit gate, so agents do not have to remember the workflow manually.
+The Deepseek workspace now has second-stage `engineering-handoff-memory` tooling: template-based memory creation plus a pre-handoff commit gate, so agents do not have to remember the workflow manually.
 
 ## Read First
 
@@ -34,5 +34,6 @@ The Deepseek workspace is adding the second-stage `engineering-handoff-memory` t
 ## Last Verified
 
 - Date: 2026-06-22
-- Repo HEAD: pending second-stage tooling commit
-- Verified machines: `macair`; remote sync verification pending after push
+- Tooling commit verified: `1118b8a17c462a939025d04989b49a62cb990bac`
+- Verified machines: `macair`, `12700K`, `lk402`
+- Remote check: both Windows machines have `scripts/memory-new.py`, `scripts/commit-and-handoff.py`, and `memory/runbooks/use-engineering-handoff-memory.md`

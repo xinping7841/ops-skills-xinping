@@ -1,0 +1,5 @@
+interface:
+  display_name: "Engineering Handoff Memory"
+  short_description: "Durable handoff memory for code and ops."
+  default_prompt: "Use $engineering-handoff-memory to read the latest handoff, update durable memory, and audit the work before handoff."
+

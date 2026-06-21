@@ -44,6 +44,7 @@ git push
 - `AGENTS.md`
 - `skill-*.md`
 - `codex-skills/**`
+- `memory/**`
 - `setup-*.sh`、`setup-*.ps1`
 - `auto-sync.sh`、`sync.ps1`、`sync-hidden.vbs`
 - `codex-config-*.toml`
@@ -62,6 +63,16 @@ git push
 - 技能文档：`skill-<主题>.md`（Kun 专用）
 - 通用指令：`AGENTS.md`（Codex/Kun 都读）
 - 脚本：`.sh`（macOS）、`.ps1`（Windows）
+
+### Engineering Handoff Memory
+
+涉及代码行为、模块设计、架构选择、SSH、MCP、同步任务、计划任务、部署配置或机器路径的任务，必须使用 `engineering-handoff-memory`。
+
+- 开工前先读 `memory/LATEST.md`。
+- 代码任务继续读相关 `memory/modules/`、`memory/code/`、`memory/adr/`。
+- 环境/机器任务继续读相关 `memory/machines/`、`memory/sync/`、`memory/ops/`、`memory/runbooks/`。
+- 收尾前更新对应 memory 文件，重写 `memory/LATEST.md`，并运行 `python3 scripts/memory-audit.py`。
+- 如果未更新 memory，最终回复必须说明原因。
 
 ---
 
@@ -118,6 +129,7 @@ Restart-Service sshd
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机 Git 同步方案 |
 | `skill-web-app-dev-standards.md` | Web 应用现场开发规范：代码结构、Agent 协作、UI 质量和验收清单 |
 | `skill-code-review-eval.md` | 代码评估与审查规范：P0/P1/P2/P3 风险分级、结构体检、测试缺口和 UI 质量检查 |
+| `skill-engineering-handoff-memory.md` | 工程接力记忆：代码/运维/机器/同步/架构决策的上下文防腐层 |
 | `AGENTS.md` | 本文件，通用协作指令 |
 
 Codex 专用技能包：
@@ -127,6 +139,7 @@ Codex 专用技能包：
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验的入口技能 |
 | `codex-skills/web-app-dev/` | 网页服务、React/Next/Vite、Tailwind/shadcn UI、代码规范和可维护性入口技能 |
 | `codex-skills/code-review-eval/` | 代码审查、项目体检、风险评估、重构前评估、测试缺口和 UI 质量检查入口技能 |
+| `codex-skills/engineering-handoff-memory/` | 工程接力记忆：任务开始读取上下文，任务结束写回 handoff memory 并审计 |
 
 ---
 
@@ -181,6 +194,7 @@ powershell -ExecutionPolicy Bypass -File setup-win.ps1   # Windows
 | `skill-kun-skills-sync.md` | Kun / `.agents` skills 多机同步、GitHub 推送和首次拉取 |
 | `skill-web-app-dev-standards.md` | 搭建或维护网页服务、前端 UI、后台、管理台、看板、React/Next/Vite 项目 |
 | `skill-code-review-eval.md` | 代码评估、code review、重构前体检、风险分级、测试缺口、安全/性能/UI 审查 |
+| `skill-engineering-handoff-memory.md` | 代码行为、模块设计、架构选择、SSH/MCP/同步/机器配置变更和智能体接力 |
 
 Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 
@@ -189,9 +203,12 @@ Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 | `codex-skills/table-data/` | Excel、CSV、TSV、Google Sheets 表格数据整理、清洗、汇总、校验 |
 | `codex-skills/web-app-dev/` | 创建或修改网站、网页服务、后台、管理台、看板、React/Next/Vite、Tailwind/shadcn UI |
 | `codex-skills/code-review-eval/` | 评估现有代码质量、审查 PR/项目风险、重构前体检、查测试缺口或 UI 质量问题 |
+| `codex-skills/engineering-handoff-memory/` | 读取/更新 `memory/`，记录代码和运维变更原因、验证、风险和接力点 |
 
 如需修改这些文件，改完后提交：
 ```bash
 cd ~/Documents/Deepseek
-git add -A && git commit -m "描述" && git push
+git add AGENTS.md skill-*.md codex-skills memory scripts machine-profiles mcp-templates setup-*.sh setup-*.ps1 auto-sync.sh sync.ps1 sync-hidden.vbs codex-config-*.toml
+git commit -m "描述"
+git push
 ```

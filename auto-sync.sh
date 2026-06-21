@@ -215,7 +215,7 @@ stage_whitelisted_changes() {
     [ -e "$f" ] && git add -- "$f"
   done
 
-  for d in codex-skills scripts machine-profiles mcp-templates; do
+  for d in codex-skills memory scripts machine-profiles mcp-templates; do
     [ -e "$d" ] && git add -- "$d"
   done
 }

@@ -245,7 +245,7 @@ function Add-WhitelistedChanges {
         & git add -- $_.Name
     }
 
-    foreach ($dir in @('codex-skills', 'scripts', 'machine-profiles', 'mcp-templates')) {
+    foreach ($dir in @('codex-skills', 'memory', 'scripts', 'machine-profiles', 'mcp-templates')) {
         if (Test-Path -LiteralPath (Join-Path $RepoDir $dir)) {
             & git add -- $dir
         }

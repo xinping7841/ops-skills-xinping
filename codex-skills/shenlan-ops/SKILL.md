@@ -7,13 +7,23 @@ description: "Shenlan on-site network operations knowledge base. Use when the us
 
 Use this skill as the machine-readable knowledge base for Shenlan network operations.
 
+The dedicated sanitized operations repository is `xinping7841/shenlan-network-ops`. Prefer local paths `~/Documents/shenlan-network-ops` on macOS/Linux and `D:\shenlan-network-ops` on Windows. Do not nest that repository inside Deepseek.
+
 ## Load References
 
 For any resumed Shenlan operations conversation, read these first:
 
-1. `handoff/LATEST-HANDOFF.md`
-2. `references/network-inventory.sanitized.json`
-3. The task-specific files listed below only when needed.
+1. Deepseek `memory/LATEST.md` when the task touches machine, sync, config, architecture, or durable handoff state.
+2. This skill file.
+3. `handoff/LATEST-HANDOFF.md`
+4. `references/network-inventory.sanitized.json`
+5. The dedicated `shenlan-network-ops` repo when present:
+   - `README.md`
+   - `docs/current-state.md`
+   - `plans/configuration-backlog.md`
+   - `SECURITY.md`
+   - `runbooks/start-new-conversation.md` when the task is about starting/resuming future conversations.
+6. The task-specific files listed below only when needed.
 
 Task-specific references:
 
@@ -34,6 +44,8 @@ Local full-fidelity operational data may exist on 12700K at `D:\IDE\AI\network-o
 - Before changing live network configuration, verify the current state when possible and prefer reversible changes with backups.
 - Keep OpenWrt as the main egress/NAT/DNS/QoS/policy-routing device, H3C core switch as the internal L3 gateway/DHCP device, and ER5200G3 as the AC/MiniAP controller with ordinary DHCP disabled.
 - If the user says to add or update Shenlan information, update the relevant synchronized file under `handoff/` or `references/`, then commit and push the ops skills repository so other machines receive it.
+- If the user says to add or update the new Shenlan operations knowledge base, update the dedicated `shenlan-network-ops` repository first, usually under `inventory/`, `docs/open-questions.md`, `plans/configuration-backlog.md`, or `runbooks/`, then commit and push that repository.
+- Keep `shenlan-network-ops` sanitized: record facts, roles, paths, service names, local secret file references, validation, and rollback notes only. Do not commit passwords, tokens, SNMP credentials, raw configs, logs, packet captures, or secret-bearing `config.json` files.
 - Full local scripts and raw backups should remain in `D:\IDE\AI\network-ops` or a future locked-down private repository. Do not copy raw `config.json`, `inventory/`, `backups/`, `logs/`, `reports/`, or generated `state/` into this synchronized skill package.
 - The backup and monitoring service should run on `192.168.50.121`, not on the current PC, unless the user explicitly changes this decision.
 - Do not modify Chinese-named H3C DHCP pools through raw UTF-8 SSH/console input. Use H3C Web/API, manual Web UI edits, or GBK/CP936 encoded command files because console encoding previously created garbled pool names.

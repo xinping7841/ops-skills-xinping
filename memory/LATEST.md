@@ -25,6 +25,8 @@ For Shenlan follow-up, also read the new local repo first:
 - `/Users/xinping/Documents/shenlan-network-ops/docs/current-state.md`
 - `/Users/xinping/Documents/shenlan-network-ops/plans/configuration-backlog.md`
 - `/Users/xinping/Documents/shenlan-network-ops/SECURITY.md`
+- `/Users/xinping/Documents/shenlan-network-ops/runbooks/start-new-conversation.md`
+- `D:\shenlan-network-ops\runbooks\start-new-conversation.md` on Windows when the repo has been cloned there.
 
 ## Active Risks
 
@@ -46,4 +48,5 @@ For Shenlan follow-up, also read the new local repo first:
 
 - Date: 2026-06-22
 - Shenlan ops repo: `xinping7841/shenlan-network-ops`, initial commit `8746aeb` pushed to `main`.
+- 12700K Windows working copy prepared at `D:\shenlan-network-ops`; new conversation entrypoint recorded in `runbooks/start-new-conversation.md`.
 - Tooling commit previously verified: `1118b8a17c462a939025d04989b49a62cb990bac`

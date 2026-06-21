@@ -45,6 +45,10 @@ def staged_paths(root: Path) -> list[str]:
     return [line for line in output if line.strip()]
 
 
+def tracked_paths(root: Path) -> set[str]:
+    return set(run(["git", "ls-files"], root).stdout.splitlines())
+
+
 def git_path(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
 
@@ -79,9 +83,15 @@ def changed_paths(root: Path) -> list[str]:
     return paths
 
 
-def is_whitelisted(path: str) -> bool:
+def is_deleted_tracked(root: Path, path: str) -> bool:
+    return path in tracked_paths(root) and not (root / path).exists()
+
+
+def is_whitelisted(path: str, root: Path | None = None) -> bool:
     if is_generated(path):
         return False
+    if root is not None and is_deleted_tracked(root, path):
+        return True
     if path in WHITELIST_FILES:
         return True
     if any(path.startswith(prefix) for prefix in WHITELIST_DIRS):
@@ -160,7 +170,7 @@ def suggested_message(root: Path, paths: list[str]) -> str:
 def stage_whitelist(root: Path, paths: list[str]) -> list[str]:
     staged = []
     for path in sorted(set(paths)):
-        if is_whitelisted(path):
+        if is_whitelisted(path, root):
             run(["git", "add", "--", path], root)
             staged.append(path)
     return staged
@@ -195,7 +205,7 @@ def main() -> int:
     print("Changed paths:")
     if paths:
         for path in paths:
-            marker = "whitelist" if is_whitelisted(path) else "skip"
+            marker = "whitelist" if is_whitelisted(path, root) else "skip"
             print(f"  - [{marker}] {path}")
     else:
         print("  none")

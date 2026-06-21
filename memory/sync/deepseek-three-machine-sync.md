@@ -21,6 +21,7 @@ Avoid using `C:\Users\gaoxi\Documents\Deepseek` on 12700K for normal Deepseek wo
 The sync scripts may stage and commit only shared, non-secret project files such as:
 
 - `AGENTS.md`
+- `.gitattributes`, `.gitignore`
 - `skill-*.md`
 - `codex-skills/**`
 - `memory/**`
@@ -32,6 +33,8 @@ The sync scripts may stage and commit only shared, non-secret project files such
 - `mcp-templates/**`
 
 Do not auto-commit machine-private files, tokens, `.env*`, logs, backups, router exports, or `*-settings.json`.
+
+Do not keep one-off live-network probes or local credential-bearing scripts in the repo root. Convert reusable procedures into sanitized `memory/runbooks/` entries or skill references.
 
 ## Derived State
 
@@ -47,5 +50,5 @@ If `git pull --rebase` reports conflicts, stop and ask for human resolution. Do 
 ## Last Verified
 
 - Date: 2026-06-22
-- Repo HEAD across all three machines: `8b602a17192a8a15b9c5a7c7f992af9b8c264d7b`
-
+- Repo HEAD before cleanup commit: `45870e63bac99de2ccdc46a6634f1ffae7f8cfd3`
+- `macair`, `12700K`, and `lk402` were checked for root-level local drift; obsolete ignored/untracked cleanup artifacts were removed where safe.

@@ -39,6 +39,21 @@ codex-sandbox-repair-notes.md
 codex-detached-test.log
 codex-full-access-final-runner.ps1
 
+# One-off local network probes / paste notes; convert reusable procedures to memory/runbooks or sanitized skills
+/check_h3c*.ps1
+/check_speed.sh
+/fix_121_persist.sh
+/h3c_*.ps1
+/ik_*.py
+/ik_*.ps1
+/persist_nat.sh
+/serial_probe*.ps1
+/setup_121_routes.sh
+/setup_ssh_12700k.bat
+/smart-center-context.md
+/speed_test.sh
+/codex-self-config.md
+
 # Local screenshots / login captures
 tencent-docs-login-121.png
 

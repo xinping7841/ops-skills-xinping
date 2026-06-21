@@ -64,6 +64,9 @@ git push
 - 技能文档：`skill-<主题>.md`（Kun 专用）
 - 通用指令：`AGENTS.md`（Codex/Kun 都读）
 - 脚本：`.sh`（macOS）、`.ps1`（Windows）
+- 根目录只保留协作入口、setup/sync、技能说明和模板；一次性现场探测/修复脚本不要提交到根目录。
+- 可复用脚本放 `scripts/`，可复用流程写 `memory/runbooks/`，现场记录和设计原因写 `memory/` 或对应 skill reference。
+- 禁止提交带明文设备密码、token、Cookie、私钥或本机私有路径的临时脚本。
 
 ### Engineering Handoff Memory
 

@@ -33,10 +33,10 @@ Mobile office and current primary coordination machine for the Deepseek ops work
 ## Known Risks
 
 - Local Codex app config may contain runtime/cache paths managed by the app. Do not rewrite those unless they are proven to affect MCP or skills.
+- Ignored local sync artifacts such as `sync.log` and `.sync-reports/` should remain untracked and can be deleted when auditing workspace noise.
 
 ## Last Verified
 
 - Date: 2026-06-22
-- Repo HEAD: `8b602a17192a8a15b9c5a7c7f992af9b8c264d7b`
-- Verified SSH to `12700K` and `lk402`.
-
+- Repo HEAD before cleanup commit: `45870e63bac99de2ccdc46a6634f1ffae7f8cfd3`
+- Verified SSH to `12700K` and `lk402`; local ignored sync artifacts were removed.

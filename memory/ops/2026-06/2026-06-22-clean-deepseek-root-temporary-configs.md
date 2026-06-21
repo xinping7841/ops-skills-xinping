@@ -10,6 +10,7 @@ The Deepseek repo had accumulated root-level one-off troubleshooting scripts fro
 - Removed obsolete root-level setup/context snippets: `setup_ssh_12700k.bat`, `smart-center-context.md`, and `codex-self-config.md`.
 - Kept durable shared assets: `AGENTS.md`, `skill-*.md`, `codex-skills/**`, `memory/**`, `scripts/**`, `machine-profiles/**`, setup/sync scripts, and the macOS MCP template.
 - Cleaned local ignored artifacts on macair: `sync.log` and `.sync-reports/`.
+- Moved macOS/Windows sync runtime log output from root `sync.log` to `.sync-reports/sync.log`.
 - Removed 12700K local drift: `D:\Deepseek\auto-sync.bat` and stale clone `C:\Users\gaoxi\Documents\Deepseek`.
 - Removed lk402 local drift: `D:\Deepseek\install-admin-bridge-once.bat` and `D:\Deepseek\run-repair-lk402-tailscale-admin.bat`.
 - Added `.gitignore` guardrails and `AGENTS.md` guidance so one-off root-level probes are not reintroduced.
@@ -32,6 +33,7 @@ The repo should stay focused on reusable collaboration assets rather than root-l
 - Verified GitHub remote only exposes `main` with `git ls-remote --heads --tags origin`.
 - Verified lk402 `D:\Deepseek` is clean after deleting the two untracked BAT wrappers.
 - Verified 12700K `D:\Deepseek` is clean after deleting `auto-sync.bat` and the stale `Documents\Deepseek` clone.
+- Updated sync scripts so future scheduler runs do not recreate root-level `sync.log`.
 - Ran `python3 scripts/memory-audit.py` before this record was finalized.
 
 ## Risks
@@ -63,4 +65,6 @@ Future agents should treat the repo root as a high-signal entry point only. If a
 - `memory/machines/lk402.md`
 - `memory/machines/macair.md`
 - `scripts/commit-and-handoff.py`
+- `auto-sync.sh`
+- `sync.ps1`
 - `memory/code/2026-06/2026-06-22-handoff-cleanup-deletion-staging.md`

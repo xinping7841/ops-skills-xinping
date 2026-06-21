@@ -21,9 +21,11 @@ fi
 
 cd "$REPO_DIR" || exit 1
 
-LOG_FILE="$REPO_DIR/sync.log"
 LOCK_DIR="$REPO_DIR/.sync.lock"
 REPORT_DIR="$REPO_DIR/.sync-reports"
+LOG_FILE="$REPORT_DIR/sync.log"
+
+mkdir -p "$REPORT_DIR"
 
 log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"

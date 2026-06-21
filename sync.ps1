@@ -2,9 +2,11 @@
 
 $ErrorActionPreference = 'Continue'
 $RepoDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$LogFile = Join-Path $RepoDir 'sync.log'
 $LockDir = Join-Path $RepoDir '.sync.lock'
 $ReportDir = Join-Path $RepoDir '.sync-reports'
+$LogFile = Join-Path $ReportDir 'sync.log'
+
+New-Item -ItemType Directory -Path $ReportDir -Force | Out-Null
 
 function Write-SyncLog {
     param([string]$Message)

@@ -41,6 +41,7 @@ Do not keep one-off live-network probes or local credential-bearing scripts in t
 - `~/.codex/AGENTS.md` is a short index that points agents to this repo's `AGENTS.md`.
 - `~/.codex/skills` is populated from `skill-*.md` and `codex-skills/**`.
 - `~/.agents/skills` is linked or copied for GUI visibility.
+- Sync runtime logs live under `.sync-reports/sync.log`, not root `sync.log`.
 - Codex/Kun MCP configs are local machine state; memory records should document intent and paths, not secrets.
 
 ## Conflict Policy

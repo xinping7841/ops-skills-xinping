@@ -175,8 +175,18 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply-manifest", action="store_true")
     parser.add_argument("--audit", action="store_true")
+    parser.add_argument("--fix-cua-paths", action="store_true",
+                        help="Detect and fix cross-platform CUA path pollution (delegates to repair-cua-platform-paths.py)")
     args = parser.parse_args()
 
+    if args.fix_cua_paths:
+        from pathlib import Path
+        repair_script = REPO / "scripts" / "repair-cua-platform-paths.py"
+        if not repair_script.exists():
+            raise SystemExit(f"Repair script not found: {repair_script}")
+        import subprocess
+        subprocess.run([sys.executable, str(repair_script)], check=True)
+        return
     if args.apply_manifest:
         apply_manifest()
     if args.audit:

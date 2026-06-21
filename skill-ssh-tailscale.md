@@ -152,7 +152,7 @@ Restart-Service sshd
 
 | 机器 | Git 仓库 | 状态 |
 |------|----------|------|
-| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Git/SSH 已接入，远程枚举 Documents 需授予 macOS 隐私权限 |
+| macair / xinpingmacbook-air | `~/Documents/Deepseek` → `github.com:xinping7841/ops-skills-xinping` | Git/SSH/Kun MCP 已接入，远程 Documents 权限已修复 |
 | 12700K | `D:\Deepseek` | ✅ |
 | lk402 | `D:\Deepseek` → `github.com:xinping7841/ops-skills-xinping` | ✅ |
 
@@ -186,4 +186,4 @@ git add -A && git commit -m "描述" && git push
 
 ---
 
-*最后更新：2026-06-20 | Codex 整理*
+*最后更新：2026-06-21 | Codex 整理*

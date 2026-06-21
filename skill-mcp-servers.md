@@ -27,6 +27,42 @@ D:\IDE\AI
 C:\Users\gaoxi\Documents\Deepseek
 ```
 
+## macair 当前对齐状态（2026-06-21）
+
+| 环境 | 已配置 MCP | 备注 |
+|------|------------|------|
+| Codex | `filesystem`, `context7`, `playwright`, `github` 等插件/技能按 Codex 本机配置加载 | 工作区为 `~/Documents/Deepseek` |
+| Kun | `gui_schedule`, `filesystem`, `context7`, `playwright`, `github` | 配置在 `~/.kun/mcp.json` 和 `~/.kun/data/config.json`，页面显示 `5/5` 已连接 |
+
+macair filesystem 当前授权目录：
+
+```text
+/Users/xinping/Documents/Deepseek
+```
+
+macair 使用用户级 Node.js（mise 安装）作为 MCP 运行时：
+
+```text
+/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node
+```
+
+macair Kun 的个人 MCP 不使用 `npx` 作为 `command`，而是使用绝对 `node` 路径直接运行模块入口，以避免 macOS 图形应用重启后不继承 shell `PATH` 导致 `MCP error -32000: Connection closed`：
+
+| MCP | command | args |
+|-----|---------|------|
+| filesystem | `/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node` | `.../@modelcontextprotocol/server-filesystem/dist/index.js /Users/xinping/Documents/Deepseek` |
+| github | `/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node` | `.../@modelcontextprotocol/server-github/dist/index.js` |
+| playwright | `/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node` | `.../@playwright/mcp/cli.js` |
+| context7 | `/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node` | `.../@upstash/context7-mcp/dist/index.js` |
+
+每个个人 MCP 的 `env.PATH` 显式包含 Node bin：
+
+```text
+/Users/xinping/.local/share/mise/installs/node/22.23.0/bin:/usr/bin:/bin:/usr/sbin:/sbin
+```
+
+`github` 和 `context7` 的密钥只写入 macair 本机 Kun 配置和 `launchctl` 环境，不进入 Git。
+
 注意：`github` 和 `context7` 需要本机环境变量提供密钥。不要把 Token 写进 Git。推荐变量名：
 
 ```text
@@ -75,6 +111,8 @@ Get-Content "$env:USERPROFILE\.kun\data\config.json" -Raw -Encoding UTF8 | Conve
   ```
 - 启用即可，Kun/Codex 均可使用 stdio MCP 启动
 
+macOS Kun 建议改为直接 node 启动 `@playwright/mcp/cli.js`，并显式设置 `env.PATH`，不要依赖 GUI 继承 shell 环境。
+
 ### 5. context7 配置
 
 - 类型：Context7 MCP
@@ -95,10 +133,11 @@ Get-Content "$env:USERPROFILE\.kun\data\config.json" -Raw -Encoding UTF8 | Conve
 
 - 类型：Filesystem MCP
 - 用于在工作区内读取、写入和搜索文件
-- **注意**：最新版可能与 Node.js 存在 ESM 兼容问题，需固定版本：
+- **Windows 注意**：部分版本可能与 Node.js 存在 ESM 兼容问题，可固定版本：
   ```bash
   npm install -g @modelcontextprotocol/server-filesystem@0.6.2
   ```
+- **macair 注意**：`@modelcontextprotocol/server-filesystem@0.6.2` 的部分工具 `inputSchema` 缺少 `type: "object"`，Kun 会报 `Invalid input: expected "object"`。macair 已改用 `@modelcontextprotocol/server-filesystem@2025.11.25`。
 - `trustScope` 设为 `workspace`
 - `trustedWorkspaceRoots` 指定允许访问的目录
 
@@ -132,6 +171,39 @@ C:\Program Files\nodejs\npx.cmd
 
 而不是裸 `npx`。
 
+## macOS 注意事项
+
+### GUI 环境 PATH 不等于 shell PATH
+
+macOS 图形应用从 Finder/LaunchServices 启动时通常不会读取 `~/.zshrc` / `~/.zprofile`。如果 MCP 配置使用 `npx`，而 `npx` 的 shebang 是 `/usr/bin/env node`，Kun 重启后可能找不到 `node`，表现为：
+
+```text
+MCP error -32000: Connection closed
+```
+
+解决方式：
+
+1. 使用绝对 `node` 路径作为 MCP `command`
+2. `args` 指向已安装 MCP 包的 JS 入口
+3. 在 MCP `env.PATH` 中显式加入 Node bin
+4. 保存后重启 Kun
+
+### filesystem schema 兼容
+
+如果 Kun 报类似：
+
+```text
+Invalid input: expected "object", path: ["tools", 0, "inputSchema", "type"]
+```
+
+说明 MCP 返回的 tool schema 不符合 Kun 校验。macair 的修复是安装并使用：
+
+```bash
+npm install -g @modelcontextprotocol/server-filesystem@2025.11.25
+```
+
+然后用绝对 `node` 路径直接启动 `dist/index.js`。
+
 ## 验证
 
 配置完成后，Kun/Codex 对话中可以尝试调用：
@@ -158,4 +230,4 @@ C:\Program Files\nodejs\npx.cmd
 
 ---
 
-*最后更新：2026-06-15 | 12700K 已补齐 Codex MCP 并扩展 Kun filesystem*
+*最后更新：2026-06-21 | macair Kun MCP 5/5 接入并记录 macOS direct-node 配置*

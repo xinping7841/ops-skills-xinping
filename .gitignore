@@ -8,6 +8,8 @@
 sync.log
 .sync.lock/
 .sync-reports/
+__pycache__/
+*.py[cod]
 *.tmp
 *.swp
 *.swo

@@ -96,6 +96,11 @@ def find_markdown_links(text: str):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit engineering handoff memory.")
     parser.add_argument("--max-latest-bytes", type=int, default=12000)
+    parser.add_argument(
+        "--require-memory-change",
+        action="store_true",
+        help="Fail when non-memory files changed but no memory/ files changed.",
+    )
     args = parser.parse_args()
 
     root = run_git_root()
@@ -153,7 +158,11 @@ def main() -> int:
     non_memory = [p for p in changed if not p.startswith("memory/")]
     memory_changes = [p for p in changed if p.startswith("memory/")]
     if non_memory and not memory_changes:
-        warnings.append("working tree has non-memory changes but no memory/ changes")
+        message = "working tree has non-memory changes but no memory/ changes"
+        if args.require_memory_change:
+            errors.append(message)
+        else:
+            warnings.append(message)
 
     if warnings:
         print("Warnings:")
@@ -173,4 +182,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

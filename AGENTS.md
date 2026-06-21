@@ -42,6 +42,7 @@ git push
 自动同步脚本只允许自动提交以下白名单：
 
 - `AGENTS.md`
+- `.gitattributes`、`.gitignore`
 - `skill-*.md`
 - `codex-skills/**`
 - `memory/**`
@@ -208,7 +209,7 @@ Codex 专用技能包位于 `~/Documents/Deepseek/codex-skills/`：
 如需修改这些文件，改完后提交：
 ```bash
 cd ~/Documents/Deepseek
-git add AGENTS.md skill-*.md codex-skills memory scripts machine-profiles mcp-templates setup-*.sh setup-*.ps1 auto-sync.sh sync.ps1 sync-hidden.vbs codex-config-*.toml
+git add AGENTS.md .gitattributes .gitignore skill-*.md codex-skills memory scripts machine-profiles mcp-templates setup-*.sh setup-*.ps1 auto-sync.sh sync.ps1 sync-hidden.vbs codex-config-*.toml
 git commit -m "描述"
 git push
 ```

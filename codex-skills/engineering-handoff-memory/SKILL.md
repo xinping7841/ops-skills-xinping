@@ -31,6 +31,18 @@ Before finishing work that changed meaningful behavior or collaboration state:
 3. Run `python3 scripts/memory-audit.py` from the repo root. Fix actionable failures before final response.
 4. If no memory update is needed after a code/config task, state the reason in the final response.
 
+## Tooling
+
+Use the repo scripts when available instead of copying templates by hand:
+
+- Create a record: `python3 scripts/memory-new.py <ops|code|adr|module|runbook> "Title"`.
+- Preview a record: `python3 scripts/memory-new.py code "Example Change" --dry-run`.
+- Audit only: `python3 scripts/memory-audit.py`.
+- Handoff gate and commit preview: `python3 scripts/commit-and-handoff.py --dry-run`.
+- Commit/push whitelisted changes: `python3 scripts/commit-and-handoff.py --commit` or `python3 scripts/commit-and-handoff.py --push`.
+
+For the complete repeatable procedure, read `memory/runbooks/use-engineering-handoff-memory.md`.
+
 ## Record Rules
 
 - Memory is for why, tradeoffs, validation, risks, and handoff notes. Do not duplicate every diff.
@@ -47,6 +59,7 @@ Use the templates in `memory/templates/`:
 - `code-change.md` for code behavior, bug fixes, module logic, API contracts, and refactors.
 - `adr.md` for long-lived architecture decisions.
 - `module-note.md` for durable module explanations.
+- `runbook.md` for repeatable verification or repair procedures.
 - `latest.md` for rewriting `memory/LATEST.md`.
 
 ## Audit
@@ -62,3 +75,5 @@ The audit checks required directories, `LATEST.md` size, broken memory links, re
 ## Commit Guidance
 
 When committing, write memory before the commit. Use the memory record's Background, Changes, and Validation sections to build the commit message so Git history and handoff context stay aligned.
+
+Prefer `python3 scripts/commit-and-handoff.py --dry-run` before manual commits. It enforces the memory-change gate for non-memory edits by default, lists which changed paths are inside the repo whitelist, and suggests a commit message from the newest changed ops/code/ADR record.

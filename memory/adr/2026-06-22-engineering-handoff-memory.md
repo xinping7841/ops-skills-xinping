@@ -12,6 +12,8 @@ The Deepseek workspace is maintained by multiple agents across multiple machines
 
 Adopt `engineering-handoff-memory` as the durable handoff model for this repository. The system uses `memory/LATEST.md` as a short handoff index and separate durable records for ops, code, ADRs, modules, machines, sync, and runbooks. Meaningful code or environment changes should update the matching memory record and run `scripts/memory-audit.py` before handoff.
 
+Use `scripts/memory-new.py` to create records from templates and `scripts/commit-and-handoff.py` as the default pre-commit/pre-handoff gate. The gate runs the audit, requires a memory update for non-memory edits unless explicitly bypassed, lists whitelisted paths, and can derive the commit message from the newest changed ops/code/ADR record.
+
 ## Consequences
 
 - Benefits:
@@ -24,6 +26,7 @@ Adopt `engineering-handoff-memory` as the durable handoff model for this reposit
 - Operational implications:
   - `memory/**` is now part of the auto-sync whitelist.
   - `AGENTS.md` requires reading and updating memory for relevant tasks.
+  - `scripts/commit-and-handoff.py --dry-run` is the preferred final check before a manual commit.
 
 ## Alternatives Considered
 
@@ -37,6 +40,7 @@ Adopt `engineering-handoff-memory` as the durable handoff model for this reposit
 - Created `codex-skills/engineering-handoff-memory/` and `skill-engineering-handoff-memory.md`.
 - Created `memory/` structure, templates, first machine profiles, sync runbook, and first ops record.
 - Added `scripts/memory-audit.py` and verified it passes on the initial memory set.
+- Added `scripts/memory-new.py`, `scripts/commit-and-handoff.py`, and `memory/runbooks/use-engineering-handoff-memory.md` as the second-stage toolchain.
 - Updated `AGENTS.md`, `auto-sync.sh`, and `sync.ps1` so the workflow and `memory/**` sync behavior are explicit.
 
 ## Links
@@ -45,5 +49,7 @@ Adopt `engineering-handoff-memory` as the durable handoff model for this reposit
 - `codex-skills/engineering-handoff-memory/SKILL.md`
 - `skill-engineering-handoff-memory.md`
 - `scripts/memory-audit.py`
+- `scripts/memory-new.py`
+- `scripts/commit-and-handoff.py`
+- `memory/runbooks/use-engineering-handoff-memory.md`
 - `memory/ops/2026-06/2026-06-22-three-machine-collab-env-repair.md`
-

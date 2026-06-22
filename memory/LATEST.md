@@ -6,6 +6,7 @@ The Deepseek workspace remains the multi-machine skill/config source, and the pr
 
 ## Read First
 
+- `memory/ops/2026-06/2026-06-23-shenlan-switch-asset-catalog-and-cli-diagnostics.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-openwrt-hardware-inventory.md`
 - `memory/ops/2026-06/2026-06-22-shenlan-network-ops-github-repo.md`
 - `memory/ops/2026-06/2026-06-22-three-machine-collab-env-repair.md`
@@ -34,6 +35,7 @@ For Shenlan follow-up, also read the new local repo first:
 - Removed `ik_*` probe scripts from the current GitHub tree because they contained plaintext device login material; Git history still contains old revisions, so rotate the affected device password if still valid.
 - The new `shenlan-network-ops` repo is private but contains internal topology, private IPs, service ports, and rollout plans; keep credentials, raw configs, logs, and packet captures out of it.
 - OpenWrt logical hardware/interface facts are now recorded, but the physical port label/order still needs onsite visual confirmation before updating handover-grade cable diagrams or NetBox cable records.
+- Switch model pages and readonly CLI runbook now exist, but most listed switches still need onsite confirmation of physical location, management IP/VLAN, uplink/downlink ports, CLI support, PoE budget, and NetBox/LibreNMS onboarding.
 - `scripts/commit-and-handoff.py --commit` stages only whitelist paths, but agents should still inspect the dry-run output before committing.
 - `memory/LATEST.md` is still human/agent-curated; tooling does not automatically infer priority, active risks, or next steps.
 - Local Codex/Kun config files may contain machine-private state; memory should record paths and reasons, not secrets.
@@ -42,9 +44,10 @@ For Shenlan follow-up, also read the new local repo first:
 
 1. Use `xinping7841/shenlan-network-ops` as the first update target when the user supplements Shenlan device, VLAN, UPS, NAS, node-122, Tailscale, or AI-Ops rollout information.
 2. For live Shenlan configuration work, cross-check NetBox/LibreNMS/Scanopy on `node-121` and the Deepseek Shenlan references before changing devices.
-3. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
-4. Run `python3 scripts/commit-and-handoff.py --dry-run` before commits or final handoff when durable state changed.
-5. Decide separately whether to rewrite Git history for old plaintext probe scripts; coordinate force-push handling across all machines if doing so.
+3. For Shenlan switch troubleshooting, read `D:\shenlan-network-ops\runbooks\switch-cli-readonly-diagnostics.md` before using CLI, and keep live sessions readonly unless a pre-change safety check and backup are complete.
+4. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
+5. Run `python3 scripts/commit-and-handoff.py --dry-run` before commits or final handoff when durable state changed.
+6. Decide separately whether to rewrite Git history for old plaintext probe scripts; coordinate force-push handling across all machines if doing so.
 
 ## Last Verified
 
@@ -52,4 +55,5 @@ For Shenlan follow-up, also read the new local repo first:
 - Shenlan ops repo: `xinping7841/shenlan-network-ops`, initial commit `8746aeb` pushed to `main`.
 - 12700K Windows working copy prepared at `D:\shenlan-network-ops`; new conversation entrypoint recorded in `runbooks/start-new-conversation.md`.
 - OpenWrt main router hardware snapshot captured read-only: 倍控 H30S / Intel N150 / 16GB RAM / Samsung SSD 980 500GB / OpenWrt 25.12.4; logical interface roles recorded in `D:\shenlan-network-ops\inventory\devices\core-devices.md`.
+- Shenlan switch asset catalog and readonly CLI runbook added to `D:\shenlan-network-ops` and pushed as commit `00122bf`.
 - Tooling commit previously verified: `1118b8a17c462a939025d04989b49a62cb990bac`

@@ -2,12 +2,13 @@
 
 ## Current Focus
 
-The Deepseek workspace remains the multi-machine skill/config source, and the private Shenlan operations repository is now being used as the sanitized source for live network asset facts and staged AI-Ops/DR rollout planning. H3C `GE1/0/20` is now a VLAN99 access setup port for debugging a newly connected managed switch. A separate onsite Huawei S5735S was factory-reset via console/BootLoad and now has no startup saved configuration.
+The Deepseek workspace remains the multi-machine skill/config source, and the private Shenlan operations repository is now being used as the sanitized source for live network asset facts and staged AI-Ops/DR rollout planning. H3C `GE1/0/20` is now a VLAN99 access setup port for debugging a newly connected managed switch. Two separate onsite Huawei S5735S units were factory-reset via console/BootLoad and now have no startup saved configuration.
 
 ## Read First
 
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-factory-reset-via-console-bootload.md`
+- `memory/ops/2026-06/2026-06-23-shenlan-second-s5735s-factory-reset-via-console-bootload.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-meth-ssh-management-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6730-meth-ssh-management-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-h3c-ge20-vlan99-switch-management.md`
@@ -50,6 +51,7 @@ For Shenlan follow-up, also read the new local repo first:
 - H3C `GE1/0/20` was moved from VLAN120 free-DHCP to access VLAN99 for new managed-switch debugging. It is up/up at 100 Mbps full duplex with historical CRC/frame/lost-carrier counters; watch cabling while testing.
 - Onsite S5735S `S5735S-VLAN50-Access` / ESN `3G21B0008306` is now configured as a VLAN50 access switch with management IP `192.168.99.10` on VLAN99 and SSH enabled. Clock is still stale and needs NTP/time follow-up.
 - Onsite Huawei `S5735S-L24T4S-QA2` / ESN `3G21B0008820` was factory-reset via console/BootLoad and verified with `Startup saved-configuration file: NULL`. It is not yet configured for management IP, SSH, SNMP, VLANs, or production ports. A temporary BootLoad password was set during reset because BootLoad initially required changing an empty password; rotate BootLoad credentials during final hardening if this unit will be deployed.
+- Onsite Huawei `S5735S-L24T4S-QA2` / ESN `3G21B0008087` was also factory-reset via console/BootLoad and verified with `Startup saved-configuration file: NULL`. It is not yet configured for management IP, SSH, SNMP, VLANs, or production ports. A temporary BootLoad password was set during reset because BootLoad initially required changing an empty password; rotate BootLoad credentials during final hardening if this unit will be deployed.
 - `node-121` now has `expect 5.45.4` installed for interactive SSH/console automation; apt source/download reliability was flaky during install and should be checked before adding more packages.
 - `scripts/commit-and-handoff.py --commit` stages only whitelist paths, but agents should still inspect the dry-run output before committing.
 - `memory/LATEST.md` is still human/agent-curated; tooling does not automatically infer priority, active risks, or next steps.
@@ -60,7 +62,7 @@ For Shenlan follow-up, also read the new local repo first:
 1. Use `xinping7841/shenlan-network-ops` as the first update target when the user supplements Shenlan device, VLAN, UPS, NAS, node-122, Tailscale, or AI-Ops rollout information.
 2. For live Shenlan configuration work, cross-check NetBox/LibreNMS/Scanopy on `node-121` and the Deepseek Shenlan references before changing devices.
 3. If continuing the onsite S5735S work, verify NTP/time, SNMPv3/LibreNMS onboarding, and final per-port descriptions/shutdown state for VLAN50 access ports.
-4. For the factory-reset S5735S / ESN `3G21B0008820`, start from console and create a deliberate deployment plan before saving any configuration: sysname, management VLAN/IP, SSH/STelnet, NTP, SNMPv3/LibreNMS, VLAN/trunk/access roles, and credential hardening.
+4. For the factory-reset S5735S units / ESN `3G21B0008820` and `3G21B0008087`, start from console and create a deliberate deployment plan before saving any configuration: sysname, management VLAN/IP, SSH/STelnet, NTP, SNMPv3/LibreNMS, VLAN/trunk/access roles, and credential hardening.
 5. If deploying the S6720S, create a separate pre-change plan for sysname, NTP/time, SSH ACL/source restrictions, SNMPv3/LibreNMS, VLAN/trunk/access roles, and final optics/cabling.
 6. If deploying the S6730, create a separate pre-change plan for core/aggregation role, sysname convention, NTP/time, SSH ACL/source restrictions, SNMPv3/LibreNMS, VLAN/trunk/access roles, QSFP+/SFP+ optics, and NetBox cabling.
 7. For the newly connected S6720S/S6730 on H3C `GE1/0/20`, use VLAN99 untagged for initial management at `192.168.99.11` / `192.168.99.12`. If either will carry production VLANs, replace the temporary access setup with a documented trunk plan and update NetBox/LibreNMS.
@@ -83,5 +85,6 @@ For Shenlan follow-up, also read the new local repo first:
 - Shenlan spare switch lab runbook and switch knowledge index added to `D:\shenlan-network-ops` and pushed as commit `d90ddc5`.
 - Onsite S5735S configured locally on macair: `S5735S-VLAN50-Access`, ESN `3G21B0008306`, management `192.168.99.10/24` on VLAN99, `GE0/0/1` trunk VLAN50/99 to H3C `GE1/0/11`, `GE0/0/2-28` access VLAN50, SSH port 22 reachable from `node-121`. H3C `GE1/0/11` was changed from access VLAN50 to trunk VLAN50/99 and saved.
 - Onsite S5735S factory reset: model `S5735S-L24T4S-QA2`, ESN `3G21B0008820`, VRP `V200R021C00SPC600`, BootLoad `0215.0000`; `reset saved-configuration` succeeded and post-reboot `display startup` showed `Startup saved-configuration file: NULL`.
+- Second onsite S5735S factory reset: model `S5735S-L24T4S-QA2`, ESN `3G21B0008087`, VRP `V200R021C00SPC600`, BootLoad `0215.0000`; `reset saved-configuration` succeeded and post-reboot `display startup` showed `Startup saved-configuration file: NULL`.
 - Shenlan device-management repo pushed S5735S asset state in commit `21f7b15`, node-121 CLI tooling cleanup in `4f21bc1`, and expect installation/backlog completion in `5c8437d`.
 - Tooling commit previously verified: `1118b8a17c462a939025d04989b49a62cb990bac`

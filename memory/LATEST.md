@@ -41,7 +41,7 @@ For Shenlan follow-up, also read the new local repo first:
 - Switch model pages and readonly CLI runbook now exist, but most listed switches still need onsite confirmation of physical location, management IP/VLAN, uplink/downlink ports, CLI support, PoE budget, and NetBox/LibreNMS onboarding.
 - Many listed switches may be idle/spare, but exact per-device status is still not recorded; do not factory reset, upgrade, or reconfigure any unit until it is confirmed as non-production and approved for isolated lab work.
 - Onsite S5735S `S5735S-VLAN50-Access` / ESN `3G21B0008306` is now configured as a VLAN50 access switch with management IP `192.168.99.10` on VLAN99 and SSH enabled. Clock is still stale and needs NTP/time follow-up.
-- `node-121` is missing `expect`, so interactive SSH/console automation cannot currently run directly there; this is tracked compactly in `shenlan-network-ops/inventory/services/node-121.md`.
+- `node-121` now has `expect 5.45.4` installed for interactive SSH/console automation; apt source/download reliability was flaky during install and should be checked before adding more packages.
 - `scripts/commit-and-handoff.py --commit` stages only whitelist paths, but agents should still inspect the dry-run output before committing.
 - `memory/LATEST.md` is still human/agent-curated; tooling does not automatically infer priority, active risks, or next steps.
 - Local Codex/Kun config files may contain machine-private state; memory should record paths and reasons, not secrets.
@@ -66,5 +66,5 @@ For Shenlan follow-up, also read the new local repo first:
 - Shenlan switch asset catalog and readonly CLI runbook added to `D:\shenlan-network-ops` and pushed as commit `00122bf`.
 - Shenlan spare switch lab runbook and switch knowledge index added to `D:\shenlan-network-ops` and pushed as commit `d90ddc5`.
 - Onsite S5735S configured locally on macair: `S5735S-VLAN50-Access`, ESN `3G21B0008306`, management `192.168.99.10/24` on VLAN99, `GE0/0/1` trunk VLAN50/99 to H3C `GE1/0/11`, `GE0/0/2-28` access VLAN50, SSH port 22 reachable from `node-121`. H3C `GE1/0/11` was changed from access VLAN50 to trunk VLAN50/99 and saved.
-- Shenlan device-management repo pushed S5735S asset state in commit `21f7b15` and node-121 CLI tooling gap in commit `8360854`.
+- Shenlan device-management repo pushed S5735S asset state in commit `21f7b15`, node-121 CLI tooling cleanup in `4f21bc1`, and expect installation/backlog completion in `5c8437d`.
 - Tooling commit previously verified: `1118b8a17c462a939025d04989b49a62cb990bac`

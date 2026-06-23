@@ -45,7 +45,8 @@ The S5735S management interface lives on VLAN99 while its user/monitoring access
   - `nc -vz -w 3 192.168.99.10 22` succeeded.
 - Node-121 environment gap:
   - `node-121` did not have `expect`, so interactive SSH automation for S5735S could not run there during the onsite session.
-  - The gap was documented in `shenlan-network-ops/inventory/services/node-121.md`; the earlier standalone environment-gap page was removed to keep the repo compact.
+  - Follow-up completed: installed `expect 5.45.4` on `node-121` and documented it in `shenlan-network-ops/inventory/services/node-121.md`; pushed `shenlan-network-ops` commit `5c8437d`.
+  - Installation note: `apt-get update/install` initially stalled on apt method / external source downloads, so `tcl-expect` and `expect` debs were downloaded from TUNA mirror and installed with `dpkg -i`.
 - Password verification:
   - SSH login to `admin@192.168.99.10` succeeded with the final user-specified password after clearing the Huawei initial-password change prompt.
   - Console logout/login also succeeded with the same final password.
@@ -54,7 +55,7 @@ The S5735S management interface lives on VLAN99 while its user/monitoring access
 
 - S5735S clock is still stale (`2024-01-15` observed earlier); configure NTP/time later so logs are meaningful.
 - SSH and console authentication currently use a local password for onsite setup. Consider replacing or supplementing this with a documented read-only/ops account policy before long-term use.
-- Install `expect` on `node-121` or choose a longer-term toolchain such as Oxidized/Netmiko/NAPALM/Nornir before expecting node-121 to run interactive switch automation.
+- `expect` is now installed on `node-121`, but apt source/DNS/HTTP reliability should be checked before adding more packages. Choose a longer-term toolchain such as Oxidized/Netmiko/NAPALM/Nornir before expecting node-121 to run durable switch automation.
 - H3C and S5735S raw console logs remain local only under ignored `local-captures/`; do not commit them without review and redaction.
 
 ## Machine / Sync Impact
@@ -71,7 +72,7 @@ For follow-up, use `ssh admin@192.168.99.10` from a routed management host such 
 The private Shenlan device-management repository now includes the S5735S asset page and a compact node-121 environment gap note:
 
 - `xinping7841/shenlan-network-ops` commit `21f7b15`: S5735S VLAN50 asset/config state.
-- `xinping7841/shenlan-network-ops` commit `8360854` plus follow-up cleanup: node-121 interactive CLI tooling gap is kept in the existing service inventory instead of a standalone page.
+- `xinping7841/shenlan-network-ops` commit `5c8437d`: `expect 5.45.4` installed on node-121 and the backlog item marked Done.
 
 ## Related Files
 

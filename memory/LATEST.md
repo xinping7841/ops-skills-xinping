@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-The Deepseek workspace remains the multi-machine skill/config source, and the private Shenlan operations repository is now being used as the sanitized source for live network asset facts and staged AI-Ops/DR rollout planning. H3C `GE1/0/20` is now a VLAN99 access setup port for debugging a newly connected managed switch. Two separate onsite Huawei S5735S units were factory-reset via console/BootLoad and now have no startup saved configuration.
+The Deepseek workspace remains the multi-machine skill/config source. node-123 (192.168.50.123) is now hosting Hunyuan3D-2.1 Gradio on port 7860 (GPU 15.6GB/24GB), with vLLM 0.23.0 standby for Qwen3-14B/32B models. H3C `GE1/0/20` is now a VLAN99 access setup port for debugging a newly connected managed switch. Two separate onsite Huawei S5735S units were factory-reset via console/BootLoad and now have no startup saved configuration.
 
 ## Read First
 

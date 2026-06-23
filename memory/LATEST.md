@@ -7,6 +7,7 @@ The Deepseek workspace remains the multi-machine skill/config source, and the pr
 ## Read First
 
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
+- `memory/ops/2026-06/2026-06-23-shenlan-s6720s-meth-ssh-management-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-h3c-ge20-vlan99-switch-management.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-console-initial-read.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-vlan50-access-configuration.md`
@@ -42,7 +43,7 @@ For Shenlan follow-up, also read the new local repo first:
 - OpenWrt logical hardware/interface facts are now recorded, but the physical port label/order still needs onsite visual confirmation before updating handover-grade cable diagrams or NetBox cable records.
 - Switch model pages and readonly CLI runbook now exist, but most listed switches still need onsite confirmation of physical location, management IP/VLAN, uplink/downlink ports, CLI support, PoE budget, and NetBox/LibreNMS onboarding.
 - Many listed switches may be idle/spare, but exact per-device status is still not recorded; do not factory reset, upgrade, or reconfigure any unit until it is confirmed as non-production and approved for isolated lab work.
-- Onsite Huawei `S6720S-S24S28X-A` / ESN `3G21B0060790` has been console-initialized and saved with the user-specified formal console password, but remains factory-like: VLAN1 only, service ports down, default `MEth0/0/1 192.168.1.253/24`, and no production VLAN/management design applied. `GE0/0/5` has a 10G module/speed mismatch alarm.
+- Onsite Huawei `S6720S-S24S28X-A` / ESN `3G21B0060790` has been console-initialized and now has `MEth0/0/1 192.168.99.11/24`, default route via `192.168.99.1`, and working SSH/STelnet as local user `admin`. It remains otherwise factory-like: VLAN1 only, service ports down, and no production VLAN design applied. Earlier 10G modules were moved from 1G GE ports to XGE ports; confirm final optics/cabling before deployment.
 - H3C `GE1/0/20` was moved from VLAN120 free-DHCP to access VLAN99 for new managed-switch debugging. It is up/up at 100 Mbps full duplex with historical CRC/frame/lost-carrier counters; watch cabling while testing.
 - Onsite S5735S `S5735S-VLAN50-Access` / ESN `3G21B0008306` is now configured as a VLAN50 access switch with management IP `192.168.99.10` on VLAN99 and SSH enabled. Clock is still stale and needs NTP/time follow-up.
 - `node-121` now has `expect 5.45.4` installed for interactive SSH/console automation; apt source/download reliability was flaky during install and should be checked before adding more packages.
@@ -55,8 +56,8 @@ For Shenlan follow-up, also read the new local repo first:
 1. Use `xinping7841/shenlan-network-ops` as the first update target when the user supplements Shenlan device, VLAN, UPS, NAS, node-122, Tailscale, or AI-Ops rollout information.
 2. For live Shenlan configuration work, cross-check NetBox/LibreNMS/Scanopy on `node-121` and the Deepseek Shenlan references before changing devices.
 3. If continuing the onsite S5735S work, verify NTP/time, SNMPv3/LibreNMS onboarding, and final per-port descriptions/shutdown state for VLAN50 access ports.
-4. If deploying the S6720S, create a separate pre-change plan for sysname, NTP/time, management VLAN/IP, SSH/SNMPv3, VLAN/trunk/access roles, and the `GE0/0/5` module mismatch.
-5. For the newly connected switch on H3C `GE1/0/20`, use VLAN99 untagged for initial management. If it will carry production VLANs, replace the temporary access setup with a documented trunk plan and update NetBox/LibreNMS.
+4. If deploying the S6720S, create a separate pre-change plan for sysname, NTP/time, SSH ACL/source restrictions, SNMPv3/LibreNMS, VLAN/trunk/access roles, and final optics/cabling.
+5. For the newly connected S6720S on H3C `GE1/0/20`, use VLAN99 untagged for initial management at `192.168.99.11`. If it will carry production VLANs, replace the temporary access setup with a documented trunk plan and update NetBox/LibreNMS.
 6. For Shenlan switch knowledge prep, read `D:\shenlan-network-ops\docs\switch-knowledge-index.md`, then choose the spare-device lab runbook for confirmed idle devices or the readonly CLI runbook for online/unknown devices.
 7. For Shenlan switch troubleshooting, read `D:\shenlan-network-ops\runbooks\switch-cli-readonly-diagnostics.md` before using CLI, and keep live sessions readonly unless a pre-change safety check and backup are complete.
 8. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
@@ -66,7 +67,7 @@ For Shenlan follow-up, also read the new local repo first:
 ## Last Verified
 
 - Date: 2026-06-23
-- Onsite S6720S console initialization/status: model `S6720S-S24S28X-A`, ESN `3G21B0060790`, VRP `V200R020C30`, sysname `FutureMatrix`, default `MEth0/0/1 192.168.1.253/24` connected to H3C `GE1/0/20`, VLAN1 only, all service ports down, console password saved to next startup config `flash:/vrpcfg.zip`, and `GE0/0/5` invalid 10G module/speed mismatch recorded.
+- Onsite S6720S management configuration: model `S6720S-S24S28X-A`, ESN `3G21B0060790`, VRP `V200R020C30`, sysname `FutureMatrix`, `MEth0/0/1 192.168.99.11/24`, default route via `192.168.99.1`, SSH/STelnet source `MEth0/0/1`, local `admin` SSH login verified from macair, and ping/TCP/22 verified from `node-121`. Startup config saved to `flash:/vrpcfg.zip`.
 - H3C `GE1/0/20` changed and saved as access VLAN99 for new-switch management setup; post-check showed `PVID 99`, untagged VLAN99, and MAC `3cc7-861b-cf60` learned on VLAN99.
 - Shenlan ops repo: `xinping7841/shenlan-network-ops`, initial commit `8746aeb` pushed to `main`.
 - 12700K Windows working copy prepared at `D:\shenlan-network-ops`; new conversation entrypoint recorded in `runbooks/start-new-conversation.md`.

@@ -6,6 +6,7 @@ The Deepseek workspace remains the multi-machine skill/config source, and the pr
 
 ## Read First
 
+- `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-console-initial-read.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-vlan50-access-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-spare-switch-lab-knowledge.md`
@@ -40,6 +41,7 @@ For Shenlan follow-up, also read the new local repo first:
 - OpenWrt logical hardware/interface facts are now recorded, but the physical port label/order still needs onsite visual confirmation before updating handover-grade cable diagrams or NetBox cable records.
 - Switch model pages and readonly CLI runbook now exist, but most listed switches still need onsite confirmation of physical location, management IP/VLAN, uplink/downlink ports, CLI support, PoE budget, and NetBox/LibreNMS onboarding.
 - Many listed switches may be idle/spare, but exact per-device status is still not recorded; do not factory reset, upgrade, or reconfigure any unit until it is confirmed as non-production and approved for isolated lab work.
+- Onsite Huawei `S6720S-S24S28X-A` / ESN `3G21B0060790` has been console-initialized and saved with the user-specified formal console password, but remains factory-like: VLAN1 only, service ports down, default `MEth0/0/1 192.168.1.253/24`, and no production VLAN/management design applied. `GE0/0/5` has a 10G module/speed mismatch alarm.
 - Onsite S5735S `S5735S-VLAN50-Access` / ESN `3G21B0008306` is now configured as a VLAN50 access switch with management IP `192.168.99.10` on VLAN99 and SSH enabled. Clock is still stale and needs NTP/time follow-up.
 - `node-121` now has `expect 5.45.4` installed for interactive SSH/console automation; apt source/download reliability was flaky during install and should be checked before adding more packages.
 - `scripts/commit-and-handoff.py --commit` stages only whitelist paths, but agents should still inspect the dry-run output before committing.
@@ -51,15 +53,17 @@ For Shenlan follow-up, also read the new local repo first:
 1. Use `xinping7841/shenlan-network-ops` as the first update target when the user supplements Shenlan device, VLAN, UPS, NAS, node-122, Tailscale, or AI-Ops rollout information.
 2. For live Shenlan configuration work, cross-check NetBox/LibreNMS/Scanopy on `node-121` and the Deepseek Shenlan references before changing devices.
 3. If continuing the onsite S5735S work, verify NTP/time, SNMPv3/LibreNMS onboarding, and final per-port descriptions/shutdown state for VLAN50 access ports.
-4. For Shenlan switch knowledge prep, read `D:\shenlan-network-ops\docs\switch-knowledge-index.md`, then choose the spare-device lab runbook for confirmed idle devices or the readonly CLI runbook for online/unknown devices.
-5. For Shenlan switch troubleshooting, read `D:\shenlan-network-ops\runbooks\switch-cli-readonly-diagnostics.md` before using CLI, and keep live sessions readonly unless a pre-change safety check and backup are complete.
-6. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
-7. Run `python3 scripts/commit-and-handoff.py --dry-run` before commits or final handoff when durable state changed.
-8. Decide separately whether to rewrite Git history for old plaintext probe scripts; coordinate force-push handling across all machines if doing so.
+4. If deploying the S6720S, create a separate pre-change plan for sysname, NTP/time, management VLAN/IP, SSH/SNMPv3, VLAN/trunk/access roles, and the `GE0/0/5` module mismatch.
+5. For Shenlan switch knowledge prep, read `D:\shenlan-network-ops\docs\switch-knowledge-index.md`, then choose the spare-device lab runbook for confirmed idle devices or the readonly CLI runbook for online/unknown devices.
+6. For Shenlan switch troubleshooting, read `D:\shenlan-network-ops\runbooks\switch-cli-readonly-diagnostics.md` before using CLI, and keep live sessions readonly unless a pre-change safety check and backup are complete.
+7. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
+8. Run `python3 scripts/commit-and-handoff.py --dry-run` before commits or final handoff when durable state changed.
+9. Decide separately whether to rewrite Git history for old plaintext probe scripts; coordinate force-push handling across all machines if doing so.
 
 ## Last Verified
 
 - Date: 2026-06-23
+- Onsite S6720S console initialization/status: model `S6720S-S24S28X-A`, ESN `3G21B0060790`, VRP `V200R020C30`, sysname `FutureMatrix`, default `MEth0/0/1 192.168.1.253/24` connected to H3C `GE1/0/20`, VLAN1 only, all service ports down, console password saved to next startup config `flash:/vrpcfg.zip`, and `GE0/0/5` invalid 10G module/speed mismatch recorded.
 - Shenlan ops repo: `xinping7841/shenlan-network-ops`, initial commit `8746aeb` pushed to `main`.
 - 12700K Windows working copy prepared at `D:\shenlan-network-ops`; new conversation entrypoint recorded in `runbooks/start-new-conversation.md`.
 - OpenWrt main router hardware snapshot captured read-only: 倍控 H30S / Intel N150 / 16GB RAM / Samsung SSD 980 500GB / OpenWrt 25.12.4; logical interface roles recorded in `D:\shenlan-network-ops\inventory\devices\core-devices.md`.

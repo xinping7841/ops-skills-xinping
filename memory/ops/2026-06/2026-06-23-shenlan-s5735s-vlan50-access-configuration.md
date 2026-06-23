@@ -43,6 +43,9 @@ The S5735S management interface lives on VLAN99 while its user/monitoring access
 - Node-121 checks:
   - `ping -c 3 192.168.99.10` succeeded: 3/3 received.
   - `nc -vz -w 3 192.168.99.10 22` succeeded.
+- Node-121 environment gap:
+  - `node-121` did not have `expect`, so interactive SSH automation for S5735S could not run there during the onsite session.
+  - The gap was documented in `shenlan-network-ops/inventory/services/node-121.md`; the earlier standalone environment-gap page was removed to keep the repo compact.
 - Password verification:
   - SSH login to `admin@192.168.99.10` succeeded with the final user-specified password after clearing the Huawei initial-password change prompt.
   - Console logout/login also succeeded with the same final password.
@@ -51,6 +54,7 @@ The S5735S management interface lives on VLAN99 while its user/monitoring access
 
 - S5735S clock is still stale (`2024-01-15` observed earlier); configure NTP/time later so logs are meaningful.
 - SSH and console authentication currently use a local password for onsite setup. Consider replacing or supplementing this with a documented read-only/ops account policy before long-term use.
+- Install `expect` on `node-121` or choose a longer-term toolchain such as Oxidized/Netmiko/NAPALM/Nornir before expecting node-121 to run interactive switch automation.
 - H3C and S5735S raw console logs remain local only under ignored `local-captures/`; do not commit them without review and redaction.
 
 ## Machine / Sync Impact
@@ -63,6 +67,11 @@ The S5735S management interface lives on VLAN99 while its user/monitoring access
 ## Handoff Notes
 
 For follow-up, use `ssh admin@192.168.99.10` from a routed management host such as `node-121` or console access. Verify NTP/time, SNMPv3/LibreNMS onboarding, and whether all `GE0/0/2-28` should remain VLAN50 access or whether some ports need shutdown/description updates.
+
+The private Shenlan device-management repository now includes the S5735S asset page and a compact node-121 environment gap note:
+
+- `xinping7841/shenlan-network-ops` commit `21f7b15`: S5735S VLAN50 asset/config state.
+- `xinping7841/shenlan-network-ops` commit `8360854` plus follow-up cleanup: node-121 interactive CLI tooling gap is kept in the existing service inventory instead of a standalone page.
 
 ## Related Files
 

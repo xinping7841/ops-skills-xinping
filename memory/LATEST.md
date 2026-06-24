@@ -2,89 +2,59 @@
 
 ## Current Focus
 
-The Deepseek workspace remains the multi-machine skill/config source. node-123 (192.168.50.123) is now hosting Hunyuan3D-2.1 Gradio on port 7860 (GPU 15.6GB/24GB), with vLLM 0.23.0 standby for Qwen3-14B/32B models. H3C `GE1/0/20` is now a VLAN99 access setup port for debugging a newly connected managed switch. Two separate onsite Huawei S5735S units were factory-reset via console/BootLoad and now have no startup saved configuration.
+SmartCenter meter history stabilization was completed on node-121 and verified through node-120. node-121 remains the raw cumulative meter collector, while node-120 displays the configured visible/reporting meters and now returns stable 2026-06-19/20/21 history values without the previous missing `二号厅` total drift.
 
 ## Read First
 
+- `memory/code/2026-06/2026-06-24-smart-center-meter-history-stabilization.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-factory-reset-via-console-bootload.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-second-s5735s-factory-reset-via-console-bootload.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-meth-ssh-management-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6730-meth-ssh-management-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-h3c-ge20-vlan99-switch-management.md`
-- `memory/ops/2026-06/2026-06-23-shenlan-s5735s-console-initial-read.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-vlan50-access-configuration.md`
-- `memory/ops/2026-06/2026-06-23-shenlan-spare-switch-lab-knowledge.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-switch-asset-catalog-and-cli-diagnostics.md`
-- `memory/ops/2026-06/2026-06-23-shenlan-openwrt-hardware-inventory.md`
-- `memory/ops/2026-06/2026-06-22-shenlan-network-ops-github-repo.md`
 - `memory/ops/2026-06/2026-06-22-three-machine-collab-env-repair.md`
 - `memory/code/2026-06/2026-06-22-engineering-memory-tooling.md`
-- `memory/ops/2026-06/2026-06-22-clean-deepseek-root-temporary-configs.md`
-- `memory/code/2026-06/2026-06-22-handoff-cleanup-deletion-staging.md`
 - `memory/adr/2026-06-22-engineering-handoff-memory.md`
 - `memory/runbooks/use-engineering-handoff-memory.md`
 - `memory/sync/deepseek-three-machine-sync.md`
 - `memory/machines/macair.md`
 - `memory/machines/12700k.md`
 - `memory/machines/lk402.md`
-- `memory/runbooks/verify-three-machine-sync.md`
 
-For Shenlan follow-up, also read the new local repo first:
+For Shenlan network follow-up, also read the `shenlan-network-ops` repo start files before changing devices:
 
 - `/Users/xinping/Documents/shenlan-network-ops/README.md`
 - `/Users/xinping/Documents/shenlan-network-ops/docs/current-state.md`
 - `/Users/xinping/Documents/shenlan-network-ops/plans/configuration-backlog.md`
 - `/Users/xinping/Documents/shenlan-network-ops/SECURITY.md`
 - `/Users/xinping/Documents/shenlan-network-ops/runbooks/start-new-conversation.md`
-- `D:\shenlan-network-ops\runbooks\start-new-conversation.md` on Windows when the repo has been cloned there.
+- `D:\shenlan-network-ops\runbooks\start-new-conversation.md` on Windows when available.
 
 ## Active Risks
 
-- Removed `ik_*` probe scripts from the current GitHub tree because they contained plaintext device login material; Git history still contains old revisions, so rotate the affected device password if still valid.
-- The new `shenlan-network-ops` repo is private but contains internal topology, private IPs, service ports, and rollout plans; keep credentials, raw configs, logs, and packet captures out of it.
-- OpenWrt logical hardware/interface facts are now recorded, but the physical port label/order still needs onsite visual confirmation before updating handover-grade cable diagrams or NetBox cable records.
-- Switch model pages and readonly CLI runbook now exist, but most listed switches still need onsite confirmation of physical location, management IP/VLAN, uplink/downlink ports, CLI support, PoE budget, and NetBox/LibreNMS onboarding.
-- Many listed switches may be idle/spare, but exact per-device status is still not recorded; do not factory reset, upgrade, or reconfigure any unit until it is confirmed as non-production and approved for isolated lab work.
-- Onsite Huawei `S6720S-S24S28X-A` / ESN `3G21B0060790` has been console-initialized and now has `MEth0/0/1 192.168.99.11/24`, default route via `192.168.99.1`, and working SSH/STelnet as local user `admin`; the admin SSH password was rotated back to the user-specified formal password and saved. It remains otherwise factory-like: VLAN1 only, service ports down, and no production VLAN design applied. Earlier 10G modules were moved from 1G GE ports to XGE ports; confirm final optics/cabling before deployment.
-- Onsite Huawei `S6730-S24X6Q` / ESN `102170397708` is management-ready at `MEth0/0/1 192.168.99.12/24`, default route via `192.168.99.1`, SSH/STelnet source `MEth0/0/1`, local `admin` SSH login verified from macair, and ping/TCP/22 verified from `node-121`. It remains otherwise factory-like with no production VLAN/uplink design applied.
-- H3C `GE1/0/20` was moved from VLAN120 free-DHCP to access VLAN99 for new managed-switch debugging. It is up/up at 100 Mbps full duplex with historical CRC/frame/lost-carrier counters; watch cabling while testing.
-- Onsite S5735S `S5735S-VLAN50-Access` / ESN `3G21B0008306` is now configured as a VLAN50 access switch with management IP `192.168.99.10` on VLAN99 and SSH enabled. Clock is still stale and needs NTP/time follow-up.
-- Onsite Huawei `S5735S-L24T4S-QA2` / ESN `3G21B0008820` was factory-reset via console/BootLoad and verified with `Startup saved-configuration file: NULL`. It is not yet configured for management IP, SSH, SNMP, VLANs, or production ports. A temporary BootLoad password was set during reset because BootLoad initially required changing an empty password; rotate BootLoad credentials during final hardening if this unit will be deployed.
-- Onsite Huawei `S5735S-L24T4S-QA2` / ESN `3G21B0008087` was also factory-reset via console/BootLoad and verified with `Startup saved-configuration file: NULL`. It is not yet configured for management IP, SSH, SNMP, VLANs, or production ports. A temporary BootLoad password was set during reset because BootLoad initially required changing an empty password; rotate BootLoad credentials during final hardening if this unit will be deployed.
-- `node-121` now has `expect 5.45.4` installed for interactive SSH/console automation; apt source/download reliability was flaky during install and should be checked before adding more packages.
-- `scripts/commit-and-handoff.py --commit` stages only whitelist paths, but agents should still inspect the dry-run output before committing.
-- `memory/LATEST.md` is still human/agent-curated; tooling does not automatically infer priority, active risks, or next steps.
-- Local Codex/Kun config files may contain machine-private state; memory should record paths and reasons, not secrets.
+- node-121 SmartCenter meter service is a flat onsite deployment at `/opt/smart_power_services/meter_service/service.py`, not the repository package layout. Do not replace it wholesale with repo `meter_service/service.py`; preserve onsite-only APIs such as `get_latest_snapshot_rows()`.
+- SmartCenter meter diagnostics must stay read-only unless the user explicitly authorizes controls. Avoid `/api/set`, `/api/onekey_start`, `/api/onekey_stop`, and similar physical-control endpoints.
+- node-120 history API values are sanitized/cache-shaped display values and can differ slightly from independent node-121 SQLite first/last raw-counter estimates. Use the raw-count-derived table from the 2026-06-24 memory record for formal reporting.
+- `D:\SmartCenter\smart-center-worktrees\meter-history-spike-filter\config.json` had unrelated local modifications during the meter task; do not revert them casually.
+- Deepseek repo currently has untracked local artifacts such as `Kun-0.2.16-win-x64.exe`, `tmp-node123/`, and `tmp/`; inspect before any broad commit and keep private/generated artifacts out of Git.
+- Existing Shenlan network risks still apply: many switches remain partially documented or factory-like, and live device changes need a deliberate pre-change plan and sanitized records.
 
 ## Next Steps
 
-1. Use `xinping7841/shenlan-network-ops` as the first update target when the user supplements Shenlan device, VLAN, UPS, NAS, node-122, Tailscale, or AI-Ops rollout information.
-2. For live Shenlan configuration work, cross-check NetBox/LibreNMS/Scanopy on `node-121` and the Deepseek Shenlan references before changing devices.
-3. If continuing the onsite S5735S work, verify NTP/time, SNMPv3/LibreNMS onboarding, and final per-port descriptions/shutdown state for VLAN50 access ports.
-4. For the factory-reset S5735S units / ESN `3G21B0008820` and `3G21B0008087`, start from console and create a deliberate deployment plan before saving any configuration: sysname, management VLAN/IP, SSH/STelnet, NTP, SNMPv3/LibreNMS, VLAN/trunk/access roles, and credential hardening.
-5. If deploying the S6720S, create a separate pre-change plan for sysname, NTP/time, SSH ACL/source restrictions, SNMPv3/LibreNMS, VLAN/trunk/access roles, and final optics/cabling.
-6. If deploying the S6730, create a separate pre-change plan for core/aggregation role, sysname convention, NTP/time, SSH ACL/source restrictions, SNMPv3/LibreNMS, VLAN/trunk/access roles, QSFP+/SFP+ optics, and NetBox cabling.
-7. For the newly connected S6720S/S6730 on H3C `GE1/0/20`, use VLAN99 untagged for initial management at `192.168.99.11` / `192.168.99.12`. If either will carry production VLANs, replace the temporary access setup with a documented trunk plan and update NetBox/LibreNMS.
-8. For Shenlan switch knowledge prep, read `D:\shenlan-network-ops\docs\switch-knowledge-index.md`, then choose the spare-device lab runbook for confirmed idle devices or the readonly CLI runbook for online/unknown devices.
-9. For Shenlan switch troubleshooting, read `D:\shenlan-network-ops\runbooks\switch-cli-readonly-diagnostics.md` before using CLI, and keep live sessions readonly unless a pre-change safety check and backup are complete.
-10. Keep new reusable procedures in `memory/runbooks/` or sanitized skill references, not as root-level ad hoc scripts.
-11. Run `python3 scripts/commit-and-handoff.py --dry-run` before commits or final handoff when durable state changed.
-12. Decide separately whether to rewrite Git history for old plaintext probe scripts; coordinate force-push handling across all machines if doing so.
+1. If continuing SmartCenter meter work, start in `D:\SmartCenter\smart-center-worktrees\meter-history-spike-filter`, check `git status`, and use `scripts/ssh_exec.sh --host node-120|node-121 --script scripts/remote/<script>.sh` for complex remote commands.
+2. For a user-facing meter report, present the raw-count-derived visible table from `memory/code/2026-06/2026-06-24-smart-center-meter-history-stabilization.md`, with final row named `汇总` and including `二号厅`.
+3. If making more SmartCenter production changes, create or reuse remote scripts under `scripts/remote/`, run local tests, and re-verify node-120 history stability after deployment.
+4. Before committing Deepseek memory or scripts, run `python3 scripts/commit-and-handoff.py --dry-run` and stage only whitelist-safe files.
+5. For Shenlan switch follow-up, read the listed Shenlan records and the local `shenlan-network-ops` runbook first, then keep live CLI sessions read-only until a pre-change plan is approved.
 
 ## Last Verified
 
-- Date: 2026-06-23
-- Onsite S6720S management configuration: model `S6720S-S24S28X-A`, ESN `3G21B0060790`, VRP `V200R020C30`, sysname `FutureMatrix`, `MEth0/0/1 192.168.99.11/24`, default route via `192.168.99.1`, SSH/STelnet source `MEth0/0/1`, local `admin` SSH login verified from macair, and ping/TCP/22 verified from `node-121`. Startup config saved to `flash:/vrpcfg.zip`.
-- Onsite S6730 management configuration: model `S6730-S24X6Q`, ESN `102170397708`, VRP `V200R020C10SPC500`, sysname `S6730-MGMT-99-12`, `MEth0/0/1 192.168.99.12/24`, default route via `192.168.99.1`, SSH/STelnet source `MEth0/0/1`, local `admin` SSH login verified from macair, and ping/TCP/22 verified from `node-121`. Startup config saved to `flash:/vrpcfg.zip`.
-- H3C `GE1/0/20` changed and saved as access VLAN99 for new-switch management setup; post-check showed `PVID 99`, untagged VLAN99, and MAC `3cc7-861b-cf60` learned on VLAN99.
-- Shenlan ops repo: `xinping7841/shenlan-network-ops`, initial commit `8746aeb` pushed to `main`.
-- 12700K Windows working copy prepared at `D:\shenlan-network-ops`; new conversation entrypoint recorded in `runbooks/start-new-conversation.md`.
-- OpenWrt main router hardware snapshot captured read-only: 倍控 H30S / Intel N150 / 16GB RAM / Samsung SSD 980 500GB / OpenWrt 25.12.4; logical interface roles recorded in `D:\shenlan-network-ops\inventory\devices\core-devices.md`.
-- Shenlan switch asset catalog and readonly CLI runbook added to `D:\shenlan-network-ops` and pushed as commit `00122bf`.
-- Shenlan spare switch lab runbook and switch knowledge index added to `D:\shenlan-network-ops` and pushed as commit `d90ddc5`.
-- Onsite S5735S configured locally on macair: `S5735S-VLAN50-Access`, ESN `3G21B0008306`, management `192.168.99.10/24` on VLAN99, `GE0/0/1` trunk VLAN50/99 to H3C `GE1/0/11`, `GE0/0/2-28` access VLAN50, SSH port 22 reachable from `node-121`. H3C `GE1/0/11` was changed from access VLAN50 to trunk VLAN50/99 and saved.
-- Onsite S5735S factory reset: model `S5735S-L24T4S-QA2`, ESN `3G21B0008820`, VRP `V200R021C00SPC600`, BootLoad `0215.0000`; `reset saved-configuration` succeeded and post-reboot `display startup` showed `Startup saved-configuration file: NULL`.
-- Second onsite S5735S factory reset: model `S5735S-L24T4S-QA2`, ESN `3G21B0008087`, VRP `V200R021C00SPC600`, BootLoad `0215.0000`; `reset saved-configuration` succeeded and post-reboot `display startup` showed `Startup saved-configuration file: NULL`.
-- Shenlan device-management repo pushed S5735S asset state in commit `21f7b15`, node-121 CLI tooling cleanup in `4f21bc1`, and expect installation/backlog completion in `5c8437d`.
-- Tooling commit previously verified: `1118b8a17c462a939025d04989b49a62cb990bac`
+- Date: 2026-06-24
+- SmartCenter branch: `codex/12700k-meter-history-spike-filter-20260622`
+- node-121: `meter-service.service` active after patching onsite flat `service.py`; `target=legacy_meter_3`, `target=meter:legacy_meter_3`, `target=cabinet_meter_1`, `target=cabinet:1`, and `target=total` verified through `/api/meters`.
+- node-120: configured report returned `remote_payload_shape=node120_config`, `meter_count=14`, no remote history errors, and total trend `174.5, 164.0, 167.05`; five repeated reads of total, `二号厅`, `咖啡厅`, and `中控室` were stable.
+- Raw node-121 SQLite estimate for visible configured meters: `汇总` 2026-06-19 `174.88`, 2026-06-20 `164.15`, 2026-06-21 `167.24`, total `506.27`.
+- Local checks: `python -m unittest tests.test_meter_storage_history tests.test_power_remote_meter_cache` passed; `python -m compileall meter_service services api\power.py` passed.

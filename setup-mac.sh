@@ -78,12 +78,8 @@ if [ -d "$HOME/.codex" ] && [ -d "$REPO_DIR/codex-skills" ]; then
   done
 fi
 
-if [ -d "$HOME/.codex/skills" ]; then
-  for SKILL_DEST in "$HOME/.codex/skills"/*; do
-    [ -d "$SKILL_DEST" ] && [ -f "$SKILL_DEST/SKILL.md" ] || continue
-    link_codex_skill_for_ui "$(basename "$SKILL_DEST")"
-  done
-fi
+## Only repo-managed skills are registered in Codex config. Local orphan skills
+## may exist on disk, but should not be auto-registered into every thread.
 
 # 2. SSH config 追加（不覆盖已有）
 SSH_CONFIG="$HOME/.ssh/config"

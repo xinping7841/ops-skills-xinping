@@ -162,10 +162,8 @@ deploy_repo_to_local() {
       done
     fi
 
-    for skill_dest in "$HOME/.codex/skills"/*; do
-      [ -d "$skill_dest" ] && [ -f "$skill_dest/SKILL.md" ] || continue
-      link_codex_skill_for_ui "$(basename "$skill_dest")"
-    done
+    # Only repo-managed skills are registered in Codex config. Local orphan
+    # skills are audited below, but not auto-registered into every thread.
   fi
 }
 

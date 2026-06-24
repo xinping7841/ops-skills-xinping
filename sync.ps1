@@ -174,14 +174,8 @@ function Deploy-RepoToLocal {
             }
         }
 
-        $skillRoot = Join-Path $codexDir 'skills'
-        if (Test-Path -LiteralPath $skillRoot) {
-            Get-ChildItem -LiteralPath $skillRoot -Directory | Where-Object {
-                Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md')
-            } | ForEach-Object {
-                Link-CodexSkillForUi -SkillName $_.Name
-            }
-        }
+        # Only repo-managed skills are registered in Codex config. Local orphan
+        # skills are audited below, but not auto-registered into every thread.
     }
 }
 

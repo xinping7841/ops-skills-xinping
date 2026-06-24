@@ -2,11 +2,14 @@
 
 ## Current Focus
 
+Codex context injection for the Deepseek workspace was slimmed on 12700K after a high token-consumption analysis. The project `AGENTS.md` is now a short read-on-demand entry, local Codex default plugins/MCP/skills were reduced, and sync scripts no longer auto-register orphan local skills into every Codex thread.
+
 SmartCenter meter history stabilization was completed on node-121 and verified through node-120. node-121 remains the raw cumulative meter collector, while node-120 displays the configured visible/reporting meters and now returns stable 2026-06-19/20/21 history values without the previous missing `二号厅` total drift.
 
 ## Read First
 
 - `memory/code/2026-06/2026-06-24-smart-center-meter-history-stabilization.md`
+- `memory/ops/2026-06/2026-06-24-slim-codex-context-injection.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-factory-reset-via-console-bootload.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-second-s5735s-factory-reset-via-console-bootload.md`
@@ -40,6 +43,7 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 - node-120 history API values are sanitized/cache-shaped display values and can differ slightly from independent node-121 SQLite first/last raw-counter estimates. Use the raw-count-derived table from the 2026-06-24 memory record for formal reporting.
 - `D:\SmartCenter\smart-center-worktrees\meter-history-spike-filter\config.json` had unrelated local modifications during the meter task; do not revert them casually.
 - Deepseek repo currently has untracked local artifacts such as `Kun-0.2.16-win-x64.exe`, `tmp-node123/`, and `tmp/`; inspect before any broad commit and keep private/generated artifacts out of Git.
+- Codex context was intentionally slimmed on 12700K. Do not bulk-register every local `~/.codex/skills/*` directory or re-enable all heavy plugins/MCP blocks unless the user accepts higher recurring input-token cost. Restore from `C:\Users\gaoxi\.codex\config.toml.before-context-slim-20260624-095241.bak` only if broad capabilities are more important than context cost.
 - Existing Shenlan network risks still apply: many switches remain partially documented or factory-like, and live device changes need a deliberate pre-change plan and sanitized records.
 
 ## Next Steps
@@ -49,10 +53,12 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 3. If making more SmartCenter production changes, create or reuse remote scripts under `scripts/remote/`, run local tests, and re-verify node-120 history stability after deployment.
 4. Before committing Deepseek memory or scripts, run `python3 scripts/commit-and-handoff.py --dry-run` and stage only whitelist-safe files.
 5. For Shenlan switch follow-up, read the listed Shenlan records and the local `shenlan-network-ops` runbook first, then keep live CLI sessions read-only until a pre-change plan is approved.
+6. If a Codex task needs browser, document, spreadsheet, presentation, Figma, Notion, Lark, deploy, or security skills, re-enable only the specific plugin or skill in `C:\Users\gaoxi\.codex\config.toml` instead of restoring the full previous config.
 
 ## Last Verified
 
 - Date: 2026-06-24
+- 12700K Codex context slimming: local TOML parsed successfully after edits; default registration count reduced from 62 plugin/skill/MCP blocks to 23 blocks before the handoff record, with 17 skill blocks and no default MCP server blocks.
 - SmartCenter branch: `codex/12700k-meter-history-spike-filter-20260622`
 - node-121: `meter-service.service` active after patching onsite flat `service.py`; `target=legacy_meter_3`, `target=meter:legacy_meter_3`, `target=cabinet_meter_1`, `target=cabinet:1`, and `target=total` verified through `/api/meters`.
 - node-120: configured report returned `remote_payload_shape=node120_config`, `meter_count=14`, no remote history errors, and total trend `174.5, 164.0, 167.05`; five repeated reads of total, `二号厅`, `咖啡厅`, and `中控室` were stable.

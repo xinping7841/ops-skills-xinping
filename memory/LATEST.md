@@ -6,7 +6,7 @@ Codex context injection for the Deepseek workspace was slimmed on 12700K after a
 
 SmartCenter meter history stabilization was completed on node-121 and verified through node-120. node-121 remains the raw cumulative meter collector, while node-120 displays the configured visible/reporting meters and now returns stable 2026-06-19/20/21 history values without the previous missing `二号厅` total drift.
 
-node-123 SSH was re-verified after the user power-cycled the machine. LAN `192.168.50.123` and Tailscale `100.119.214.90` both accept SSH as `sl123`; user-side SSH key permissions and authorized key line endings were repaired, and local aliases now include `node-123-lan` and `node-123-ts`.
+node-123 SSH was re-verified after the user power-cycled the machine. LAN `192.168.50.123` and Tailscale `100.119.214.90` both accept SSH as `sl123`; user-side SSH key permissions and authorized key line endings were repaired, local aliases now include `node-123-lan` and `node-123-ts`, and system SSH policy now disables password login/root login through `/etc/ssh/sshd_config.d/99-codex-hardening.conf`. RDP is restored through `xrdp` on TCP/3389; GNOME Remote Desktop is disabled to avoid port conflicts.
 
 ## Read First
 
@@ -47,7 +47,8 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 - node-120 history API values are sanitized/cache-shaped display values and can differ slightly from independent node-121 SQLite first/last raw-counter estimates. Use the raw-count-derived table from the 2026-06-24 memory record for formal reporting.
 - `D:\SmartCenter\smart-center-worktrees\meter-history-spike-filter\config.json` had unrelated local modifications during the meter task; do not revert them casually.
 - Deepseek repo currently has untracked local artifacts such as `Kun-0.2.16-win-x64.exe`, `tmp-node123/`, and `tmp/`; inspect before any broad commit and keep private/generated artifacts out of Git.
-- node-123 root-level SSH policy hardening was not changed because `sl123` currently requires a sudo password. User-side SSH is fixed, but disabling password authentication or changing `/etc/ssh/sshd_config` still needs console/root access or an approved sudo-password session.
+- node-123 SSH password login is now disabled, so future SSH access requires an authorized key or console access. Do not remove authorized keys casually.
+- node-123 RDP should be served by `xrdp.service` on TCP/3389. Keep `gnome-remote-desktop.service` disabled unless it is deliberately moved to another port and given credentials.
 - Codex context was intentionally slimmed on 12700K. Do not bulk-register every local `~/.codex/skills/*` directory or re-enable all heavy plugins/MCP blocks unless the user accepts higher recurring input-token cost. Restore from `C:\Users\gaoxi\.codex\config.toml.before-context-slim-20260624-095241.bak` only if broad capabilities are more important than context cost.
 - Existing Shenlan network risks still apply: many switches remain partially documented or factory-like, and live device changes need a deliberate pre-change plan and sanitized records.
 
@@ -57,14 +58,14 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 2. For a user-facing meter report, present the raw-count-derived visible table from `memory/code/2026-06/2026-06-24-smart-center-meter-history-stabilization.md`, with final row named `汇总` and including `二号厅`.
 3. If making more SmartCenter production changes, create or reuse remote scripts under `scripts/remote/`, run local tests, and re-verify node-120 history stability after deployment.
 4. Before committing Deepseek memory or scripts, run `python3 scripts/commit-and-handoff.py --dry-run` and stage only whitelist-safe files.
-5. For node-123 follow-up, use `ssh node-123-lan` for LAN access or `ssh node-123-ts` for Tailscale access. If continuing Hunyuan3D work, resume at the `custom_rasterizer` CUDA extension rebuild/import issue described in the 2026-06-25 node-123 SSH ops record.
+5. For node-123 follow-up, use `ssh node-123-lan` for LAN access or `ssh node-123-ts` for Tailscale access. Use RDP username `sl123` on port 3389. If continuing Hunyuan3D work, resume at the `custom_rasterizer` CUDA extension rebuild/import issue described in the 2026-06-25 node-123 SSH ops record.
 6. For Shenlan switch follow-up, read the listed Shenlan records and the local `shenlan-network-ops` runbook first, then keep live CLI sessions read-only until a pre-change plan is approved.
 7. If a Codex task needs browser, document, spreadsheet, presentation, Figma, Notion, Lark, deploy, or security skills, re-enable only the specific plugin or skill in `C:\Users\gaoxi\.codex\config.toml` instead of restoring the full previous config.
 
 ## Last Verified
 
 - Date: 2026-06-24
-- node-123 SSH: 2026-06-25 LAN and Tailscale TCP/22 reachable; `ssh node-123-lan` returned `sl123-System-Product-Name`, user `sl123`, `ssh.service enabled/active`; `ssh.socket enabled/active`; Tailscale online at `100.119.214.90`.
+- node-123 SSH/RDP: 2026-06-25 LAN and Tailscale TCP/22 and TCP/3389 reachable; `ssh node-123-lan` returned `sl123-System-Product-Name`, user `sl123`; `ssh.service`, `ssh.socket`, `xrdp.service`, and `xrdp-sesman.service` enabled/active; `gnome-remote-desktop.service` disabled/inactive; `sshd -T` shows password auth and root login disabled.
 - 12700K Codex context slimming: local TOML parsed successfully after edits; default registration count reduced from 62 plugin/skill/MCP blocks to 23 blocks before the handoff record, with 17 skill blocks and no default MCP server blocks.
 - SmartCenter branch: `codex/12700k-meter-history-spike-filter-20260622`
 - node-121: `meter-service.service` active after patching onsite flat `service.py`; `target=legacy_meter_3`, `target=meter:legacy_meter_3`, `target=cabinet_meter_1`, `target=cabinet:1`, and `target=total` verified through `/api/meters`.

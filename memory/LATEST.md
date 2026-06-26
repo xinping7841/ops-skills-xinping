@@ -52,7 +52,7 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 - node-123 RDP should be served by `xrdp.service` on TCP/3389. Keep `gnome-remote-desktop.service` disabled unless it is deliberately moved to another port and given credentials.
 - Codex context was intentionally slimmed on 12700K. Do not bulk-register every local `~/.codex/skills/*` directory or re-enable all heavy plugins/MCP blocks unless the user accepts higher recurring input-token cost. Restore from `C:\Users\gaoxi\.codex\config.toml.before-context-slim-20260624-095241.bak` only if broad capabilities are more important than context cost.
 - Existing Shenlan network risks still apply: many switches remain partially documented or factory-like, and live device changes need a deliberate pre-change plan and sanitized records.
-- S6720S `XGE0/0/25` is now the active 10G trunk uplink to H3C `Te1/0/25` for VLAN10 and VLAN99; H3C still lists default VLAN1 on that trunk while S6720S only allows VLAN10/99. Remove VLAN1 from H3C separately only after a checked plan.
+- S6720S `XGE0/0/25` is now the active 10G trunk uplink to H3C `Te1/0/25` for VLAN10 and VLAN99; VLAN1 has been removed from the H3C trunk. S6720S management has moved from `MEth0/0/1` to `Vlanif99 192.168.99.11/24`, SSH source is `Vlanif99`, and LibreNMS monitors it as device ID `13` using SNMPv2c restricted to node-121.
 
 ## Next Steps
 
@@ -62,13 +62,13 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 4. Before committing Deepseek memory or scripts, run `python3 scripts/commit-and-handoff.py --dry-run` and stage only whitelist-safe files.
 5. For node-123 follow-up, use `ssh node-123-lan` for LAN access or `ssh node-123-ts` for Tailscale access. Use RDP username `sl123` on port 3389. If continuing Hunyuan3D work, resume at the `custom_rasterizer` CUDA extension rebuild/import issue described in the 2026-06-25 node-123 SSH ops record.
 6. For Shenlan switch follow-up, read the listed Shenlan records and the local `shenlan-network-ops` runbook first, then keep live CLI sessions read-only until a pre-change plan is approved.
-7. For S6720S follow-up, treat `XGE0/0/25` <-> H3C `Te1/0/25` as the trunk uplink and decide downstream port roles, SNMPv3/LibreNMS, NetBox cabling, and whether H3C VLAN1 should be removed from the trunk.
+7. For S6720S follow-up, treat `XGE0/0/25` <-> H3C `Te1/0/25` as the trunk uplink and manage the switch through `Vlanif99 192.168.99.11`; decide downstream port roles, NTP, and NetBox cabling.
 8. If a Codex task needs browser, document, spreadsheet, presentation, Figma, Notion, Lark, deploy, or security skills, re-enable only the specific plugin or skill in `C:\Users\gaoxi\.codex\config.toml` instead of restoring the full previous config.
 
 ## Last Verified
 
 - Date: 2026-06-24
-- Shenlan S6720S uplink: 2026-06-26 S6720S `XGE0/0/25` and H3C `Ten-GigabitEthernet1/0/25` verified UP/10G/trunk, LLDP neighbors match, VLAN10 and VLAN99 tagged/up on both sides, and both device configurations saved.
+- Shenlan S6720S uplink and management: 2026-06-26 S6720S `XGE0/0/25` and H3C `Ten-GigabitEthernet1/0/25` verified UP/10G/trunk, LLDP neighbors match, VLAN10 and VLAN99 tagged/up on both sides, and both device configurations saved. S6720S `Vlanif99 192.168.99.11/24` is up/up; macair and node-121 ping/SSH succeed; SNMPv2c from node-121 succeeds; LibreNMS discovery/poll succeeded for device ID `13`.
 - node-123 SSH/RDP: 2026-06-25 LAN and Tailscale TCP/22 and TCP/3389 reachable; `ssh node-123-lan` returned `sl123-System-Product-Name`, user `sl123`; `ssh.service`, `ssh.socket`, `xrdp.service`, and `xrdp-sesman.service` enabled/active; `gnome-remote-desktop.service` disabled/inactive; `sshd -T` shows password auth and root login disabled.
 - 12700K Codex context slimming: local TOML parsed successfully after edits; default registration count reduced from 62 plugin/skill/MCP blocks to 23 blocks before the handoff record, with 17 skill blocks and no default MCP server blocks.
 - SmartCenter branch: `codex/12700k-meter-history-spike-filter-20260622`

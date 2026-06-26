@@ -14,6 +14,7 @@ node-123 SSH was re-verified after the user power-cycled the machine. LAN `192.1
 - `memory/ops/2026-06/2026-06-25-node-123-ssh-hardening-after-power-cycle.md`
 - `memory/machines/123.md`
 - `memory/ops/2026-06/2026-06-24-slim-codex-context-injection.md`
+- `memory/ops/2026-06/2026-06-26-shenlan-h3c-to-s6730-migration-planning.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s6720s-console-initial-status.md`
 - `memory/ops/2026-06/2026-06-26-shenlan-s6720s-h3c-te25-trunk-uplink-configuration.md`
 - `memory/ops/2026-06/2026-06-23-shenlan-s5735s-factory-reset-via-console-bootload.md`
@@ -53,7 +54,8 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 - Codex context was intentionally slimmed on 12700K. Do not bulk-register every local `~/.codex/skills/*` directory or re-enable all heavy plugins/MCP blocks unless the user accepts higher recurring input-token cost. Restore from `C:\Users\gaoxi\.codex\config.toml.before-context-slim-20260624-095241.bak` only if broad capabilities are more important than context cost.
 - Existing Shenlan network risks still apply: many switches remain partially documented or factory-like, and live device changes need a deliberate pre-change plan and sanitized records.
 - S6720S `XGE0/0/25` is now the active 10G trunk uplink to H3C `Te1/0/25` for VLAN10/16-19/40/50/80/99; VLAN1 has been removed from the H3C trunk. S6720S management has moved from `MEth0/0/1` to `Vlanif99 192.168.99.11/24`, SSH source is `Vlanif99`, and LibreNMS monitors it as device ID `13` using SNMPv2c restricted to node-121.
-- S5735S-Access-8820 (`S5735S-L24T4S-QA2`, ESN `3G21B0008820`) is now downstream of S6720S: `GE0/0/28` <-> S6720S `XGE0/0/28`, trunk VLAN10/16-19/40/50/80/99; temporary test access ports are 4 -> VLAN40, 5 -> VLAN50, 8 -> VLAN80, and 16/17/18/19 -> VLAN16/17/18/19. On S6720S this map is configured on both ordinary `GE0/0/x` and `XGE0/0/x` port families; management is `Vlanif99 192.168.99.13/24`; SSH and SNMPv2c are verified; LibreNMS device ID is `14`.
+- S5735S-Access-8820 (`S5735S-L24T4S-QA2`, ESN `3G21B0008820`) is now downstream of S6720S: `GE0/0/28` <-> S6720S `XGE0/0/28`, trunk VLAN10/16-19/40/50/80/99; temporary test access ports are 4 -> VLAN40, 5 -> VLAN50, 8 -> VLAN80, and 16/17/18/19 -> VLAN16/17/18/19. On S6720S this same test map is configured on both ordinary `GE0/0/x` and `XGE0/0/x` port families. S5735S management is `Vlanif99 192.168.99.13/24`; SSH and SNMPv2c are verified; LibreNMS device ID is `14`.
+- H3C-to-S6730 core migration planning has started. Raw H3C config/state exports are stored only in ignored local `shenlan-network-ops/backups/` and `captures/`; sanitized plan and preconfig template are under `shenlan-network-ops/plans/`. Do not enable S6730 production gateway IPs or DHCP before H3C ownership is removed.
 
 ## Next Steps
 
@@ -64,7 +66,8 @@ For Shenlan network follow-up, also read the `shenlan-network-ops` repo start fi
 5. For node-123 follow-up, use `ssh node-123-lan` for LAN access or `ssh node-123-ts` for Tailscale access. Use RDP username `sl123` on port 3389. If continuing Hunyuan3D work, resume at the `custom_rasterizer` CUDA extension rebuild/import issue described in the 2026-06-25 node-123 SSH ops record.
 6. For Shenlan switch follow-up, read the listed Shenlan records and the local `shenlan-network-ops` runbook first, then keep live CLI sessions read-only until a pre-change plan is approved.
 7. For S6720S/S5735S follow-up, treat `XGE0/0/25` <-> H3C `Te1/0/25` as the core uplink and `XGE0/0/28` <-> S5735S-Access-8820 `GE0/0/28` as the downstream trunk, both carrying VLAN10/16-19/40/50/80/99. Manage S6720S through `192.168.99.11` and S5735S-Access-8820 through `192.168.99.13`; formalize the temporary test port roles, NTP, and NetBox cabling.
-8. If a Codex task needs browser, document, spreadsheet, presentation, Figma, Notion, Lark, deploy, or security skills, re-enable only the specific plugin or skill in `C:\Users\gaoxi\.codex\config.toml` instead of restoring the full previous config.
+8. For H3C -> S6730 migration, first repair/use S6730 console or SSH, decide physical port mapping, then apply only safe preconfiguration. Gateway IP/DHCP activation belongs to a maintenance window with H3C ready for rollback.
+9. If a Codex task needs browser, document, spreadsheet, presentation, Figma, Notion, Lark, deploy, or security skills, re-enable only the specific plugin or skill in `C:\Users\gaoxi\.codex\config.toml` instead of restoring the full previous config.
 
 ## Last Verified
 

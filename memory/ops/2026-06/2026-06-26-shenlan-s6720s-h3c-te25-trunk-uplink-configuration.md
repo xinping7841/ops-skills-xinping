@@ -43,6 +43,10 @@ The user connected the Huawei S6720S to the H3C core with optical port 25 on bot
   - On both S6720S and S5735S-Access-8820, temporarily assigned test access ports: port 4 -> VLAN40, port 5 -> VLAN50, port 8 -> VLAN80, and ports 16/17/18/19 -> VLAN16/17/18/19.
   - Follow-up correction after laptop testing: S6720S has both `GigabitEthernet0/0/x` and `XGigabitEthernet0/0/x` numbered port families. The first pass configured the `XGE0/0/4/5/8/16-19` ports; the laptop was connected to ordinary `GE0/0/16`, so the ordinary `GE0/0/4/5/8/16-19` ports were configured to the same temporary VLAN map and saved.
   - Saved all three device configurations. These access assignments are explicitly temporary for testing and should be replaced by the final onsite port plan during installation.
+- Follow-up VLAN50 PoE downlink on S6720S:
+  - Configured `XGigabitEthernet0/0/9` with description `TO-POE-SWITCH-VLAN50`, `port link-type access`, and `port default vlan 50`.
+  - After the user connected the downstream switch, `XGE0/0/9` came up/up at 1G full duplex.
+  - LLDP identified the downstream device as `YLS220P-5G1F` on neighbor port `6`.
 
 ## Why This Way
 
@@ -100,6 +104,11 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
   - S5735S-Access-8820 test access ports verified: `GE0/0/4` VLAN40, `GE0/0/5` VLAN50, `GE0/0/8` VLAN80, `GE0/0/16-19` VLAN16/17/18/19.
   - S6720S LLDP still showed H3C on `XGE0/0/25` and S5735S-Access-8820 on `XGE0/0/28`; S5735S-Access-8820 LLDP still showed S6720S on `GE0/0/28`.
   - `Vlanif99` management remained up/up on S6720S `192.168.99.11/24` and S5735S-Access-8820 `192.168.99.13/24`; macair ping to both addresses returned 0% packet loss.
+- S6720S VLAN50 PoE downlink validation:
+  - `display current-configuration interface XGigabitEthernet0/0/9` showed description `TO-POE-SWITCH-VLAN50`, `port link-type access`, and `port default vlan 50`.
+  - `display interface XGigabitEthernet0/0/9` showed current state `UP`, line protocol `UP`, PVID `50`, `1000_BASE_LX_SFP`, 1G full duplex, and zero input/output errors.
+  - `display vlan 50` showed `XGE0/0/9(U)`.
+  - `display lldp neighbor brief` showed `XGE0/0/9` neighbor `YLS220P-5G1F` interface `6`.
 
 ## Risks
 
@@ -107,6 +116,7 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
 - S6720S is now uplinked and monitored but still lacks final production design for sysname, NTP, downstream access/trunk ports, and NetBox cabling.
 - S5735S-Access-8820 uses SNMPv2c and has administrator password policy disabled by user preference for the existing onsite password. Access is limited by SNMP ACL, but this is less strict than SNMPv3 plus forced password rotation.
 - S6720S and S5735S-Access-8820 now have temporary test access ports for VLAN40/50/80/16/17/18/19. On S6720S, both ordinary `GE0/0/x` and `XGE0/0/x` numbered test ports were configured because onsite testing used the ordinary GE ports. These are not a final production port map; formal installation should deliberately reassign ports and update NetBox/LibreNMS records.
+- S6720S `XGE0/0/9` is now a live VLAN50 access downlink to a TP-LINK `YLS220P-5G1F` PoE switch. The downstream switch is likely a smaller PoE access device; confirm its exact physical location, connected AP/camera loads, and whether it needs management/SNMP later.
 - H3C `Te1/0/25` had historical minor input errors before the change (`2 input errors`, `1 CRC`, `1 runt`) and a recent link flap around cabling time. Watch counters while testing.
 
 ## Machine / Sync Impact
@@ -118,7 +128,7 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
 
 ## Handoff Notes
 
-Treat S6720S `XGE0/0/25` <-> H3C `Te1/0/25` as the active 10G trunk uplink for VLAN10/16-19/40/50/80/99. Treat S6720S `XGE0/0/28` <-> S5735S-Access-8820 `GE0/0/28` as the active downstream trunk for the same VLAN set. Manage S6720S at `192.168.99.11` and S5735S-Access-8820 at `192.168.99.13`, both through `Vlanif99`. LibreNMS device IDs are `13` for S6720S and `14` for S5735S-Access-8820`; SNMPv2c read access is intentionally limited to node-121. Current test access ports on S5735S are 4 -> VLAN40, 5 -> VLAN50, 8 -> VLAN80, and 16/17/18/19 -> VLAN16/17/18/19; on S6720S the same map exists on both ordinary `GE0/0/x` and `XGE0/0/x` families. Before formal installation, decide final access/trunk roles and update NetBox cabling.
+Treat S6720S `XGE0/0/25` <-> H3C `Te1/0/25` as the active 10G trunk uplink for VLAN10/16-19/40/50/80/99. Treat S6720S `XGE0/0/28` <-> S5735S-Access-8820 `GE0/0/28` as the active downstream trunk for the same VLAN set. Treat S6720S `XGE0/0/9` as a live access VLAN50 downlink to `YLS220P-5G1F` port 6. Manage S6720S at `192.168.99.11` and S5735S-Access-8820 at `192.168.99.13`, both through `Vlanif99`. LibreNMS device IDs are `13` for S6720S and `14` for S5735S-Access-8820`; SNMPv2c read access is intentionally limited to node-121. Current test access ports on S5735S are 4 -> VLAN40, 5 -> VLAN50, 8 -> VLAN80, and 16/17/18/19 -> VLAN16/17/18/19; on S6720S the same map exists on both ordinary `GE0/0/x` and `XGE0/0/x` families. Before formal installation, decide final access/trunk roles and update NetBox cabling.
 
 ## Related Files
 

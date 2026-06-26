@@ -32,12 +32,16 @@ The user connected the Huawei S6720S to the H3C core with optical port 25 on bot
 - Follow-up S6720S downstream access change:
   - Console-connected S5735S `S5735S-Access-8820` / ESN `3G21B0008820` was confirmed as factory-like after reset, then configured as a downstream access switch for the S6720S.
   - Physical link: S5735S `GigabitEthernet0/0/28` to S6720S `XGigabitEthernet0/0/28`, verified by LLDP on both sides.
-  - S6720S `XGE0/0/28` was configured as trunk VLAN `10,99`, saved to `flash:/vrpcfg.zip`.
-  - S5735S `GE0/0/28` was configured as trunk VLAN `10,99` with VLAN1 removed; `GE0/0/1-24` were configured as access VLAN10.
+  - S6720S `XGE0/0/28` was initially configured as trunk VLAN `10,99`, saved to `flash:/vrpcfg.zip`; it was later expanded to the small machine room test VLAN set below.
+  - S5735S `GE0/0/28` was initially configured as trunk VLAN `10,99` with VLAN1 removed and `GE0/0/1-24` baseline access VLAN10; selected test ports were later reassigned as listed below.
   - S5735S management was configured as `Vlanif99 192.168.99.13/24` with default route via `192.168.99.1`.
   - S5735S SSH was enabled on `Vlanif99`; local `admin` password was set to the user-confirmed onsite password, and the VRP administrator first-login password policy was disabled because it prevented SSH login unless the password changed to a different value.
   - S5735S SNMP was configured as v2c only, using the existing node-121 secret and ACL `2001` restricted to `192.168.50.121`.
   - Added S5735S to LibreNMS as device ID `14`, display name `S5735S-Access-8820`; discovery and polling completed.
+- Follow-up small machine room VLAN test expansion:
+  - Expanded the H3C `Ten-GigabitEthernet1/0/25`, S6720S `XGigabitEthernet0/0/25`, S6720S `XGigabitEthernet0/0/28`, and S5735S-Access-8820 `GigabitEthernet0/0/28` trunks to allow VLANs `10,16-19,40,50,80,99`.
+  - On both S6720S and S5735S-Access-8820, temporarily assigned test access ports: port 4 -> VLAN40, port 5 -> VLAN50, port 8 -> VLAN80, and ports 16/17/18/19 -> VLAN16/17/18/19.
+  - Saved all three device configurations. These access assignments are explicitly temporary for testing and should be replaced by the final onsite port plan during installation.
 
 ## Why This Way
 
@@ -46,8 +50,8 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
 ## Alternatives Not Taken
 
 - Did not leave H3C `Te1/0/25` as access VLAN10 because the user specifically identified it as the uplink to the S6720S.
-- Did not permit all VLANs on the new trunk. Only VLAN10 and VLAN99 were intentionally added for the current request and management expansion.
-- Did not configure S6720S downstream access ports, VLANIFs, SNMPv3, NTP, or LibreNMS onboarding; those still need a separate deployment plan.
+- Did not permit all VLANs on the new trunk. The trunk was later expanded only to the requested small machine room VLAN set `10,16-19,40,50,80,99`.
+- Did not configure unrelated S6720S downstream ports, VLANIFs, SNMPv3, NTP, or additional LibreNMS onboarding; those still need a separate deployment plan.
 - Did not use SNMPv3 for this device because the user explicitly requested v2c for simplicity after reviewing the existing LibreNMS/SNMP state. The v2c community is sourced from the existing local secret file and not recorded.
 - Did not force SSH to a different password during VRP first-login change because the user explicitly confirmed the existing onsite password should remain in use. The administrator password policy was disabled for this S5735S to avoid forced SSH password rotation.
 
@@ -87,13 +91,21 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
   - SSH to `192.168.99.13` succeeded after disabling the administrator first-login password policy.
   - node-121 SNMPv2c `snmpget` returned sysName `S5735S-Access-8820` and the VRP system description.
   - LibreNMS `lnms device:discover 14` and `lnms device:poll 14` completed successfully.
+- Small machine room VLAN test expansion validation:
+  - S6720S `display current-configuration interface XGigabitEthernet 0/0/25` and `XGigabitEthernet 0/0/28` showed `port trunk allow-pass vlan 10 16 to 19 40 50 80 99`.
+  - S5735S-Access-8820 `display current-configuration interface GigabitEthernet 0/0/28` showed `undo port trunk allow-pass vlan 1` and `port trunk allow-pass vlan 10 16 to 19 40 50 80 99`.
+  - H3C `display current-configuration interface Ten-GigabitEthernet 1/0/25` showed `undo port trunk permit vlan 1` and `port trunk permit vlan 10 16 to 19 40 50 80 99`.
+  - S6720S test access ports verified: `XGE0/0/4` VLAN40, `XGE0/0/5` VLAN50, `XGE0/0/8` VLAN80, `XGE0/0/16-19` VLAN16/17/18/19.
+  - S5735S-Access-8820 test access ports verified: `GE0/0/4` VLAN40, `GE0/0/5` VLAN50, `GE0/0/8` VLAN80, `GE0/0/16-19` VLAN16/17/18/19.
+  - S6720S LLDP still showed H3C on `XGE0/0/25` and S5735S-Access-8820 on `XGE0/0/28`; S5735S-Access-8820 LLDP still showed S6720S on `GE0/0/28`.
+  - `Vlanif99` management remained up/up on S6720S `192.168.99.11/24` and S5735S-Access-8820 `192.168.99.13/24`; macair ping to both addresses returned 0% packet loss.
 
 ## Risks
 
 - S6720S now uses SNMPv2c rather than SNMPv3 by user request. Access is limited by device ACL to node-121 `192.168.50.121`, but v2c is still less secure than SNMPv3.
 - S6720S is now uplinked and monitored but still lacks final production design for sysname, NTP, downstream access/trunk ports, and NetBox cabling.
 - S5735S-Access-8820 uses SNMPv2c and has administrator password policy disabled by user preference for the existing onsite password. Access is limited by SNMP ACL, but this is less strict than SNMPv3 plus forced password rotation.
-- S5735S-Access-8820 `GE0/0/1-24` are currently all VLAN10 access; if the small machine room needs multiple business VLANs later, change ports deliberately and update NetBox/LibreNMS records.
+- S6720S and S5735S-Access-8820 now have temporary test access ports for VLAN40/50/80/16/17/18/19. These are not a final production port map; formal installation should deliberately reassign ports and update NetBox/LibreNMS records.
 - H3C `Te1/0/25` had historical minor input errors before the change (`2 input errors`, `1 CRC`, `1 runt`) and a recent link flap around cabling time. Watch counters while testing.
 
 ## Machine / Sync Impact
@@ -105,7 +117,7 @@ The link is switch-to-switch, so both sides should be trunk rather than leaving 
 
 ## Handoff Notes
 
-Treat S6720S `XGE0/0/25` <-> H3C `Te1/0/25` as the active 10G trunk uplink for VLAN10 and VLAN99. Treat S6720S `XGE0/0/28` <-> S5735S-Access-8820 `GE0/0/28` as the active downstream trunk for VLAN10 and VLAN99. Manage S6720S at `192.168.99.11` and S5735S-Access-8820 at `192.168.99.13`, both through `Vlanif99`. LibreNMS device IDs are `13` for S6720S and `14` for S5735S-Access-8820`; SNMPv2c read access is intentionally limited to node-121. Before adding more downstream S6720S ports or changing S5735 access VLANs, decide access/trunk roles and update NetBox cabling.
+Treat S6720S `XGE0/0/25` <-> H3C `Te1/0/25` as the active 10G trunk uplink for VLAN10/16-19/40/50/80/99. Treat S6720S `XGE0/0/28` <-> S5735S-Access-8820 `GE0/0/28` as the active downstream trunk for the same VLAN set. Manage S6720S at `192.168.99.11` and S5735S-Access-8820 at `192.168.99.13`, both through `Vlanif99`. LibreNMS device IDs are `13` for S6720S and `14` for S5735S-Access-8820`; SNMPv2c read access is intentionally limited to node-121. Current test access ports on both Huawei switches are 4 -> VLAN40, 5 -> VLAN50, 8 -> VLAN80, and 16/17/18/19 -> VLAN16/17/18/19. Before formal installation, decide final access/trunk roles and update NetBox cabling.
 
 ## Related Files
 

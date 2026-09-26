@@ -50,6 +50,21 @@ mkdir -p "$backup_dir"
 backup_db "$ROOT_DB" "$backup_dir/root-state_5.sqlite"
 backup_db "$NESTED_DB" "$backup_dir/sqlite-state_5.sqlite"
 
+# This script runs on every sync cycle (every 5 min, twice per run), so backups
+# would otherwise grow without bound (~0.7 MB per run). Keep only the newest N.
+keep_backups() {
+  keep="${CODEX_THREAD_INDEX_KEEP:-10}"
+  root="$CODEX_HOME/backups_state/thread-index-repair"
+  [ -d "$root" ] || return 0
+  ls -1dt "$root"/*/ 2>/dev/null | tail -n +$((keep + 1)) | while IFS= read -r old; do
+    case "$old" in
+      "$root"/*/) rm -rf "$old" ;;
+      *) log "WARN: refusing to prune unexpected path: $old" ;;
+    esac
+  done
+}
+keep_backups
+
 sql_quote() {
   printf "%s" "$1" | sed "s/'/''/g"
 }
@@ -59,8 +74,20 @@ merge_threads() {
   dst="$2"
   src_sql="$(sql_quote "$src")"
 
-  cols="$(sqlite3 "$dst" "PRAGMA table_info(threads);" | awk -F'|' '{print $2}' | paste -sd, -)"
-  updates="$(sqlite3 "$dst" "PRAGMA table_info(threads);" | awk -F'|' '$2 != "id" {printf "%s%s=(SELECT %s FROM srcdb.threads s WHERE s.id=threads.id)", sep, $2, $2; sep=", "}')"
+  src_cols="$(sqlite3 "$src" "PRAGMA table_info(threads);" 2>/dev/null | awk -F'|' 'NF {print $2}' | sort -u)"
+  dst_cols="$(sqlite3 "$dst" "PRAGMA table_info(threads);" 2>/dev/null | awk -F'|' 'NF {print $2}' | sort -u)"
+
+  [ -n "$src_cols" ] || return 0
+  [ -n "$dst_cols" ] || return 0
+
+  # Only migrate columns present in BOTH schemas. Different Codex versions ship
+  # different `threads` layouts (e.g. the newer root DB has history_mode/is_pinned
+  # while an older sqlite/ DB does not); using dst's full column list to SELECT
+  # from srcdb fails with "no such column".
+  common_cols="$(comm -12 <(printf '%s\n' "$src_cols") <(printf '%s\n' "$dst_cols"))"
+
+  cols="$(printf '%s\n' "$common_cols" | paste -sd, -)"
+  updates="$(printf '%s\n' "$common_cols" | awk '$0 != "id" {printf "%s%s=(SELECT %s FROM srcdb.threads s WHERE s.id=threads.id)", sep, $0, $0; sep=", "}')"
 
   [ -n "$cols" ] || return 0
   [ -n "$updates" ] || return 0

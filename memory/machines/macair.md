@@ -27,16 +27,16 @@ Mobile office and current primary coordination machine for the Deepseek ops work
 
 - Kun MCP uses direct node path from mise: `/Users/xinping/.local/share/mise/installs/node/22.23.0/bin/node`.
 - Kun filesystem root: `/Users/xinping/Documents/Deepseek`.
-- Codex MCP block was cleaned on 2026-06-22 to use macOS direct-node paths for filesystem, GitHub, Playwright, and Context7.
+- Codex MCP block was cleaned on 2026-06-22 and repaired on 2026-09-27 to use macOS direct-node paths. Context7 and filesystem now point to the installed mise Node 22 packages; filesystem is scoped to `/Users/xinping/Documents/Deepseek`.
 - Tokens should stay in local environment or app config, not Git memory.
 
 ## Known Risks
 
-- Local Codex app config may contain runtime/cache paths managed by the app. Do not rewrite those unless they are proven to affect MCP or skills.
+- Local Codex app config may contain runtime/cache paths managed by the app. Do not rewrite those unless they are proven to affect MCP or skills. The 2026-09-27 repair backup is under `~/.codex/backups_state/health-repair-20260927_223541/`.
 - Ignored local sync artifacts such as `sync.log` and `.sync-reports/` should remain untracked and can be deleted when auditing workspace noise.
 
 ## Last Verified
 
-- Date: 2026-06-22
-- Repo HEAD before cleanup commit: `45870e63bac99de2ccdc46a6634f1ffae7f8cfd3`
-- Verified SSH to `12700K` and `lk402`; local ignored sync artifacts were removed.
+- Date: 2026-09-27
+- Deepseek repo was up to date with `origin/main` before the memory update.
+- `codex doctor` passed with 17 ok, 0 warnings, and 0 failures; filesystem MCP handshake and historical session archive both succeeded.

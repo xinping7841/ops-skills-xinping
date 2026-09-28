@@ -33,10 +33,11 @@ Mobile office and current primary coordination machine for the Deepseek ops work
 ## Known Risks
 
 - Local Codex app config may contain runtime/cache paths managed by the app. Do not rewrite those unless they are proven to affect MCP or skills. The 2026-09-27 repair backup is under `~/.codex/backups_state/health-repair-20260927_223541/`.
+- Codex desktop archive currently fails in API key authentication mode with `Could not determine the account for worktree cleanup.` Ordinary chats can be archived with `codex archive <thread-id>`; the CLI path was verified on 2026-09-28. Do not alter auth files or app bundles to fake an account.
 - Ignored local sync artifacts such as `sync.log` and `.sync-reports/` should remain untracked and can be deleted when auditing workspace noise.
 
 ## Last Verified
 
-- Date: 2026-09-27
+- Date: 2026-09-28
 - Deepseek repo was up to date with `origin/main` before the memory update.
-- `codex doctor` passed with 17 ok, 0 warnings, and 0 failures; filesystem MCP handshake and historical session archive both succeeded.
+- Five previous chats in the Codex project were archived through the CLI; the desktop list shows only the active chat. The desktop archive button still has the API key account gap.
